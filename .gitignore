@@ -1,1 +1,9 @@
 env.js
+*.bak
+*.py
+*.tex
+*.ps1
+*.md
+paperwriter/
+portfolio/
+profile-readme/
