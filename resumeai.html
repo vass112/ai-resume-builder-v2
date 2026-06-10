@@ -21,6 +21,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="env.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -631,9 +632,9 @@ details summary{cursor:pointer;user-select:none}details summary svg[data-lucide=
 
 <script>
 // ===== CONSTANTS =====
-const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
-const RAZORPAY_KEY = "YOUR_RAZORPAY_KEY_ID";
-const FIREBASE_CONFIG = {
+const GEMINI_API_KEY = window._env?.GEMINI_API_KEY || "YOUR_GEMINI_API_KEY";
+const RAZORPAY_KEY = window._env?.RAZORPAY_KEY || "YOUR_RAZORPAY_KEY_ID";
+const FIREBASE_CONFIG = window._env?.FIREBASE_CONFIG || {
   apiKey: "YOUR_FIREBASE_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
   projectId: "YOUR_PROJECT_ID"
@@ -702,28 +703,48 @@ document.addEventListener('DOMContentLoaded', () => {
   initFirebase();
 });
 
-function initFirebase() {
+async function initFirebase() {
   if (FIREBASE_CONFIG.apiKey === "YOUR_FIREBASE_API_KEY") return;
-  import('firebase/app').then(({ initializeApp }) => {
-    import('firebase/auth').then(({ getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut }) => {
-      const app = initializeApp(FIREBASE_CONFIG);
-      const auth = getAuth(app);
-      window._auth = auth;
-      window._signInWithPopup = signInWithPopup;
-      window._GoogleAuthProvider = GoogleAuthProvider;
-      window._signOut = signOut;
-      onAuthStateChanged(auth, (u) => {
-        if (u) {
-          user = { uid: u.uid, name: u.displayName || 'User', email: u.email, photo: u.photoURL };
-          updateAuthUI();
-          loadUserResumes();
-        } else {
-          user = null;
-          updateAuthUI();
-        }
-      });
+  try {
+    const { initializeApp } = await import('firebase/app');
+    const { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, browserPopupRedirectResolver } = await import('firebase/auth');
+    const app = initializeApp(FIREBASE_CONFIG);
+    const auth = getAuth(app);
+    window._auth = auth;
+    window._signInWithPopup = signInWithPopup;
+    window._GoogleAuthProvider = GoogleAuthProvider;
+    window._signOut = signOut;
+    window._browserPopupRedirectResolver = browserPopupRedirectResolver;
+    onAuthStateChanged(auth, (u) => {
+      if (u) {
+        user = { uid: u.uid, name: u.displayName || 'User', email: u.email, photo: u.photoURL };
+        updateAuthUI();
+        loadUserResumes();
+      } else {
+        user = null;
+        updateAuthUI();
+      }
     });
-  });
+  } catch (e) {
+    console.error('Firebase init error:', e);
+  }
+}
+
+function signIn() {
+  if (window._auth) {
+    window._signInWithPopup(window._auth, new window._GoogleAuthProvider()).catch((err) => {
+      console.error('Sign-in error:', err);
+      if (err.code === 'auth/popup-blocked') {
+        showToast('Popup blocked. Allow popups for this site.');
+      } else if (err.code === 'auth/unauthorized-domain') {
+        showToast('This domain is not authorized. Add it in Firebase Console > Auth > Settings.');
+      } else {
+        showToast('Sign-in failed: ' + err.message);
+      }
+    });
+  } else {
+    showToast('Firebase not configured. Set FIREBASE_CONFIG.');
+  }
 }
 
 function signIn() {
