@@ -707,14 +707,28 @@ async function initFirebase() {
   if (FIREBASE_CONFIG.apiKey === "YOUR_FIREBASE_API_KEY") return;
   try {
     const { initializeApp } = await import('firebase/app');
-    const { getAuth, onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, browserPopupRedirectResolver } = await import('firebase/auth');
+    const { getAuth, onAuthStateChanged, signInWithRedirect, getRedirectResult, GoogleAuthProvider, signOut } = await import('firebase/auth');
     const app = initializeApp(FIREBASE_CONFIG);
     const auth = getAuth(app);
     window._auth = auth;
-    window._signInWithPopup = signInWithPopup;
+    window._signInWithRedirect = signInWithRedirect;
     window._GoogleAuthProvider = GoogleAuthProvider;
     window._signOut = signOut;
-    window._browserPopupRedirectResolver = browserPopupRedirectResolver;
+
+    // Handle redirect result (user coming back from Google)
+    try {
+      const result = await getRedirectResult(auth);
+      if (result) {
+        const u = result.user;
+        user = { uid: u.uid, name: u.displayName || 'User', email: u.email, photo: u.photoURL };
+        updateAuthUI();
+        loadUserResumes();
+        return;
+      }
+    } catch (e) {
+      console.error('Redirect result error:', e);
+    }
+
     onAuthStateChanged(auth, (u) => {
       if (u) {
         user = { uid: u.uid, name: u.displayName || 'User', email: u.email, photo: u.photoURL };
@@ -731,25 +745,8 @@ async function initFirebase() {
 }
 
 function signIn() {
-  if (window._auth) {
-    window._signInWithPopup(window._auth, new window._GoogleAuthProvider()).catch((err) => {
-      console.error('Sign-in error:', err);
-      if (err.code === 'auth/popup-blocked') {
-        showToast('Popup blocked. Allow popups for this site.');
-      } else if (err.code === 'auth/unauthorized-domain') {
-        showToast('This domain is not authorized. Add it in Firebase Console > Auth > Settings.');
-      } else {
-        showToast('Sign-in failed: ' + err.message);
-      }
-    });
-  } else {
-    showToast('Firebase not configured. Set FIREBASE_CONFIG.');
-  }
-}
-
-function signIn() {
-  if (window._auth) {
-    window._signInWithPopup(window._auth, new window._GoogleAuthProvider()).catch(() => {});
+  if (window._auth && window._signInWithRedirect) {
+    window._signInWithRedirect(window._auth, new window._GoogleAuthProvider());
   } else {
     showToast('Firebase not configured. Set FIREBASE_CONFIG.');
   }
