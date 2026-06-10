@@ -709,16 +709,27 @@ document.addEventListener('DOMContentLoaded',()=>{
 async function initFirebase(){
   if(FIREBASE_CONFIG.apiKey==="YOUR_FIREBASE_API_KEY")return;
   try{
-    const {initializeApp}=await import('firebase/app');
-    const {getAuth,onAuthStateChanged,signInWithRedirect,getRedirectResult,GoogleAuthProvider,signOut}=await import('firebase/auth');
-    const app=initializeApp(FIREBASE_CONFIG);const auth=getAuth(app);
-    window._auth=auth;window._signInWithRedirect=signInWithRedirect;window._GoogleAuthProvider=GoogleAuthProvider;window._signOut=signOut;
-    try{const r=await getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){}
-    onAuthStateChanged(auth,u=>{if(u)setUser(u);else{user=null;updateAuthUI()}});
-  }catch(e){console.error('Firebase:',e)}
+    const fa=await import('firebase/app');
+    const fb=await import('firebase/auth');
+    const app=fa.initializeApp(FIREBASE_CONFIG);const auth=fb.getAuth(app);
+    window._auth=auth;window._firebaseLazy=fb;
+    window._signInWithRedirect=fb.signInWithRedirect;window._GoogleAuthProvider=fb.GoogleAuthProvider;window._signOut=fb.signOut;
+    try{const r=await fb.getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){}
+    fb.onAuthStateChanged(auth,u=>{if(u)setUser(u);else{user=null;updateAuthUI()}});
+  }catch(e){showToast('Firebase init failed: '+(e.message||e));console.error('Firebase:',e)}
 }
 function setUser(u){user={uid:u.uid,name:u.displayName||'User',email:u.email,photo:u.photoURL};updateAuthUI();loadUserResumes()}
-function signIn(){if(window._auth&&window._signInWithRedirect)window._signInWithRedirect(window._auth,new window._GoogleAuthProvider());else showToast('Set Firebase config first')}
+function signIn(){
+  if(!window._auth||!window._signInWithRedirect){showToast('Firebase not configured');return}
+  window._signInWithRedirect(window._auth,new window._GoogleAuthProvider()).catch(e=>{
+    // fallback to popup if redirect blocked
+    showToast('Sign in failed, trying popup...');
+    setTimeout(()=>{
+      const {getAuth,signInWithPopup,GoogleAuthProvider}=window._firebaseLazy||{};
+      if(signInWithPopup)signInWithPopup(getAuth(),new GoogleAuthProvider()).catch(x=>showToast(x.message))
+    },500)
+  })
+}
 function signOutUser(){if(window._signOut&&window._auth){window._signOut(window._auth);closeActionSheet();showPage('home')}}
 
 // ===== NAV =====
@@ -881,11 +892,17 @@ function closeActionSheet(){document.getElementById('actionSheetOverlay').classL
 
 // ===== AI CLOSED LOOP =====
 function buildPrompt(ctx){let s='';if(ctx.accepted.length)s+='User accepted: '+ctx.accepted.join('; ')+'. ';if(ctx.rejected.length)s+='User rejected: '+ctx.rejected.join('; ')+'. ';return s+'Maintain consistency.\n\n'}
-async function callGemini(p){
+async function callGemini(p,retries=3){
   if(GEMINI_API_KEY==="YOUR_GEMINI_API_KEY")throw new Error('Set Gemini API key');
-  const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_API_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:buildPrompt(sessionContext)+p}]}]})});
-  if(!res.ok)throw new Error('API error '+res.status);
-  return (await res.json()).candidates[0].content.parts[0].text;
+  const delay=ms=>new Promise(r=>setTimeout(r,ms));
+  for(let i=0;i<retries;i++){
+    try{
+      const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_API_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:buildPrompt(sessionContext)+p}]}]})});
+      if(res.status===429&&i<retries-1){await delay(1000*Math.pow(2,i));continue}
+      if(!res.ok)throw new Error(res.status===429?'Rate limited. Try again in a moment.':'API error '+res.status);
+      return (await res.json()).candidates[0].content.parts[0].text;
+    }catch(e){if(i===retries-1)throw e;await delay(1000*Math.pow(2,i))}
+  }
 }
 function recordAccept(t){sessionContext.accepted.push(t);acceptedSuggestionCount++;if(acceptedSuggestionCount>=3)document.getElementById('aiLearnedBadge').style.display='inline-flex';silentReScore()}
 function recordReject(t){sessionContext.rejected.push(t)}
@@ -948,11 +965,19 @@ function cycleTemplate(){
 
 function renderResume(d){
   if(!d||!d.name)return '<div style="text-align:center;padding:80px 20px;color:#999"><span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span></div>';
-  const exp=(d.experiences||[]).filter(e=>e.company).map(e=>'<div style="margin-bottom:8px"><div style="font-weight:500;font-size:var(--text-sm)">'+(e.position||'')+'</div><div style="font-size:var(--text-xs);color:#6B7280">'+e.company+(e.startDate?' · '+e.startDate+(e.endDate?' – '+e.endDate:''):'')+'</div>'+(e.description?'<div style="font-size:var(--text-xs);color:#4B5563;margin-top:4px">'+e.description+'</div>':'')+'</div>').join('');
-  const edu=(d.educations||[]).filter(e=>e.school).map(e=>'<div style="margin-bottom:6px;font-size:var(--text-sm)">'+(e.degree||'')+(e.field?' in '+e.field:'')+'<div style="font-size:var(--text-xs);color:#6B7280">'+e.school+(e.gradYear?' · '+e.gradYear:'')+'</div></div>').join('');
-  const skillHtml=(d.skills||[]).map(s=>'<span style="display:inline-block;background:#E5E7EB;padding:2px 8px;border-radius:4px;margin:2px;font-size:var(--text-xs)">'+s+'</span>').join(' ');
-  return '<div class="r-name" style="font-size:var(--text-2xl);font-family:var(--font-display)">'+d.name+'</div><div style="color:#6B7280;margin-bottom:12px">'+d.title||'';
+  const r=[];
+  r.push('<div class="r-name">'+esc(d.name)+'</div>');
+  if(d.title)r.push('<div style="color:#6B7280;margin-bottom:12px;font-size:var(--text-sm)">'+esc(d.title)+'</div>');
+  if(d.email||d.phone||d.location)r.push('<div style="color:#6B7280;margin-bottom:16px;font-size:var(--text-xs)">'+(d.email?esc(d.email):'')+(d.phone?' · '+esc(d.phone):'')+(d.location?' · '+esc(d.location):'')+'</div>');
+  if(d.summary){r.push('<div class="r-section-title">Summary</div><div style="font-size:var(--text-xs);color:#4B5563;line-height:1.5;margin-bottom:12px">'+esc(d.summary)+'</div>')}
+  const exp=(d.experiences||[]).filter(e=>e.company).map(e=>'<div style="margin-bottom:8px"><div style="font-weight:500;font-size:var(--text-sm)">'+esc(e.position||'')+'</div><div style="font-size:var(--text-xs);color:#6B7280">'+esc(e.company)+(e.startDate?' · '+esc(e.startDate)+(e.endDate?' – '+esc(e.endDate):''):'')+'</div>'+(e.description?'<div style="font-size:var(--text-xs);color:#4B5563;margin-top:4px">'+esc(e.description)+'</div>':'')+'</div>').join('');
+  if(exp)r.push('<div class="r-section-title">Experience</div>'+exp);
+  const edu=(d.educations||[]).filter(e=>e.school).map(e=>'<div style="margin-bottom:6px;font-size:var(--text-xs)"><div style="font-weight:500">'+esc(e.degree||'')+(e.field?' in '+esc(e.field):'')+'</div><div style="color:#6B7280">'+esc(e.school)+(e.gradYear?' · '+esc(e.gradYear):'')+'</div></div>').join('');
+  if(edu)r.push('<div class="r-section-title">Education</div>'+edu);
+  if(d.skills&&d.skills.length)r.push('<div class="r-section-title">Skills</div><div style="margin-bottom:12px">'+d.skills.map(s=>'<span style="display:inline-block;background:#E5E7EB;padding:2px 8px;border-radius:4px;margin:2px;font-size:var(--text-xs)">'+esc(s)+'</span>').join(' ')+'</div>');
+  return r.join('');
 }
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
 
 // ===== PREVIEW ACTIONS =====
 function fullPreview(){

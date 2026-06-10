@@ -1,0 +1,11 @@
+import re
+txt = open('C:/Users/DELL/my-board/my-board.kicad_pcb').read()
+fps = re.findall(r'\(footprint "([^"]+)"', txt)
+print('Footprints:', fps)
+segs = len(re.findall(r'\(segment', txt))
+print('Segments:', segs)
+nets = re.findall(r'\(net \d+ "([^"]*)"', txt)
+print('Nets:', nets)
+o = txt.count('(')
+c = txt.count(')')
+print(f'Balance: (={o}, )={c} {"OK" if o==c else "UNBALANCED"}')

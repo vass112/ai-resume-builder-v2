@@ -1,0 +1,181 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[letterpaper,margin=0.6in]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+\usepackage{parskip}
+\usepackage{fontawesome5}
+\usepackage{hyperref}
+
+\pagenumbering{gobble}
+
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+
+\titleformat{\section}
+{\bfseries\raggedright\large\MakeUppercase}
+{}
+{0em}
+{}[\vspace{-2pt}\rule{\textwidth}{0.5pt}\vspace{4pt}]
+
+\titlespacing{\section}{0pt}{10pt}{0pt}
+
+\setlist[itemize]{
+    leftmargin=1.1em,
+    topsep=1pt,
+    itemsep=1pt,
+    parsep=0pt,
+    label=\textbullet
+}
+
+\newcommand{\role}[2]{\textbf{#1} \hfill \textit{#2}}
+\newcommand{\org}[2]{\textit{#1} \hfill #2}
+\newcommand{\skillgroup}[2]{\textbf{#1:} #2}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=black,
+    citecolor=black
+}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE \textbf{Arjun M}} \\[3pt]
+    {\small Electronics \& Communication Engineer} \\[2pt]
+    {\small \faMapMarker* \hspace{0.3em} Thiruvananthapuram, Kerala \hspace{1.2em}
+     \faPhone* \hspace{0.3em} +91 73564 64502 \hspace{1.2em}
+     \faEnvelope \hspace{0.3em} \href{mailto:arjunmundakottu@gmail.com}{arjunmundakottu@gmail.com}} \\[2pt]
+    {\small \faLinkedin \hspace{0.3em} \href{https://linkedin.com/in/arjunm11}{linkedin.com/in/arjunm11} \hspace{1.2em}
+     \faGithub \hspace{0.3em} \href{https://github.com/vass112}{github.com/vass112} \hspace{1.2em}
+     \faGlobe \hspace{0.3em} \href{https://vass112.github.io}{vass112.github.io}}
+\end{center}
+
+\section*{Professional Summary}
+
+Electronics \& Communication Engineer experienced in embedded systems, 5G infrastructure, and signal processing. Worked with live 5G NR equipment at IIST and Qualcomm-certified in 5G technologies. Built custom flight controllers, radar platforms, and wireless control systems across the full hardware--software stack. Expert in AI-augmented development, leveraging AI agents to maximize output with minimal resources.
+
+\section*{Experience}
+
+\role{Technical Lead -- STEM Education}{2024 -- Present} \\
+\org{Nuke Labs}{}
+\begin{itemize}
+    \item Designed and delivered 20+ technical workshops on UAV systems, embedded systems, and programming, training 1000+ students across 15+ institutions.
+    \item Developed curriculum and hands-on lab programs adopted by 3 partner colleges for their embedded systems coursework.
+    \item Reduced student onboarding time by 40\% through structured lab kits and guided project templates.
+\end{itemize}
+
+\role{Project Intern -- 5G Testbed Lab}{Dec 2025} \\
+\org{Indian Institute of Space Science and Technology (IIST)}{}
+\begin{itemize}
+    \item Deployed wireless sensor nodes over a private 5G NR network (gNB, AMF, SMF, UPF, MEC), achieving sub-10ms OTA latency for real-time sensor data.
+    \item Built MEC-based real-time monitoring pipelines, reducing signal integrity assessment time by 60\% compared to manual analysis.
+    \item Analyzed antenna deployment and EMI patterns, contributing to improved link budget planning for future testbed expansions.
+\end{itemize}
+
+\role{Team Lead -- Global Evaluation Qualifier}{2024} \\
+\org{NASA Space Apps Challenge}{}
+\begin{itemize}
+    \item Developed a Python DSP pipeline for planetary seismic signal extraction and classification, advancing the team to the Global Evaluation Round from 57,000+ participants worldwide (top 1\%).
+    \item Implemented STA/LTA triggering and spectrogram analysis, achieving 92\% detection accuracy on benchmark seismic datasets.
+\end{itemize}
+
+\role{Chairperson, Student Branch Chapter}{2025 -- 2026} \\
+\org{IEEE Signal Processing Society, Sree Buddha College of Engineering}{}
+\begin{itemize}
+    \item Organized 8 technical seminars and 4 project competitions, increasing student chapter participation by 50\% year-over-year.
+\end{itemize}
+
+\section*{Projects}
+
+\role{Radar-Based Human Detection Rover}{2026} \\
+\href{https://github.com/vass112}{GitHub}
+\begin{itemize}
+    \item Designed an FMCW radar-based search-and-rescue rover with CFAR detection and Doppler processing, detecting human presence through debris at up to 15m range.
+    \item Built an STM32-based control system with multi-threaded task scheduling, achieving <5ms sensor-to-motor response latency.
+\end{itemize}
+
+\role{LD2450 TinyML -- Radar Motion Classifier}{2026} \\
+\href{https://github.com/vass112/ld2450-tinyml}{GitHub}
+\begin{itemize}
+    \item Developed an edge ML pipeline: collected LD2450 radar data, trained a Keras motion classifier (92\% accuracy), and deployed on ESP32 with ESP-NOW telemetry.
+    \item Achieved real-time inference at <50ms per frame on-device, enabling battery-operated edge deployment.
+\end{itemize}
+
+\role{SCARA Pen Plotter}{2026} \\
+\href{https://github.com/vass112/scara-pen-plotter}{GitHub}
+\begin{itemize}
+    \item Built a SCARA robot arm pen plotter with GRBL firmware and Flask-based web UI, enabling browser-driven G-code control.
+    \item Achieved 0.1mm positioning accuracy with <100ms command-to-motion latency over Wi-Fi.
+\end{itemize}
+
+\role{Radar Live UI}{2026} \\
+\href{https://github.com/vass112/radar-live-ui}{GitHub}
+\begin{itemize}
+    \item Created real-time radar visualization interface for RD03D sensor using Python/tkinter with SSE streaming, reducing data-to-display latency to <200ms.
+\end{itemize}
+
+\role{ESP32 Flight Controller}{2026} \\
+\href{https://github.com/vass112}{GitHub}
+\begin{itemize}
+    \item Built a custom flight controller with MPU6050 IMU, complementary-filter sensor fusion, and cascaded PID control achieving stable hover with <2\textdegree attitude deviation.
+    \item Implemented failsafe logic for signal loss and low-battery, ensuring safe auto-landing within 3 seconds of detection.
+\end{itemize}
+
+\role{DIY Radio Transmitter (ESP-NOW)}{2026} \\
+\href{https://github.com/vass112}{GitHub}
+\begin{itemize}
+    \item Designed a custom RC transmitter with dual-joystick input, OLED telemetry, and 3D-printed enclosure achieving sub-10ms control loop latency via ESP-NOW with CRC-checked packet structure and channel hopping.
+\end{itemize}
+
+\role{Planetary Seismic Detection Pipeline}{2024} \\
+\href{https://github.com/vass112/seismic-detection-ml}{GitHub}
+\begin{itemize}
+    \item Developed a Python DSP pipeline using STA/LTA triggering, bandpass filtering, and spectrogram analysis, achieving 92\% seismic event detection accuracy.
+    \item Selected as Global Evaluation qualifier from 57,000+ participants at NASA Space Apps Challenge.
+\end{itemize}
+
+\section*{Education}
+
+\role{B.Tech Electronics \& Communication Engineering}{2022 -- 2026} \\
+\org{Sree Buddha College of Engineering, Kerala}{CGPA: 7.85/10}
+\begin{itemize}
+    \item Coursework: Digital Signal Processing, Wireless Communication, Antenna Theory, Embedded Systems, Radar Signal Processing
+\end{itemize}
+
+\role{ISC (Physics, Chemistry, Mathematics)}{2022} \\
+\org{St. Joseph's Convent English Medium School}{76.5\%}
+
+\section*{Technical Skills}
+
+\skillgroup{Wireless}{5G NR (gNB, AMF, SMF, UPF, MEC), Antenna Fundamentals, MIMO, Beamforming, OTA Testing, LoRa Mesh, ESP-NOW} \\
+
+\skillgroup{Programming}{Python, C, C++, Embedded C, MATLAB, AI-Assisted Development (opencode, Antigravity -- expert)} \\
+
+\skillgroup{Embedded \& Signal Processing}{ESP32, STM32, Arduino, UART, SPI, I2C, PWM, GRBL / G-Code, PID Control, Flight Control, KiCad PCB Design; FFT, CFAR, Doppler Processing, Digital Filtering, Sensor Fusion; TinyML, TensorFlow / Keras} \\
+
+\skillgroup{Tools \& Platforms}{Linux, Git, Flask, tkinter, Web UI, SSE, LaTeX, KiCad, LTspice, Oscilloscope, Spectrum Analyzer} \\
+
+\skillgroup{Networking}{Core Network Architecture, TCP/IP, MQTT, Network Slicing, Edge Computing / MEC} \\
+
+\skillgroup{Methodology}{AI Agent-Enabled Development, GitHub / Git Flow, Issue-Based Task Management, Validation-Driven Closed-Loop Development}
+
+\section*{Certifications}
+
+\role{Qualcomm Introductory 5G Certification}{Aug 2025}
+
+\section*{Achievements}
+
+\begin{itemize}
+    \item NASA Space Apps Challenge 2024 -- Global Evaluation Qualifier (top 1\% of 57,000+ participants)
+    \item IEEE SPS Student Branch Chairperson (2025--2026) -- increased participation by 50\%
+\end{itemize}
+
+\vspace{6pt}
+\begin{center}
+\small English (Professional) \quad $|$ \quad Malayalam (Native)
+\end{center}
+
+\end{document}
