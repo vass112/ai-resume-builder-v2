@@ -1797,7 +1797,9 @@ function downloadResumeData(idx) {
   setTimeout(() => downloadResume(), 300);
 }
 
-// ===== PAYMENT =====
+// ===== PAYMENT & REDEEM =====
+const VALID_REDEEM_CODES = ['TEST10', 'FREE3', 'DEV2024', 'PREMIUM', 'BETA'];
+
 function showPayModal() {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay open';
@@ -1818,12 +1820,41 @@ function showPayModal() {
         <button class="btn btn-primary btn-lg btn-full" onclick="startPayment()">
           <span data-lucide="lock" style="width:18px;height:18px"></span> Pay ₹10 & Get 3 Downloads
         </button>
+        <div class="mt-16" style="border-top:1px solid var(--border);padding-top:16px;margin-top:16px">
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('redeemSection').classList.toggle('hidden')">
+            <span data-lucide="key" style="width:16px;height:16px"></span> Have a redeem code?
+          </button>
+          <div id="redeemSection" class="hidden mt-8" style="display:none">
+            <div class="flex gap-8">
+              <input type="text" id="redeemInput" placeholder="Enter code" style="flex:1;text-transform:uppercase" onkeydown="if(event.key==='Enter')redeemCode()">
+              <button class="btn btn-primary btn-sm" onclick="redeemCode()">Apply</button>
+            </div>
+            <p id="redeemMsg" class="text-xs mt-8" style="color:var(--text3)"></p>
+          </div>
+        </div>
         <p class="text-3 text-xs mt-16">Secure payment via Razorpay</p>
       </div>
     </div>
   `;
   document.body.appendChild(overlay);
   setTimeout(() => lucide.createIcons(), 50);
+}
+
+function redeemCode() {
+  const input = document.getElementById('redeemInput');
+  const msg = document.getElementById('redeemMsg');
+  const code = input.value.trim().toUpperCase();
+  if (!code) { msg.textContent = 'Enter a code'; msg.style.color = 'var(--red)'; return; }
+  if (VALID_REDEEM_CODES.includes(code)) {
+    addDownloads(3);
+    msg.textContent = '✅ Code accepted! 3 downloads added.';
+    msg.style.color = 'var(--green)';
+    input.value = '';
+    setTimeout(() => document.getElementById('payModal').remove(), 1000);
+  } else {
+    msg.textContent = '❌ Invalid code';
+    msg.style.color = 'var(--red)';
+  }
 }
 
 function startPayment() {
