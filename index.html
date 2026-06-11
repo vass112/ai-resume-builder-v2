@@ -923,16 +923,16 @@ function closeActionSheet(){document.getElementById('actionSheetOverlay').classL
 
 // ===== AI CLOSED LOOP =====
 function buildPrompt(ctx){let s='';if(ctx.accepted.length)s+='User accepted: '+ctx.accepted.join('; ')+'. ';if(ctx.rejected.length)s+='User rejected: '+ctx.rejected.join('; ')+'. ';return s+'Maintain consistency.\n\n'}
-async function callGemini(p,retries=3){
+async function callGemini(p,retries=6){
   if(GEMINI_API_KEY==="YOUR_GEMINI_API_KEY")throw new Error('Set Gemini API key');
   const delay=ms=>new Promise(r=>setTimeout(r,ms));
   for(let i=0;i<retries;i++){
     try{
       const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_API_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:buildPrompt(sessionContext)+p}]}]})});
-      if(res.status===429&&i<retries-1){await delay(1000*Math.pow(2,i));continue}
+      if(res.status===429&&i<retries-1){const w=2000*Math.pow(2,i);showToast('Rate limited, retrying in '+(w/1000)+'s...');await delay(w);continue}
       if(!res.ok)throw new Error(res.status===429?'Rate limited. Try again in a moment.':'API error '+res.status);
       return (await res.json()).candidates[0].content.parts[0].text;
-    }catch(e){if(i===retries-1)throw e;await delay(1000*Math.pow(2,i))}
+    }catch(e){if(i===retries-1)throw e;const w=2000*Math.pow(2,i);showToast('Retrying...');await delay(w)}
   }
 }
 function recordAccept(t){sessionContext.accepted.push(t);acceptedSuggestionCount++;if(acceptedSuggestionCount>=3)document.getElementById('aiLearnedBadge').style.display='inline-flex';silentReScore()}
