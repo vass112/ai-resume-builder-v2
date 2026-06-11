@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ResumeAI Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="env.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "firebase/auth": "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js",
+    "firebase/app": "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js"
+  }
+}
+</script>
+<style>
+/* ============================================
+   DESIGN TOKENS
+   ============================================ */
+:root{
+  /* Colors */
+  --bg-void:#080A0F;--bg-base:#0D1117;--bg-elevated:#13181F;--bg-overlay:#1A2130;
+  --bg-glass:rgba(19,24,31,0.6);--bg-glass-light:rgba(255,255,255,0.03);
+  --accent-primary:#C8A97E;--accent-secondary:#E8C99A;--accent-dim:rgba(200,169,126,0.15);
+  --accent-glow:rgba(200,169,126,0.25);
+  --jade:#4ECDC4;--ember:#FF6B47;--frost:#A8C4D4;
+  --text-primary:#F0EDE8;--text-secondary:#8B92A0;--text-tertiary:#4A5260;
+  --border-subtle:rgba(255,255,255,0.06);--border-glass:rgba(255,255,255,0.10);
+  --border-accent:rgba(200,169,126,0.30);
+
+  /* Typography */
+  --font-display:'Instrument Serif',Georgia,serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+
+  /* Type scale */
+  --text-xs:11px;--text-sm:13px;--text-base:15px;--text-md:17px;--text-lg:20px;
+  --text-xl:24px;--text-2xl:30px;--text-3xl:38px;--text-4xl:52px;
+
+  /* Motion */
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+  --spring-subtle:cubic-bezier(0.22,1,0.36,1);
+  --ease-out:cubic-bezier(0.16,1,0.3,1);
+  --ease-in-out:cubic-bezier(0.65,0,0.35,1);
+  --duration-instant:80ms;--duration-fast:160ms;--duration-normal:280ms;
+  --duration-slow:480ms;--duration-crawl:800ms;
+
+  /* Spacing (8pt grid) */
+  --space-8:8px;--space-16:16px;--space-24:24px;--space-32:32px;
+  --space-40:40px;--space-48:48px;--space-56:56px;--space-64:64px;
+  --space-80:80px;--space-96:96px;--space-128:128px;
+
+  /* Radii */
+  --radius-sm:6px;--radius-md:10px;--radius-lg:12px;--radius-xl:16px;--radius-2xl:20px;
+}
+.light{
+  --bg-void:#F5F3EF;--bg-base:#FAFAF8;--bg-elevated:#FFFFFF;--bg-overlay:#FFFFFF;
+  --bg-glass:rgba(255,255,255,0.65);--bg-glass-light:rgba(0,0,0,0.02);
+  --accent-primary:#B8956A;--accent-secondary:#A07D55;--accent-dim:rgba(184,149,106,0.12);
+  --accent-glow:rgba(184,149,106,0.20);
+  --text-primary:#1A1C20;--text-secondary:#6B7280;--text-tertiary:#9CA3AF;
+  --border-subtle:rgba(0,0,0,0.06);--border-glass:rgba(0,0,0,0.08);
+  --border-accent:rgba(184,149,106,0.25);
+}
+
+/* ============================================
+   RESET & BASE
+   ============================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{
+  font-family:var(--font-body);font-size:var(--text-base);color:var(--text-primary);
+  background:var(--bg-base);min-height:100vh;overflow-x:hidden;line-height:1.6;
+  letter-spacing:-0.01em;
+}
+
+/* ============================================
+   BACKDROP ORBS
+   ============================================ */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(120px);animation:float 30s ease-in-out infinite alternate}
+.orb-1{width:600px;height:600px;background:rgba(200,169,126,0.10);top:-200px;left:-200px;animation-duration:35s}
+.orb-2{width:500px;height:500px;background:rgba(78,205,196,0.06);bottom:-150px;right:-150px;animation-duration:40s;animation-delay:-10s}
+.orb-3{width:400px;height:400px;background:rgba(255,255,255,0.03);top:40%;right:-100px;animation-duration:25s;animation-delay:-5s}
+.orb-4{width:800px;height:800px;background:rgba(200,169,126,0.05);bottom:10%;left:-300px;animation-duration:45s;animation-delay:-15s}
+@keyframes float{0%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-20px,40px)}100%{transform:translate(30px,-20px)}}
+
+/* ============================================
+   GLASS
+   ============================================ */
+.glass{
+  background:var(--bg-glass);backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid var(--border-glass);border-radius:var(--radius-2xl);
+  box-shadow:0 0 0 0.5px rgba(255,255,255,0.04) inset,0 1px 0 rgba(255,255,255,0.06) inset,
+    0 24px 48px rgba(0,0,0,0.4),0 8px 16px rgba(0,0,0,0.2);
+  position:relative;
+}
+.glass::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.02) 30%,transparent 60%);
+}
+.glass-subtle{backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 0 0 0.5px rgba(255,255,255,0.03) inset,0 1px 0 rgba(255,255,255,0.04) inset,0 8px 24px rgba(0,0,0,0.2);}
+.glass-prominent{backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);box-shadow:0 0 0 0.5px rgba(255,255,255,0.05) inset,0 1px 0 rgba(255,255,255,0.08) inset,0 32px 64px rgba(0,0,0,0.5),0 12px 24px rgba(0,0,0,0.3);}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing:-0.02em;line-height:1.2}
+.text-eyebrow{font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:var(--space-8)}
+.text-display{font-family:var(--font-display);font-size:var(--text-4xl);line-height:1.1;letter-spacing:-0.02em}
+.mono{font-family:var(--font-mono);letter-spacing:0}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+#app{position:relative;z-index:1;min-height:100vh}
+.navbar{
+  position:fixed;top:0;left:0;right:0;height:64px;z-index:100;display:flex;align-items:center;
+  padding:0 var(--space-32);gap:var(--space-32);
+  background:var(--bg-glass);backdrop-filter:blur(32px) saturate(200%);
+  -webkit-backdrop-filter:blur(32px) saturate(200%);
+  border-bottom:1px solid var(--border-glass);
+}
+.navbar-wordmark{font-family:var(--font-display);font-size:22px;color:var(--accent-primary);letter-spacing:-0.02em;cursor:pointer;position:relative;overflow:hidden}
+.navbar-wordmark::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(200,169,126,0.15),transparent);animation:shimmerOnce 1.2s ease-in-out 0.5s 1;pointer-events:none}
+@keyframes shimmerOnce{0%{left:-100%}100%{left:200%}}
+.navbar-wordmark:hover::after{animation:shimmerOnce 0.8s ease-in-out 0s 1}
+.nav-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.04);padding:3px;border-radius:var(--radius-lg);position:relative}
+.nav-tab{padding:8px 20px;border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;color:var(--text-secondary);cursor:pointer;transition:color var(--duration-fast) var(--ease-out);position:relative;z-index:2;min-height:36px;display:flex;align-items:center}
+.nav-tab.active{color:var(--text-primary)}
+.nav-tab-indicator{position:absolute;height:36px;border-radius:var(--radius-md);background:var(--bg-elevated);z-index:1;transition:all var(--duration-normal) var(--spring-subtle);pointer-events:none}
+.navbar-right{display:flex;align-items:center;gap:var(--space-16);margin-left:auto}
+.user-btn{display:flex;align-items:center;gap:var(--space-8);padding:6px 12px;border-radius:var(--radius-md);cursor:pointer;transition:background var(--duration-fast);min-height:44px;border:none;background:none;color:var(--text-primary)}
+.user-btn:hover{background:var(--accent-dim)}
+.user-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover}
+.user-name{font-size:var(--text-sm);font-weight:500}
+
+/* ============================================
+   BOTTOM TABS (MOBILE)
+   ============================================ */
+.bottom-tabs{display:none;position:fixed;bottom:0;left:0;right:0;height:56px;z-index:100;
+  background:var(--bg-glass);backdrop-filter:blur(32px) saturate(200%);
+  -webkit-backdrop-filter:blur(32px) saturate(200%);
+  border-top:1px solid var(--border-glass);padding:0 var(--space-8)}
+.bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;cursor:pointer;position:relative;color:var(--text-tertiary);transition:color var(--duration-fast)}
+.bottom-tab svg{width:24px;height:24px;transition:color var(--duration-fast)}
+.bottom-tab.active{color:var(--accent-primary)}
+.bottom-tab.active svg{color:var(--accent-primary)}
+.bottom-tab.active::before{content:'';position:absolute;top:0;width:24px;height:2px;background:var(--accent-primary);border-radius:0 0 2px 2px;transition:left var(--duration-normal) var(--spring-subtle)}
+.bottom-tab-label{font-size:var(--text-xs);line-height:1;margin-top:1px}
+.bottom-tab:not(.active) .bottom-tab-label{display:none}
+@media(max-width:768px){.bottom-tabs{display:flex}.nav-tabs,.user-name{display:none}.navbar{padding:0 var(--space-16)}.main-content{padding-bottom:64px}}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+.main-content{padding-top:80px;max-width:1280px;margin:0 auto;padding-left:var(--space-32);padding-right:var(--space-32)}
+.page{display:none;animation:fadeIn var(--duration-normal) var(--spring-subtle)}.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(var(--space-16)) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-8);
+  height:44px;padding:0 24px;border-radius:var(--radius-lg);font-family:var(--font-body);
+  font-size:14px;font-weight:600;letter-spacing:-0.01em;line-height:1;
+  cursor:pointer;transition:all var(--duration-fast) var(--ease-out);border:none;position:relative;
+  -webkit-tap-highlight-color:transparent;white-space:nowrap}
+.btn:active{transform:scale(0.97)}
+.btn-primary{background:var(--accent-primary);color:#0D1117}
+.btn-primary:hover{background:var(--accent-secondary);transform:translateY(-1px);box-shadow:0 8px 24px var(--accent-glow)}
+.btn-secondary{background:transparent;border:1px solid var(--border-glass);color:var(--text-primary)}
+.btn-secondary:hover{background:var(--bg-elevated);border-color:var(--border-accent)}
+.btn-ghost{background:transparent;color:var(--text-secondary)}
+.btn-ghost:hover{color:var(--text-primary);background:rgba(255,255,255,0.04)}
+.btn-ai{
+  background:linear-gradient(135deg,rgba(200,169,126,0.15),rgba(200,169,126,0.05));
+  border:1px solid rgba(200,169,126,0.25);color:var(--accent-secondary);font-weight:500;
+  font-size:var(--text-sm);min-height:44px;
+}
+.btn-ai:hover{background:linear-gradient(135deg,rgba(200,169,126,0.25),rgba(200,169,126,0.10));border-color:rgba(200,169,126,0.40)}
+.btn-full{width:100%;justify-content:center}
+.btn-sm{height:36px;padding:0 16px;font-size:var(--text-xs)}
+.btn-icon{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* AI star animation */
+.ai-star{display:inline-block;animation:spinStar 6s linear infinite;font-size:16px}
+.btn-ai.loading .ai-star{animation:spinStar 0.8s linear infinite}
+@keyframes spinStar{to{transform:rotate(360deg)}}
+
+/* ============================================
+   INPUTS
+   ============================================ */
+.input-group{position:relative;margin-bottom:var(--space-24)}
+.input-group label{
+  position:absolute;left:16px;top:14px;
+  font-size:var(--text-base);color:var(--text-tertiary);
+  transition:all var(--duration-fast) var(--ease-out);
+  pointer-events:none;font-weight:400;font-family:var(--font-body);
+}
+.input-group input,.input-group textarea,.input-group select{
+  width:100%;height:48px;padding:22px 16px 6px;font-size:var(--text-base);font-family:var(--font-body);
+  color:var(--text-primary);background:var(--bg-elevated);border:1px solid var(--border-subtle);
+  border-radius:var(--radius-md);outline:none;transition:all var(--duration-fast) var(--ease-out);
+  letter-spacing:-0.01em;
+}
+.input-group textarea{height:auto;min-height:48px;padding-top:24px;resize:vertical}
+.input-group select{padding-top:22px;padding-bottom:6px;-webkit-appearance:none;appearance:none}
+.input-group input:focus,.input-group textarea:focus{border-color:var(--border-accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.input-group input:focus+label,.input-group input:not(:placeholder-shown)+label,
+.input-group textarea:focus+label,.input-group textarea:not(:placeholder-shown)+label,
+.input-group select:focus+label,.input-group select:not([value=""])+label{
+  top:6px;font-size:var(--text-xs);color:var(--accent-primary);font-weight:500;
+}
+.input-group input::placeholder,.input-group textarea::placeholder{color:transparent}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card{padding:var(--space-32);border-radius:var(--radius-2xl);background:var(--bg-elevated);border:1px solid var(--border-subtle)}
+.card-hover{transition:all var(--duration-fast) var(--ease-out)}.card-hover:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:var(--radius-sm);
+  font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+.badge-free{background:rgba(78,205,196,0.15);color:var(--jade);border:1px solid rgba(78,205,196,0.25)}
+.badge-premium{background:var(--accent-dim);color:var(--accent-secondary);border:1px solid rgba(200,169,126,0.20)}
+
+/* ============================================
+   TAGS
+   ============================================ */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:var(--radius-sm);
+  background:var(--accent-dim);border:1px solid rgba(200,169,126,0.20);
+  font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;color:var(--accent-secondary);cursor:pointer}
+.tag .tag-remove{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(200,169,126,0.15);cursor:pointer;opacity:0;transition:opacity var(--duration-fast);font-size:10px}
+.tag:hover .tag-remove{opacity:1}
+.tag-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;cursor:pointer;transition:all var(--duration-fast)}
+.tag-chip-green{background:rgba(78,205,196,0.12);color:var(--jade);border:1px solid rgba(78,205,196,0.20)}
+.tag-chip-red{background:rgba(255,107,71,0.12);color:var(--ember);border:1px solid rgba(255,107,71,0.20)}
+
+/* ============================================
+   STEP INDICATOR
+   ============================================ */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:var(--space-32);padding:4px 0}
+.step-dot{display:flex;align-items:center;gap:var(--space-8);cursor:pointer;min-height:44px;padding:8px 4px;position:relative}
+.step-dot .dot{width:10px;height:10px;border-radius:50%;background:var(--border-subtle);transition:all var(--duration-normal) var(--spring-subtle);flex-shrink:0;position:relative}
+.step-dot .dot.active{background:var(--accent-primary);width:14px;height:14px;box-shadow:0 0 0 4px var(--accent-dim)}
+.step-dot .dot.done{background:var(--jade);width:12px;height:12px}
+.step-dot .dot.active::after{content:'';position:absolute;inset:-4px;border-radius:50%;animation:pulseRing 2s ease-in-out infinite;border:2px solid var(--accent-dim)}
+@keyframes pulseRing{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.5)}}
+.step-connector{flex:1;height:2px;background:var(--border-subtle);min-width:16px;margin:0 4px;border-radius:1px;transition:background var(--duration-normal)}
+.step-connector.done{background:var(--jade)}
+
+/* ============================================
+   STEP CARDS
+   ============================================ */
+.step-card{display:none;animation:stepIn var(--duration-normal) var(--spring-subtle)}.step-card.active{display:block}
+@keyframes stepIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+.step-out{animation:stepOut var(--duration-normal) var(--ease-out)}
+@keyframes stepOut{to{opacity:0;transform:translateX(-24px)}}
+.step-title{font-size:var(--text-xl);margin-bottom:var(--space-8);font-weight:400}
+.step-subtitle{color:var(--text-secondary);font-size:var(--text-base);margin-bottom:var(--space-32)}
+
+/* ============================================
+   BUILDER LAYOUT
+   ============================================ */
+.builder-layout{display:flex;gap:var(--space-40);align-items:flex-start}
+.builder-form{flex:1;max-width:600px}
+.builder-preview{flex:1;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto}
+@media(max-width:1024px){.builder-preview{display:none}.builder-form{max-width:100%}}
+
+/* ============================================
+   SCORE RING
+   ============================================ */
+.score-ring{width:160px;height:160px;position:relative;flex-shrink:0}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-ring-num{font-family:var(--font-mono);font-size:var(--text-3xl);font-weight:500;line-height:1}
+.score-ring-label{font-size:var(--text-sm);color:var(--text-secondary);font-family:var(--font-body)}
+
+/* ============================================
+   SECTION BAR
+   ============================================ */
+.section-bar{display:flex;align-items:center;gap:var(--space-12);margin-bottom:var(--space-8)}
+.section-bar-label{font-size:var(--text-sm);font-weight:500;width:96px;flex-shrink:0;color:var(--text-secondary)}
+.section-bar-track{flex:1;height:4px;background:var(--border-subtle);border-radius:2px;overflow:hidden}
+.section-bar-fill{height:100%;border-radius:2px;transition:width var(--duration-crawl) var(--ease-out)}
+.section-bar-score{font-family:var(--font-mono);font-size:var(--text-xs);width:32px;text-align:right;color:var(--text-secondary)}
+
+/* ============================================
+   UPLOAD ZONE
+   ============================================ */
+.upload-zone{text-align:center;padding:var(--space-48) var(--space-24);cursor:pointer;position:relative;
+  border:1.5px dashed var(--border-glass);border-radius:var(--radius-2xl);transition:all var(--duration-fast)}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--border-accent);background:var(--accent-dim)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* ============================================
+   MODALS & SHEETS
+   ============================================ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:5000;display:none;align-items:flex-end;justify-content:center;animation:fadeIn var(--duration-normal) var(--ease-out)}
+.modal-overlay.open{display:flex}
+@media(min-width:768px){.modal-overlay{align-items:center}}
+.modal-sheet{width:100%;max-width:520px;max-height:85vh;overflow-y:auto;animation:sheetUp var(--duration-slow) var(--spring);position:relative}
+.modal-sheet .grabber{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,0.20);margin:12px auto 8px;flex-shrink:0}
+@media(min-width:768px){.modal-sheet{border-radius:var(--radius-2xl);max-height:80vh}.modal-sheet .grabber{display:none}}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-24) var(--space-32) 0}
+.modal-header h2{font-size:var(--text-xl)}
+.modal-body{padding:var(--space-24) var(--space-32) var(--space-32)}
+
+/* ============================================
+   TOAST
+   ============================================ */
+.toast{position:fixed;top:var(--space-24);left:50%;transform:translateX(-50%) translateY(-100px);z-index:10000;
+  background:var(--bg-overlay);border:1px solid var(--border-glass);backdrop-filter:blur(24px);
+  padding:12px 24px;border-radius:100px;font-size:var(--text-sm);font-weight:500;
+  transition:transform var(--duration-normal) var(--spring);box-shadow:0 8px 32px rgba(0,0,0,0.3);
+  display:flex;align-items:center;gap:10px;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media(max-width:640px){.toast{top:auto;bottom:var(--space-24);left:var(--space-16);right:var(--space-16);transform:translateY(100px);border-radius:var(--radius-lg)}.toast.show{transform:translateY(0)}}
+
+/* ============================================
+   ENTRY CARDS
+   ============================================ */
+.entry-card{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-xl);padding:var(--space-24);margin-bottom:var(--space-16)}
+.entry-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-16)}
+.entry-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-12)}
+
+/* ============================================
+   PREVIEW
+   ============================================ */
+.preview-panel{background:var(--bg-elevated);border:1px solid var(--border-glass);border-radius:var(--radius-2xl);overflow:hidden}
+.preview-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-16) var(--space-24);border-bottom:1px solid var(--border-glass)}
+.preview-body{padding:var(--space-24);min-height:400px;position:relative}
+
+.resume-a4{background:#FAFAF8;color:#1A1C20;padding:40px 36px;max-width:595px;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,0.06);position:relative;font-family:var(--font-body)}
+.resume-a4 *{color:#1A1C20}
+.resume-a4 .r-name{font-family:var(--font-display);font-size:var(--text-2xl);margin-bottom:4px}
+.resume-a4 .r-section-title{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6B7280;border-bottom:1px solid #E5E7EB;padding-bottom:6px;margin:16px 0 8px}
+
+/* Resume preview paper texture */
+.resume-preview-bg{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");background-repeat:repeat}
+
+/* ============================================
+   AI RESULT ANIMATION
+   ============================================ */
+.ai-result{overflow:hidden}
+.ai-result .word{display:inline-block;opacity:0;transform:translateY(4px);animation:wordIn 0.3s var(--spring-subtle) forwards;margin-right:4px}
+@keyframes wordIn{to{opacity:1;transform:translateY(0)}}
+
+/* ============================================
+   SKELETON
+   ============================================ */
+.skeleton{background:linear-gradient(90deg,var(--bg-elevated) 25%,rgba(255,255,255,0.06) 50%,var(--bg-elevated) 75%);background-size:300px 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-sm)}
+@keyframes shimmer{0%{background-position:-300px 0}100%{background-position:300px 0}}
+
+/* ============================================
+   LANDING
+   ============================================ */
+.landing{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--space-48) var(--space-24)}
+.landing .trust-row{font-family:var(--font-body);font-size:var(--text-sm);color:var(--text-tertiary);display:flex;gap:var(--space-16);flex-wrap:wrap;justify-content:center}
+.landing .trust-row span::after{content:'·';margin-left:var(--space-16);color:var(--border-glass)}.landing .trust-row span:last-child::after{content:''}
+
+/* ============================================
+   ACTION SHEET
+   ============================================ */
+.action-sheet{position:fixed;bottom:0;left:0;right:0;z-index:6000;background:var(--bg-overlay);border-radius:var(--radius-2xl) var(--radius-2xl) 0 0;animation:sheetUp var(--duration-slow) var(--spring);padding:8px 0 24px;max-width:400px;margin:0 auto}
+.action-sheet .as-item{display:flex;align-items:center;gap:var(--space-12);padding:14px 24px;min-height:44px;cursor:pointer;transition:background var(--duration-fast);font-size:var(--text-base);color:var(--text-primary)}
+.action-sheet .as-item:hover{background:var(--bg-elevated)}
+.action-sheet .as-item.danger{color:var(--ember)}
+
+/* ============================================
+   COACH MARKS
+   ============================================ */
+.coach{position:fixed;z-index:9000;background:var(--bg-overlay);border:1px solid var(--border-glass);border-radius:var(--radius-xl);padding:var(--space-24);max-width:320px;box-shadow:0 24px 48px rgba(0,0,0,0.4);animation:fadeIn var(--duration-normal) var(--spring-subtle)}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media(max-width:768px){.main-content{padding-left:var(--space-16);padding-right:var(--space-16)}.card{padding:var(--space-16)}}
+
+/* ============================================
+   PREFERENCES
+   ============================================ */
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}@keyframes none{}}
+</style>
+</head>
+<body>
+<!-- Backdrop Orbs -->
+<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div><div class="orb orb-4"></div>
+
+<div id="app">
+  <div class="toast" id="toast"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-wordmark" onclick="showPage('home')">ResumeAI</div>
+    <div class="nav-tabs" id="navTabs">
+      <div class="nav-tab-indicator" id="navIndicator"></div>
+      <div class="nav-tab active" data-page="home" onclick="showPage('home')">Home</div>
+      <div class="nav-tab" data-page="builder" onclick="showPage('builder')">Builder</div>
+      <div class="nav-tab" data-page="score" onclick="showPage('score')">Score</div>
+      <div class="nav-tab" data-page="dashboard" onclick="showPage('dashboard')">Dashboard</div>
+    </div>
+    <div class="navbar-right">
+      <button class="btn btn-icon btn-ghost" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">
+        <span data-lucide="moon" style="width:20px;height:20px"></span>
+      </button>
+      <div id="authArea">
+        <button class="btn btn-primary btn-sm" onclick="signIn()" id="signInBtn">Continue with Google</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Bottom Tabs -->
+  <div class="bottom-tabs" id="bottomTabs">
+    <div class="bottom-tab active" data-page="home" onclick="showPage('home')"><span data-lucide="home"></span><span class="bottom-tab-label">Home</span></div>
+    <div class="bottom-tab" data-page="builder" onclick="showPage('builder')"><span data-lucide="file-text"></span><span class="bottom-tab-label">Builder</span></div>
+    <div class="bottom-tab" data-page="score" onclick="showPage('score')"><span data-lucide="target"></span><span class="bottom-tab-label">Score</span></div>
+    <div class="bottom-tab" data-page="dashboard" onclick="showPage('dashboard')"><span data-lucide="layout-dashboard"></span><span class="bottom-tab-label">Dashboard</span></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+
+    <!-- Landing Page -->
+    <div class="page active" id="page-home">
+      <div class="landing">
+        <h1 class="text-display" style="margin-bottom:var(--space-16)">Resume intelligence<br>for serious candidates</h1>
+        <p style="font-family:var(--font-body);font-size:var(--text-lg);color:var(--text-secondary);max-width:480px;margin-bottom:var(--space-40);font-weight:300;letter-spacing:-0.01em">ATS-optimized resumes crafted with AI. Beautiful by design.</p>
+        <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px;width:100%;height:52px;font-size:16px">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+        <div class="trust-row" style="margin-top:var(--space-24)">
+          <span>Free to start</span><span>₹10 to download</span><span>ATS-optimized</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Builder -->
+    <div class="page" id="page-builder">
+      <div class="builder-layout">
+        <div class="builder-form">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-24)">
+            <h2 style="font-size:var(--text-xl)">Build your resume</h2>
+            <div style="display:flex;gap:var(--space-8);align-items:center">
+              <span class="ai-learned" id="aiLearnedBadge" style="display:none;font-size:var(--text-xs);color:var(--accent-secondary);padding:4px 12px;border-radius:var(--radius-sm);background:var(--accent-dim);gap:6px">
+                <span class="ai-star">✦</span> AI learned your style
+              </span>
+              <button class="btn btn-ghost btn-sm" onclick="togglePreviewMobile()" id="previewToggleBtn">
+                <span data-lucide="eye" style="width:16px;height:16px"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Steps -->
+          <div class="steps" id="stepIndicator"></div>
+
+          <!-- Step 1 -->
+          <div class="step-card active" data-step="1">
+            <div class="text-eyebrow">Step 1 of 6</div>
+            <h3 class="step-title">Personal info</h3>
+            <p class="step-subtitle">The essentials — name, contact, links</p>
+            <div class="input-group"><input type="text" id="fName" placeholder=" " oninput="autoSave();updatePreview()"><label>Full name</label></div>
+            <div class="input-group"><input type="text" id="fTitle" placeholder=" " oninput="autoSave();updatePreview()"><label>Job title</label></div>
+            <div class="entry-card-grid">
+              <div class="input-group"><input type="email" id="fEmail" placeholder=" " oninput="autoSave();updatePreview()"><label>Email</label></div>
+              <div class="input-group"><input type="tel" id="fPhone" placeholder=" " oninput="autoSave();updatePreview()"><label>Phone</label></div>
+            </div>
+            <div class="input-group"><input type="text" id="fLocation" placeholder=" " oninput="autoSave();updatePreview()"><label>Location</label></div>
+            <div class="entry-card-grid">
+              <div class="input-group"><input type="text" id="fLinkedin" placeholder=" " oninput="autoSave()"><label>LinkedIn</label></div>
+              <div class="input-group"><input type="text" id="fPortfolio" placeholder=" " oninput="autoSave()"><label>Portfolio</label></div>
+            </div>
+            <div class="flex" style="justify-content:flex-end;margin-top:var(--space-24)"><button class="btn btn-primary" onclick="nextStep(2)">Next step</button></div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step-card" data-step="2">
+            <div class="text-eyebrow">Step 2 of 6</div>
+            <h3 class="step-title">Professional summary</h3>
+            <p class="step-subtitle">A compelling overview of your career</p>
+            <div class="input-group"><textarea id="fSummary" rows="4" placeholder=" " oninput="autoSave();updatePreview()"></textarea><label>Summary</label></div>
+            <button class="btn btn-ai btn-full" onclick="generateSummary()"><span class="ai-star">✦</span> Generate with AI</button>
+            <div id="summaryResult" class="mt-16"></div>
+            <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
+              <button class="btn btn-ghost" onclick="prevStep(1)">Back</button>
+              <button class="btn btn-primary" onclick="nextStep(3)">Next step</button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step-card" data-step="3">
+            <div class="text-eyebrow">Step 3 of 6</div>
+            <h3 class="step-title">Experience</h3>
+            <p class="step-subtitle">Where you've worked and what you've done</p>
+            <div id="experienceEntries"></div>
+            <button class="btn btn-secondary btn-full" onclick="addExperience()"><span data-lucide="plus" style="width:16px;height:16px"></span> Add experience</button>
+            <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
+              <button class="btn btn-ghost" onclick="prevStep(2)">Back</button>
+              <button class="btn btn-primary" onclick="nextStep(4)">Next step</button>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="step-card" data-step="4">
+            <div class="text-eyebrow">Step 4 of 6</div>
+            <h3 class="step-title">Education</h3>
+            <p class="step-subtitle">Your academic background</p>
+            <div id="educationEntries"></div>
+            <button class="btn btn-secondary btn-full" onclick="addEducation()"><span data-lucide="plus" style="width:16px;height:16px"></span> Add education</button>
+            <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
+              <button class="btn btn-ghost" onclick="prevStep(3)">Back</button>
+              <button class="btn btn-primary" onclick="nextStep(5)">Next step</button>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="step-card" data-step="5">
+            <div class="text-eyebrow">Step 5 of 6</div>
+            <h3 class="step-title">Skills</h3>
+            <p class="step-subtitle">What you're good at</p>
+            <div class="input-group">
+              <input type="text" id="fSkillInput" placeholder=" " onkeydown="if(event.key==='Enter'){event.preventDefault();addSkill()}">
+              <label>Add a skill</label>
+            </div>
+            <div class="tags-row" id="skillsTags" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:var(--space-16)"></div>
+            <button class="btn btn-ai btn-full" onclick="suggestSkills()"><span class="ai-star">✦</span> Suggest skills</button>
+            <div id="suggestedSkillsResult" class="mt-16"></div>
+            <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
+              <button class="btn btn-ghost" onclick="prevStep(4)">Back</button>
+              <button class="btn btn-primary" onclick="nextStep(6)">Next step</button>
+            </div>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="step-card" data-step="6">
+            <div class="text-eyebrow">Step 6 of 6</div>
+            <h3 class="step-title">Extras</h3>
+            <p class="step-subtitle">Certifications, projects, languages</p>
+            <details class="card" style="margin-bottom:var(--space-16);padding:var(--space-16);cursor:pointer">
+              <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="certificate" style="width:16px;height:16px"></span> Certifications</summary>
+              <div class="mt-16" id="certEntries"></div>
+              <button class="btn btn-ghost btn-sm btn-full" onclick="addCert()" style="margin-top:var(--space-8)">+ Add certification</button>
+            </details>
+            <details class="card" style="margin-bottom:var(--space-16);padding:var(--space-16);cursor:pointer">
+              <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="folder-git-2" style="width:16px;height:16px"></span> Projects</summary>
+              <div class="mt-16" id="projectEntries"></div>
+              <button class="btn btn-ghost btn-sm btn-full" onclick="addProject()" style="margin-top:var(--space-8)">+ Add project</button>
+            </details>
+            <details class="card" style="padding:var(--space-16);cursor:pointer">
+              <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="languages" style="width:16px;height:16px"></span> Languages</summary>
+              <div class="mt-16" id="langEntries"></div>
+              <button class="btn btn-ghost btn-sm btn-full" onclick="addLanguage()" style="margin-top:var(--space-8)">+ Add language</button>
+            </details>
+            <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
+              <button class="btn btn-ghost" onclick="prevStep(5)">Back</button>
+              <button class="btn btn-primary" onclick="finishBuild()">Save resume</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="builder-preview" id="builderPreview">
+          <div class="preview-panel glass">
+            <div class="preview-header">
+              <h3 style="font-size:var(--text-sm);font-weight:500">Live preview</h3>
+              <div style="display:flex;gap:var(--space-8);align-items:center">
+                <span style="font-size:var(--text-xs);color:var(--text-tertiary)">Classic</span>
+                <span class="badge badge-free" id="previewBadge">Free</span>
+                <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
+              </div>
+            </div>
+            <div class="preview-body" id="previewBody">
+              <div id="resumePreview" class="resume-a4 resume-classic resume-preview-bg">
+                <div style="text-align:center;padding:80px 20px;color:#999">
+                  <span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>
+                  Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span>
+                </div>
+              </div>
+              <div class="flex" style="justify-content:center;gap:var(--space-8);margin-top:var(--space-16)">
+                <button class="btn btn-ghost btn-sm" onclick="fullPreview()"><span data-lucide="maximize-2" style="width:16px;height:16px"></span> Full view</button>
+                <button class="btn btn-primary btn-sm" onclick="downloadResume()"><span data-lucide="download" style="width:16px;height:16px"></span> Download PDF</button>
+                <button class="btn btn-ghost btn-sm" onclick="cycleTemplate()"><span data-lucide="refresh" style="width:16px;height:16px"></span> Template</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score -->
+    <div class="page" id="page-score">
+      <h2 style="font-size:var(--text-xl);margin-bottom:var(--space-8)">Score my resume</h2>
+      <p style="color:var(--text-secondary);margin-bottom:var(--space-32)">Upload your resume for AI-powered ATS analysis</p>
+      <div class="upload-zone glass" id="scoreZone">
+        <div style="margin-bottom:var(--space-16)"><span data-lucide="cloud-upload" style="width:32px;height:32px;color:var(--accent-primary)"></span></div>
+        <p style="font-weight:500;margin-bottom:4px">Drop your resume here</p>
+        <p style="font-size:var(--text-sm);color:var(--text-tertiary)">PDF or DOCX</p>
+        <input type="file" id="resumeFile" accept=".pdf,.docx" onchange="handleResumeUpload(event)">
+      </div>
+      <details class="card" style="margin-top:var(--space-24);padding:var(--space-16)">
+        <summary style="cursor:pointer;font-weight:500;color:var(--text-secondary)">Extracted text preview</summary>
+        <pre id="extractedTextPreview" class="mt-16" style="font-size:var(--text-sm);color:var(--text-secondary);white-space:pre-wrap;max-height:200px;overflow-y:auto;background:var(--bg-elevated);padding:var(--space-12);border-radius:var(--radius-sm)"></pre>
+      </details>
+      <div class="input-group" style="margin-top:var(--space-24)">
+        <textarea id="scoreJd" rows="3" placeholder=" " style="resize:vertical"></textarea>
+        <label>Job description (optional)</label>
+      </div>
+      <button class="btn btn-ai btn-full" onclick="analyzeResume()" style="margin-top:var(--space-16)"><span class="ai-star">✦</span> Analyze resume</button>
+      <div id="scoreResults" style="display:none" class="mt-32"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="page" id="page-dashboard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-24)">
+        <h2 style="font-size:var(--text-xl)">My resumes</h2>
+        <button class="btn btn-primary btn-sm" onclick="showPage('builder')"><span data-lucide="plus" style="width:16px;height:16px"></span> New</button>
+      </div>
+      <div id="dashboardContent"></div>
+    </div>
+  </div>
+
+  <!-- Full Preview Modal -->
+  <div class="modal-overlay" id="fullPreviewModal">
+    <div class="modal-sheet glass-prominent">
+      <div class="grabber"></div>
+      <div class="modal-header"><h2 style="font-size:var(--text-lg)">Resume preview</h2><button class="btn btn-icon btn-ghost" onclick="closeModal('fullPreviewModal')" data-lucide="x"></button></div>
+      <div class="modal-body" id="fullPreviewBody" style="background:#F5F3EF;border-radius:var(--radius-xl);margin:0 var(--space-24) var(--space-24)"></div>
+    </div>
+  </div>
+
+  <!-- Pay Modal -->
+  <div class="modal-overlay" id="payModal">
+    <div class="modal-sheet glass-prominent">
+      <div class="grabber"></div>
+      <div class="modal-header"><h2 style="font-size:var(--text-lg)">Get 3 downloads</h2><button class="btn btn-icon btn-ghost" onclick="closeModal('payModal')" data-lucide="x"></button></div>
+      <div class="modal-body text-center">
+        <div style="margin:0 auto var(--space-24);width:64px;height:64px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center">
+          <span data-lucide="download" style="width:28px;height:28px;color:var(--accent-primary)"></span>
+        </div>
+        <h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">Download any premium template</h3>
+        <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-bottom:var(--space-24)">3 downloads. No time limit. No restrictions.</p>
+        <div style="font-size:var(--text-3xl);font-family:var(--font-display);color:var(--accent-primary);margin-bottom:var(--space-8)">₹10</div>
+        <p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-bottom:var(--space-24)">One-time payment · 3 downloads</p>
+        <button class="btn btn-primary btn-full" onclick="startPayment()" style="height:52px;font-size:16px"><span data-lucide="lock" style="width:18px;height:18px"></span> Pay ₹10 — Get 3 downloads</button>
+        <div style="margin-top:var(--space-16);border-top:1px solid var(--border-subtle);padding-top:var(--space-16)">
+          <button class="btn btn-ghost btn-sm" onclick="toggleRedeem()"><span data-lucide="key" style="width:14px;height:14px"></span> Have a redeem code?</button>
+          <div id="redeemSection" style="display:none;margin-top:var(--space-12)">
+            <div class="flex" style="gap:8px"><input type="text" id="redeemInput" placeholder="Enter code" style="flex:1;height:44px;padding:0 12px;border-radius:var(--radius-md);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm);text-transform:uppercase;font-family:var(--font-body)" onkeydown="if(event.key==='Enter')redeemCode()"><button class="btn btn-primary btn-sm" onclick="redeemCode()">Apply</button></div>
+            <p id="redeemMsg" style="font-size:var(--text-xs);margin-top:var(--space-8);color:var(--text-tertiary)"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Sheet -->
+  <div class="modal-overlay" id="actionSheetOverlay" onclick="closeActionSheet()">
+    <div class="action-sheet" onclick="event.stopPropagation()">
+      <div style="width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,0.20);margin:12px auto 8px"></div>
+      <div id="actionSheetItems"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG =====
+const GEMINI_API_KEY = window._env?.GEMINI_API_KEY || "";
+const RAZORPAY_KEY = window._env?.RAZORPAY_KEY || "";
+const FIREBASE_CONFIG = window._env?.FIREBASE_CONFIG || { apiKey:"", authDomain:"", projectId:"" };
+const VALID_REDEEM_CODES = ['TEST10','FREE3','DEV2024','PREMIUM','BETA'];
+
+// ===== STATE =====
+let currentPage='home', currentStep=1, totalSteps=6, selectedTemplate='classic', templates=['classic','modern','executive','minimal','tech'];
+let skills=[], experiences=[], educations=[], certifications=[], projects=[], languages=[];
+let sessionContext={accepted:[],rejected:[],tonePreference:'professional',jobTitle:'',industry:''};
+let acceptedSuggestionCount=0, user=null, resumeData={}, remainingDownloads=0, analyzing=false, uploadedResumeText='';
+let isLight = localStorage.getItem('resumeai_theme')==='light';
+let _lastSummary='';
+remainingDownloads = parseInt(localStorage.getItem('resumeai_downloads')||'0');
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded',()=>{
+  if(isLight)document.body.classList.add('light');
+  initSteps(); addExperience(); addEducation();
+  if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  getRemainingDownloads();
+  setTimeout(()=>{lucide.createIcons();checkFirstVisit()},100);
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveResumeData();showToast('Saved','check')}});
+  const sz=document.getElementById('scoreZone');
+  sz.addEventListener('dragover',e=>{e.preventDefault();sz.classList.add('dragover')});
+  sz.addEventListener('dragleave',()=>sz.classList.remove('dragover'));
+  sz.addEventListener('drop',e=>{e.preventDefault();sz.classList.remove('dragover');if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0])});
+  initFirebase();
+});
+
+async function initFirebase(){
+  if(FIREBASE_CONFIG.apiKey==="YOUR_FIREBASE_API_KEY")return;
+  try{
+    const fa=await import('firebase/app');
+    const fb=await import('firebase/auth');
+    const app=fa.initializeApp(FIREBASE_CONFIG);const auth=fb.getAuth(app);
+    window._auth=auth;window._firebaseLazy=fb;
+    window._signInWithRedirect=fb.signInWithRedirect;window._GoogleAuthProvider=fb.GoogleAuthProvider;window._signOut=fb.signOut;
+    try{const r=await fb.getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){}
+    fb.onAuthStateChanged(auth,u=>{if(u)setUser(u);else{user=null;updateAuthUI()}});
+  }catch(e){showToast('Firebase init failed: '+(e.message||e));console.error('Firebase:',e)}
+}
+function setUser(u){user={uid:u.uid,name:u.displayName||'User',email:u.email,photo:u.photoURL};updateAuthUI();loadUserResumes()}
+function signIn(){
+  if(!window._auth||!window._signInWithRedirect){showToast('Firebase not configured');return}
+  window._signInWithRedirect(window._auth,new window._GoogleAuthProvider()).catch(e=>{
+    // fallback to popup if redirect blocked
+    showToast('Sign in failed, trying popup...');
+    setTimeout(()=>{
+      const {getAuth,signInWithPopup,GoogleAuthProvider}=window._firebaseLazy||{};
+      if(signInWithPopup)signInWithPopup(getAuth(),new GoogleAuthProvider()).catch(x=>showToast(x.message))
+    },500)
+  })
+}
+function signOutUser(){if(window._signOut&&window._auth){window._signOut(window._auth);closeActionSheet();showPage('home')}}
+
+// ===== NAV =====
+function showPage(page){
+  if(page==='builder'&&!user&&!confirm('Sign in to save your work. Continue anyway?'))return;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.page===page));
+  document.querySelectorAll('.bottom-tab').forEach(t=>t.classList.toggle('active',t.dataset.page===page));
+  currentPage=page;
+  updateNavIndicator();
+  if(page==='dashboard')renderDashboard();
+  window.scrollTo(0,0);
+}
+function updateNavIndicator(){
+  const active=document.querySelector('.nav-tab.active');
+  if(!active)return;
+  const ind=document.getElementById('navIndicator');
+  const rect=active.getBoundingClientRect();const parent=active.parentElement.getBoundingClientRect();
+  ind.style.width=rect.width+'px';ind.style.left=(rect.left-parent.left)+'px';
+}
+
+// ===== THEME =====
+function toggleTheme(){
+  isLight=!isLight;document.body.classList.toggle('light',isLight);
+  localStorage.setItem('resumeai_theme',isLight?'light':'dark');
+  const btn=document.getElementById('themeBtn');
+  if(btn){btn.innerHTML='<span data-lucide="'+(isLight?'sun':'moon')+'" style="width:20px;height:20px"></span>';setTimeout(()=>lucide.createIcons(),50)}
+}
+
+// ===== TOAST =====
+let toastTimeout;
+function showToast(msg,icon){
+  const t=document.getElementById('toast');
+  t.innerHTML=(icon?'<span data-lucide="'+icon+'" style="width:16px;height:16px"></span> ':'')+msg;
+  t.classList.add('show');clearTimeout(toastTimeout);
+  toastTimeout=setTimeout(()=>t.classList.remove('show'),3000);
+  setTimeout(()=>lucide.createIcons(),50);
+}
+
+// ===== STEPS =====
+function initSteps(){
+  const c=document.getElementById('stepIndicator');c.innerHTML='';
+  for(let i=1;i<=totalSteps;i++){
+    c.innerHTML+='<div class="step-dot" onclick="goToStep('+i+')"><div class="dot'+(i===1?' active':'')+'" data-step="'+i+'"></div></div>';
+    if(i<totalSteps)c.innerHTML+='<div class="step-connector" data-connector="'+i+'"></div>';
+  }
+  updateSteps();
+}
+function updateSteps(){
+  document.querySelectorAll('.step-dot .dot').forEach(d=>{const s=parseInt(d.dataset.step);d.className='dot'+(s<currentStep?' done':'')+(s===currentStep?' active':'')});
+  document.querySelectorAll('.step-connector').forEach(c=>{c.className='step-connector'+(parseInt(c.dataset.connector)<currentStep?' done':'')});
+  document.querySelectorAll('.step-card').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.step)===currentStep));
+}
+function goToStep(n){if(n<1||n>totalSteps)return;currentStep=n;updateSteps();window.scrollTo(0,0)}
+function nextStep(n){goToStep(n)}
+function prevStep(n){goToStep(n)}
+
+// ===== DATA =====
+function getResumeData(){return{
+  name:document.getElementById('fName').value,title:document.getElementById('fTitle').value,
+  email:document.getElementById('fEmail').value,phone:document.getElementById('fPhone').value,
+  location:document.getElementById('fLocation').value,linkedin:document.getElementById('fLinkedin').value,
+  portfolio:document.getElementById('fPortfolio').value,summary:document.getElementById('fSummary').value,
+  experiences:getExp(),educations:getEdu(),skills:skills,template:selectedTemplate
+}}
+function autoSave(){clearTimeout(window._as);window._as=setTimeout(saveResumeData,500)}
+function saveResumeData(){const d=getResumeData();resumeData=d;if(user)localStorage.setItem('resumeai_draft_'+user.uid,JSON.stringify(d))}
+function loadUserResumes(){if(!user)return;try{const d=JSON.parse(localStorage.getItem('resumeai_draft_'+user.uid));if(d)restoreData(d)}catch(e){}}
+function restoreData(d){
+  if(!d)return;
+  ['fName','fTitle','fEmail','fPhone','fLocation','fLinkedin','fPortfolio','fSummary'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=d[id.replace('f',id[1].toLowerCase()+id.slice(2))]||d[id.replace('f',id[1].toLowerCase()+id.slice(2))]||d[id]||''});
+  // Try simpler mapping
+  if(d.name)document.getElementById('fName').value=d.name;if(d.title)document.getElementById('fTitle').value=d.title;
+  if(d.email)document.getElementById('fEmail').value=d.email;if(d.phone)document.getElementById('fPhone').value=d.phone;
+  if(d.location)document.getElementById('fLocation').value=d.location;if(d.linkedin)document.getElementById('fLinkedin').value=d.linkedin;
+  if(d.portfolio)document.getElementById('fPortfolio').value=d.portfolio;if(d.summary)document.getElementById('fSummary').value=d.summary;
+  if(d.skills){skills=d.skills;renderSkills()}
+  if(d.experiences){experiences=d.experiences;renderExp()}
+  if(d.educations){educations=d.educations;renderEdu()}
+  if(d.template){selectedTemplate=d.template}
+  updatePreview();
+}
+
+// ===== EXPERIENCE =====
+let expId=1;
+function addExperience(d){const id=expId++;experiences.push(d||{id,company:'',position:'',startDate:'',endDate:'',description:''});renderExp()}
+function getExp(){return experiences}
+function renderExp(){
+  const c=document.getElementById('experienceEntries');
+  if(!experiences.length)addExperience();
+  c.innerHTML=experiences.map(e=>`<div class="entry-card"><div class="entry-card-header"><span style="font-weight:500;font-size:var(--text-sm)">${e.company||'New position'}</span><button class="btn btn-icon btn-ghost" onclick="removeExp(${e.id})" style="width:36px;height:36px" data-lucide="x" style="width:16px;height:16px"></button></div>
+    <div class="entry-card-grid"><div class="input-group"><input type="text" value="${e.company}" oninput="uExp(${e.id},'company',this.value);updatePreview()" placeholder=" "><label>Company</label></div><div class="input-group"><input type="text" value="${e.position}" oninput="uExp(${e.id},'position',this.value);updatePreview()" placeholder=" "><label>Position</label></div></div>
+    <div class="entry-card-grid"><div class="input-group"><input type="text" value="${e.startDate}" oninput="uExp(${e.id},'startDate',this.value);updatePreview()" placeholder=" "><label>Start</label></div><div class="input-group"><input type="text" value="${e.endDate}" oninput="uExp(${e.id},'endDate',this.value);updatePreview()" placeholder=" "><label>End</label></div></div>
+    <div class="input-group"><textarea rows="2" oninput="uExp(${e.id},'description',this.value);updatePreview()" placeholder=" ">${e.description}</textarea><label>Description</label></div>
+    <button class="btn btn-ai btn-sm" onclick="enhanceBullets(${e.id},this)"><span class="ai-star">✦</span> Improve</button></div>`).join('');
+  setTimeout(()=>lucide.createIcons(),50);
+}
+function removeExp(id){experiences=experiences.filter(e=>e.id!==id);renderExp()}
+function uExp(id,f,v){const e=experiences.find(x=>x.id===id);if(e){e[f]=v;autoSave()}}
+function uEdu(id,f,v){const e=educations.find(x=>x.id===id);if(e){e[f]=v;autoSave()}}
+function addEducation(d){const id=expId++;educations.push(d||{id,school:'',degree:'',field:'',gradYear:''});renderEdu()}
+function getEdu(){return educations}
+function renderEdu(){
+  const c=document.getElementById('educationEntries');
+  c.innerHTML=educations.map(e=>`<div class="entry-card"><div class="entry-card-header"><span style="font-weight:500;font-size:var(--text-sm)">${e.school||'New school'}</span><button class="btn btn-icon btn-ghost" onclick="removeEdu(${e.id})" style="width:36px;height:36px" data-lucide="x" style="width:16px;height:16px"></button></div>
+    <div class="entry-card-grid"><div class="input-group"><input type="text" value="${e.school}" oninput="uEdu(${e.id},'school',this.value);updatePreview()" placeholder=" "><label>School</label></div><div class="input-group"><input type="text" value="${e.degree}" oninput="uEdu(${e.id},'degree',this.value);updatePreview()" placeholder=" "><label>Degree</label></div></div>
+    <div class="entry-card-grid"><div class="input-group"><input type="text" value="${e.field}" oninput="uEdu(${e.id},'field',this.value);updatePreview()" placeholder=" "><label>Field</label></div><div class="input-group"><input type="text" value="${e.gradYear}" oninput="uEdu(${e.id},'gradYear',this.value);updatePreview()" placeholder=" "><label>Year</label></div></div></div>`).join('');
+  setTimeout(()=>lucide.createIcons(),50);
+}
+function removeEdu(id){educations=educations.filter(e=>e.id!==id);renderEdu()}
+
+// ===== SKILLS =====
+function addSkill(){
+  const inp=document.getElementById('fSkillInput');const v=inp.value.trim();
+  if(v&&!skills.includes(v)){skills.push(v);renderSkills();inp.value='';autoSave();updatePreview()}
+}
+function removeSkill(s){skills=skills.filter(x=>x!==s);renderSkills();autoSave();updatePreview()}
+function renderSkills(){
+  const c=document.getElementById('skillsTags');
+  c.innerHTML=skills.map(s=>`<span class="tag">${s}<span class="tag-remove" onclick="removeSkill('${s}')">✕</span></span>`).join('');
+}
+
+// ===== EXTRAS =====
+function addCert(d){const id=expId++;certifications.push(d||{id,name:'',issuer:'',year:''});renderCerts()}
+function removeCert(id){certifications=certifications.filter(x=>x.id!==id);renderCerts()}
+function renderCerts(){const c=document.getElementById('certEntries');c.innerHTML=certifications.map(e=>`<div class="flex" style="gap:8px;margin-bottom:8px;align-items:center"><input type="text" value="${e.name}" oninput="uCert(${e.id},'name',this.value)" placeholder="Name" style="flex:1;height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><input type="text" value="${e.issuer}" oninput="uCert(${e.id},'issuer',this.value)" placeholder="Issuer" style="width:120px;height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><button class="btn btn-icon btn-ghost" onclick="removeCert(${e.id})" data-lucide="x" style="width:36px;height:36px"></button></div>`).join('');setTimeout(()=>lucide.createIcons(),50)}
+function uCert(id,f,v){const e=certifications.find(x=>x.id===id);if(e){e[f]=v;autoSave()}}
+function addProject(d){const id=expId++;projects.push(d||{id,name:'',description:''});renderProjects()}
+function removeProject(id){projects=projects.filter(x=>x.id!==id);renderProjects()}
+function renderProjects(){const c=document.getElementById('projectEntries');c.innerHTML=projects.map(e=>`<div class="flex" style="gap:8px;margin-bottom:8px;align-items:center"><input type="text" value="${e.name}" oninput="uProj(${e.id},'name',this.value)" placeholder="Project" style="flex:1;height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><button class="btn btn-icon btn-ghost" onclick="removeProject(${e.id})" data-lucide="x" style="width:36px;height:36px"></button></div><textarea rows="2" oninput="uProj(${e.id},'description',this.value)" placeholder="Description" style="width:100%;margin-top:4px;height:36px;padding:8px 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm);resize:none">${e.description}</textarea>`).join('');setTimeout(()=>lucide.createIcons(),50)}
+function uProj(id,f,v){const e=projects.find(x=>x.id===id);if(e){e[f]=v;autoSave()}}
+function addLanguage(d){const id=expId++;languages.push(d||{id,language:'',proficiency:''});renderLangs()}
+function removeLanguage(id){languages=languages.filter(x=>x.id!==id);renderLangs()}
+function renderLangs(){const c=document.getElementById('langEntries');c.innerHTML=languages.map(e=>`<div class="flex" style="gap:8px;margin-bottom:8px;align-items:center"><input type="text" value="${e.language}" oninput="uLang(${e.id},'language',this.value)" placeholder="Language" style="flex:1;height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><select onchange="uLang(${e.id},'proficiency',this.value)" style="height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><option value="">Level</option><option ${e.proficiency==='Native'?'selected':''}>Native</option><option ${e.proficiency==='Fluent'?'selected':''}>Fluent</option><option ${e.proficiency==='Advanced'?'selected':''}>Advanced</option><option ${e.proficiency==='Basic'?'selected':''}>Basic</option></select><button class="btn btn-icon btn-ghost" onclick="removeLanguage(${e.id})" data-lucide="x" style="width:36px;height:36px"></button></div>`).join('');setTimeout(()=>lucide.createIcons(),50)}
+function uLang(id,f,v){const e=languages.find(x=>x.id===id);if(e){e[f]=v;autoSave()}}
+
+// ===== AUTH UI =====
+function updateAuthUI(){
+  const area=document.getElementById('authArea');
+  if(user){
+    area.innerHTML=`<button class="user-btn" onclick="showActionSheet()">${user.photo?`<img class="user-avatar" src="${user.photo}" alt="">`:`<div class="user-avatar" style="background:var(--accent-dim);color:var(--accent-primary);display:flex;align-items:center;justify-content:center;font-weight:500;font-size:var(--text-sm)">${user.name[0]}</div>`}<span class="user-name">${user.name}</span><span data-lucide="chevron-down" style="width:16px;height:16px;color:var(--text-tertiary)"></span></button>`;
+  }else{
+    area.innerHTML=`<button class="btn btn-primary btn-sm" onclick="signIn()">Continue with Google</button>`;
+  }
+  document.getElementById('signInBtn')&&(document.getElementById('signInBtn').style.display='none');
+  document.getElementById('landingCta')&&(document.getElementById('landingCta').textContent=user?'Start building →':'Continue with Google');
+  setTimeout(()=>lucide.createIcons(),50);
+}
+
+function showActionSheet(){
+  const items=document.getElementById('actionSheetItems');
+  items.innerHTML=`<div class="as-item" onclick="showPage('dashboard');closeActionSheet()"><span data-lucide="file-text" style="width:18px;height:18px;color:var(--text-secondary)"></span> My resumes</div>
+    <div class="as-item" onclick="closeActionSheet();toggleTheme()"><span data-lucide="${isLight?'sun':'moon'}" style="width:18px;height:18px;color:var(--text-secondary)"></span> ${isLight?'Dark':'Light'} mode</div>
+    <div class="as-item danger" onclick="signOutUser()"><span data-lucide="log-out" style="width:18px;height:18px;color:var(--ember)"></span> Sign out</div>`;
+  document.getElementById('actionSheetOverlay').classList.add('open');
+  setTimeout(()=>lucide.createIcons(),50);
+}
+function closeActionSheet(){document.getElementById('actionSheetOverlay').classList.remove('open')}
+
+// ===== AI CLOSED LOOP =====
+function buildPrompt(ctx){let s='';if(ctx.accepted.length)s+='User accepted: '+ctx.accepted.join('; ')+'. ';if(ctx.rejected.length)s+='User rejected: '+ctx.rejected.join('; ')+'. ';return s+'Maintain consistency.\n\n'}
+async function callGemini(p,retries=3){
+  if(GEMINI_API_KEY==="YOUR_GEMINI_API_KEY")throw new Error('Set Gemini API key');
+  const delay=ms=>new Promise(r=>setTimeout(r,ms));
+  for(let i=0;i<retries;i++){
+    try{
+      const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_API_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:buildPrompt(sessionContext)+p}]}]})});
+      if(res.status===429&&i<retries-1){await delay(1000*Math.pow(2,i));continue}
+      if(!res.ok)throw new Error(res.status===429?'Rate limited. Try again in a moment.':'API error '+res.status);
+      return (await res.json()).candidates[0].content.parts[0].text;
+    }catch(e){if(i===retries-1)throw e;await delay(1000*Math.pow(2,i))}
+  }
+}
+function recordAccept(t){sessionContext.accepted.push(t);acceptedSuggestionCount++;if(acceptedSuggestionCount>=3)document.getElementById('aiLearnedBadge').style.display='inline-flex';silentReScore()}
+function recordReject(t){sessionContext.rejected.push(t)}
+
+// ===== AI FEATURES =====
+async function generateSummary(){
+  const n=document.getElementById('fName').value||'the candidate',t=document.getElementById('fTitle').value||'professional';
+  const s=document.getElementById('summaryResult');s.innerHTML='<div class="skeleton" style="height:80px"></div>';
+  try{
+    const text=await callGemini('Write 3-4 line ATS-optimized summary for '+n+', a '+t+'. Skills: '+(skills.join(', ')||'various')+'. Return ONLY summary text.');
+    _lastSummary=text;const enc=encodeURIComponent(text);
+    s.innerHTML='<div class="card ai-result"><div style="line-height:1.6;font-size:var(--text-base)">'+text.split(' ').map((w,i)=>'<span class="word" style="animation-delay:'+(i*16)+'ms">'+w+'</span>').join(' ')+'</div><div class="flex" style="gap:8px;margin-top:16px"><button class="btn btn-sm" style="background:rgba(78,205,196,0.15);color:var(--jade);border:none" onclick="acceptSummary(decodeURIComponent(\''+enc+'\'))"><span data-lucide="check" style="width:14px;height:14px"></span> Accept</button><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'fSummary\').value=decodeURIComponent(\''+enc+'\');showToast(\'Applied\',\'check\')"><span data-lucide="edit" style="width:14px;height:14px"></span> Use</button><button class="btn btn-ghost btn-sm" onclick="generateSummary()"><span data-lucide="refresh" style="width:14px;height:14px"></span> Retry</button></div></div>';
+    setTimeout(()=>lucide.createIcons(),50);
+  }catch(e){s.innerHTML='<div class="card" style="color:var(--ember)">'+e.message+'</div>'}
+}
+function acceptSummary(t){document.getElementById('fSummary').value=t;recordAccept('summary');document.getElementById('summaryResult').innerHTML='<div class="card" style="color:var(--jade);text-align:center">Summary accepted</div>';updatePreview()}
+
+async function enhanceBullets(id,btn){
+  const exp=experiences.find(e=>e.id===id);if(!exp||!exp.description){showToast('Write a description first');return}
+  if(btn){btn.innerHTML='<span class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid rgba(200,169,126,0.3);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite"></span>';btn.disabled=true}
+  try{const text=await callGemini('Rewrite these bullet points into quantified, action-verb-led lines: '+exp.description+'\nReturn ONLY the rewritten text.');exp.description=text;renderExp();recordAccept('bullets');showToast('Enhanced','check');updatePreview()}catch(e){showToast('Error: '+e.message)}
+  if(btn)btn.disabled=false
+}
+
+async function suggestSkills(){
+  const t=document.getElementById('fTitle').value;if(!t){showToast('Enter a job title first');return}
+  const c=document.getElementById('suggestedSkillsResult');c.innerHTML='<div class="skeleton" style="height:40px"></div>';
+  try{
+    const text=await callGemini('Suggest 10-15 skills for a '+t+'. Return comma-separated list only.');
+    const suggested=text.split(',').map(s=>s.trim()).filter(Boolean);
+    c.innerHTML='<div class="card"><div style="font-size:var(--text-sm);font-weight:500;margin-bottom:8px;color:var(--text-secondary)">Suggested skills — click to add</div><div style="display:flex;flex-wrap:wrap;gap:8px">'+suggested.map(s=>'<span class="tag" onclick="addSuggestedSkill(\''+s.replace(/'/g,"\\'")+'\')">'+s+' +</span>').join('')+'</div></div>';
+  }catch(e){c.innerHTML='<div class="card" style="color:var(--ember)">'+e.message+'</div>'}
+}
+function addSuggestedSkill(s){if(!skills.includes(s)){skills.push(s);renderSkills();autoSave();updatePreview();showToast('Added '+s,'check')}}
+
+// ===== DOWNLOADS =====
+function getRemainingDownloads(){remainingDownloads=parseInt(localStorage.getItem('resumeai_downloads')||'0');const b=document.getElementById('downloadBadge');if(b){b.style.display=remainingDownloads>0?'inline-flex':'none';b.textContent=remainingDownloads+' left'}return remainingDownloads}
+function useDownload(){let c=parseInt(localStorage.getItem('resumeai_downloads')||'0');if(c<=0)return false;c--;localStorage.setItem('resumeai_downloads',c.toString());getRemainingDownloads();return true}
+function addDownloads(n){let c=parseInt(localStorage.getItem('resumeai_downloads')||'0');c+=n;localStorage.setItem('resumeai_downloads',c.toString());getRemainingDownloads()}
+
+// ===== PREVIEW =====
+function updatePreview(){clearTimeout(window._pt);window._pt=setTimeout(doPreview,300)}
+function doPreview(){
+  const d=getResumeData(),c=document.getElementById('resumePreview');
+  c.className='resume-a4 resume-classic resume-preview-bg';
+  c.innerHTML=renderResume(d);
+  updateBadge();
+}
+function updateBadge(){
+  const isPremium=['modern','executive','minimal','tech'].includes(selectedTemplate);
+  const b=document.getElementById('previewBadge');
+  if(b)b.textContent=isPremium?'Premium':'Free';b.className='badge '+(isPremium?'badge-premium':'badge-free');
+}
+function cycleTemplate(){
+  const idx=templates.indexOf(selectedTemplate);
+  selectedTemplate=templates[(idx+1)%templates.length];
+  updateBadge();updatePreview();
+  showToast(selectedTemplate.charAt(0).toUpperCase()+selectedTemplate.slice(1),'file-text');
+}
+
+function renderResume(d){
+  if(!d||!d.name)return '<div style="text-align:center;padding:80px 20px;color:#999"><span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span></div>';
+  const r=[];
+  r.push('<div class="r-name">'+esc(d.name)+'</div>');
+  if(d.title)r.push('<div style="color:#6B7280;margin-bottom:12px;font-size:var(--text-sm)">'+esc(d.title)+'</div>');
+  if(d.email||d.phone||d.location)r.push('<div style="color:#6B7280;margin-bottom:16px;font-size:var(--text-xs)">'+(d.email?esc(d.email):'')+(d.phone?' · '+esc(d.phone):'')+(d.location?' · '+esc(d.location):'')+'</div>');
+  if(d.summary){r.push('<div class="r-section-title">Summary</div><div style="font-size:var(--text-xs);color:#4B5563;line-height:1.5;margin-bottom:12px">'+esc(d.summary)+'</div>')}
+  const exp=(d.experiences||[]).filter(e=>e.company).map(e=>'<div style="margin-bottom:8px"><div style="font-weight:500;font-size:var(--text-sm)">'+esc(e.position||'')+'</div><div style="font-size:var(--text-xs);color:#6B7280">'+esc(e.company)+(e.startDate?' · '+esc(e.startDate)+(e.endDate?' – '+esc(e.endDate):''):'')+'</div>'+(e.description?'<div style="font-size:var(--text-xs);color:#4B5563;margin-top:4px">'+esc(e.description)+'</div>':'')+'</div>').join('');
+  if(exp)r.push('<div class="r-section-title">Experience</div>'+exp);
+  const edu=(d.educations||[]).filter(e=>e.school).map(e=>'<div style="margin-bottom:6px;font-size:var(--text-xs)"><div style="font-weight:500">'+esc(e.degree||'')+(e.field?' in '+esc(e.field):'')+'</div><div style="color:#6B7280">'+esc(e.school)+(e.gradYear?' · '+esc(e.gradYear):'')+'</div></div>').join('');
+  if(edu)r.push('<div class="r-section-title">Education</div>'+edu);
+  if(d.skills&&d.skills.length)r.push('<div class="r-section-title">Skills</div><div style="margin-bottom:12px">'+d.skills.map(s=>'<span style="display:inline-block;background:#E5E7EB;padding:2px 8px;border-radius:4px;margin:2px;font-size:var(--text-xs)">'+esc(s)+'</span>').join(' ')+'</div>');
+  return r.join('');
+}
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+
+// ===== PREVIEW ACTIONS =====
+function fullPreview(){
+  const fp=document.getElementById('fullPreviewBody');
+  fp.innerHTML='<div class="resume-a4 resume-preview-bg" style="box-shadow:none;max-width:595px;margin:0 auto">'+renderResume(getResumeData())+'</div>';
+  document.getElementById('fullPreviewModal').classList.add('open');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function togglePreviewMobile(){const p=document.getElementById('builderPreview');p.style.display=p.style.display==='none'?'block':'none'}
+function toggleRedeem(){const s=document.getElementById('redeemSection');s.style.display=s.style.display==='none'?'block':'none'}
+function redeemCode(){
+  const inp=document.getElementById('redeemInput'),msg=document.getElementById('redeemMsg'),code=inp.value.trim().toUpperCase();
+  if(!code){msg.textContent='Enter a code';msg.style.color='var(--ember)';return}
+  if(VALID_REDEEM_CODES.includes(code)){addDownloads(3);msg.textContent='Code accepted! 3 downloads added';msg.style.color='var(--jade)';inp.value='';setTimeout(()=>closeModal('payModal'),1000)}else{msg.textContent='Invalid code';msg.style.color='var(--ember)'}
+}
+
+// ===== PAYMENT =====
+function startPayment(){
+  if(RAZORPAY_KEY==="YOUR_RAZORPAY_KEY_ID"){addDownloads(3);closeModal('payModal');showToast('3 downloads added (demo)','download');getRemainingDownloads();return}
+  const rzp=new Razorpay({key:RAZORPAY_KEY,amount:1000,currency:"INR",name:"ResumeAI Pro",description:"3 Premium Resume Downloads",handler:function(r){addDownloads(3);closeModal('payModal');showToast('3 downloads unlocked!','download')},prefill:{email:user?.email||''},theme:{color:'#C8A97E'}});rzp.open()
+}
+
+// ===== DOWNLOAD =====
+async function downloadResume(){
+  const d=getResumeData();if(!d.name){showToast('Enter your name first');return}
+  const isPremium=['modern','executive','minimal','tech'].includes(selectedTemplate);
+  if(isPremium&&!useDownload()){document.getElementById('payModal').classList.add('open');return}
+  showToast('Generating PDF...','file-down');
+  const el=document.createElement('div');
+  el.innerHTML='<div class="resume-a4" style="padding:40px 36px;background:#FAFAF8;color:#1A1C20;max-width:595px;font-family:Inter,sans-serif">'+renderResume(d)+'</div>';
+  el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:-1;opacity:0.01;pointer-events:none';
+  document.body.appendChild(el);
+  await new Promise(r=>setTimeout(r,200));
+  try{
+    await html2pdf().set({margin:0,filename:(d.name||'Resume')+'_Resume.pdf',html2canvas:{scale:2,useCORS:true,logging:false},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(el).save();
+    showToast(getRemainingDownloads()>0?'Downloaded ('+getRemainingDownloads()+' left)':'Downloaded ✓')
+  }catch(e){showToast('PDF error: '+(e.message||e))}
+  document.body.removeChild(el);getRemainingDownloads()
+}
+
+// ===== SCORE =====
+function handleResumeUpload(e){const f=e.target.files[0];if(f)handleFile(f)}
+async function handleFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only');return}
+  showToast('Extracting...','file-text');
+  try{let text='';if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
+  uploadedResumeText=text;document.getElementById('extractedTextPreview').textContent=text.substring(0,1500)+(text.length>1500?'...':'');showToast('Extracted','check')}catch(e){showToast('Error extracting')}
+}
+
+async function analyzeResume(){
+  if(!uploadedResumeText){showToast('Upload a resume first');return}
+  if(analyzing)return;analyzing=true;
+  const btn=document.querySelector('#page-score .btn-ai');const orig=btn.innerHTML;btn.innerHTML='<span class="spinner" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,169,126,0.3);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite"></span> Analyzing...';btn.disabled=true;
+  const rd=document.getElementById('scoreResults');rd.style.display='block';rd.innerHTML='<div class="skeleton" style="height:200px"></div>';
+  try{
+    const jd=document.getElementById('scoreJd').value;
+    const text=await callGemini('You are an expert ATS resume analyzer. Analyze the resume and return ONLY valid JSON: {"ats_score":0-100,"section_scores":{"summary":0,"experience":0,"education":0,"skills":0,"formatting":0},"strengths":[],"critical_issues":[],"quick_wins":[],"keywords_present":[],"keywords_missing":[],"overall_verdict":"","improvement_priority":[]} RESUME: '+uploadedResumeText+(jd?'\nJD: '+jd:''));
+    const r=JSON.parse(text.replace(/```json|```/g,'').trim());
+    renderScore(r);
+  }catch(e){rd.innerHTML='<div class="card" style="color:var(--ember);text-align:center">Error: '+e.message+'</div>'}
+  btn.innerHTML=orig;btn.disabled=false;analyzing=false;
+}
+
+function renderScore(r){
+  const score=r.ats_score||0,ringColor=score>=75?'#C8A97E':score>=50?'#F59E0B':'#FF6B47';
+  const circ=2*Math.PI*68,off=circ-(score/100)*circ;
+  const c=document.getElementById('scoreResults');
+  c.innerHTML='<div class="glass" style="padding:var(--space-32)"><div class="flex" style="gap:var(--space-32);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-24)"><div class="score-ring"><svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/><circle cx="80" cy="80" r="68" fill="none" stroke="'+ringColor+'" stroke-width="8" stroke-dasharray="'+circ+'" stroke-dashoffset="'+circ+'" stroke-linecap="round" transform="rotate(-90,80,80)" style="transition:stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1)"/></svg><div class="score-ring-text"><span class="score-ring-num" style="color:'+ringColor+'">'+score+'</span><span class="score-ring-label">/100</span></div></div><div style="flex:1"><div style="font-size:var(--text-lg);margin-bottom:var(--space-8)">ATS Score</div><div style="font-size:var(--text-sm);color:var(--text-secondary)">'+(r.overall_verdict||'')+'</div></div></div>';
+  c.innerHTML+='<div class="text-eyebrow" style="margin-top:var(--space-24)">Section scores</div>';
+  Object.entries(r.section_scores||{}).forEach(([k,v])=>{
+    const col=v>=75?'#C8A97E':v>=50?'#F59E0B':'#FF6B47';
+    c.innerHTML+='<div class="section-bar"><span class="section-bar-label">'+k+'</span><div class="section-bar-track"><div class="section-bar-fill" style="width:0%;background:'+col+';transition:width 0.8s ease-out"></div></div><span class="section-bar-score">'+v+'</span></div>';
+  });
+  setTimeout(()=>{document.querySelectorAll('.section-bar-fill').forEach(el=>{el.style.width=el.parentElement.nextElementSibling.textContent+'%'})},100);
+  c.innerHTML+='<div class="text-eyebrow" style="margin-top:var(--space-24)">Strengths</div><div class="flex flex-col" style="gap:8px">'+(r.strengths||[]).map(s=>'<div class="card" style="padding:12px 16px;border-left:3px solid var(--jade);font-size:var(--text-sm)"><span data-lucide="check" style="width:14px;height:14px;color:var(--jade);margin-right:8px"></span>'+s+'</div>').join('')+'</div>';
+  c.innerHTML+='<div class="text-eyebrow" style="margin-top:var(--space-16)">Issues</div><div class="flex flex-col" style="gap:8px">'+(r.critical_issues||[]).map(s=>'<div class="card" style="padding:12px 16px;border-left:3px solid var(--ember);font-size:var(--text-sm)"><span data-lucide="x" style="width:14px;height:14px;color:var(--ember);margin-right:8px"></span>'+s+'</div>').join('')+'</div>';
+  c.innerHTML+='<div class="text-eyebrow" style="margin-top:var(--space-16)">Quick wins</div><div class="flex flex-col" style="gap:8px">'+(r.quick_wins||[]).map(s=>'<div class="card" style="padding:12px 16px;border-left:3px solid var(--accent-primary);font-size:var(--text-sm)"><span data-lucide="zap" style="width:14px;height:14px;color:var(--accent-primary);margin-right:8px"></span>'+s+'</div>').join('')+'</div>';
+  if((r.keywords_present||[]).length||(r.keywords_missing||[]).length){
+    c.innerHTML+='<div class="text-eyebrow" style="margin-top:var(--space-16)">Keywords</div><div style="display:flex;flex-wrap:wrap;gap:8px">'+(r.keywords_present||[]).map(s=>'<span class="tag-chip tag-chip-green"><span data-lucide="check" style="width:12px;height:12px"></span> '+s+'</span>').join('')+(r.keywords_missing||[]).map(s=>'<span class="tag-chip tag-chip-red"><span data-lucide="x" style="width:12px;height:12px"></span> '+s+'</span>').join('')+'</div>';
+  }
+  c.innerHTML+='<div class="flex" style="gap:12px;margin-top:var(--space-24);flex-wrap:wrap"><button class="btn btn-secondary btn-sm" onclick="downloadScoreReport()"><span data-lucide="download" style="width:14px;height:14px"></span> Download report</button><button class="btn btn-primary btn-sm" onclick="showPage(\'builder\')"><span data-lucide="arrow-right" style="width:14px;height:14px"></span> Build a better resume</button></div></div>';
+  setTimeout(()=>lucide.createIcons(),50);
+}
+
+async function downloadScoreReport(){showToast('Generating report...');try{await html2pdf().set({margin:10,filename:'ResumeAI_Score_Report.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(document.getElementById('scoreResults')).save()}catch(e){}}
+
+// ===== FINISH & DASHBOARD =====
+function finishBuild(){
+  const d=getResumeData();if(!d.name){showToast('Enter your name');return}
+  if(!user){showToast('Sign in to save');return}
+  const resumes=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]');
+  resumes.unshift({...d,id:Date.now(),createdAt:new Date().toISOString()});
+  localStorage.setItem('resumeai_resumes_'+user.uid,JSON.stringify(resumes));
+  showToast('Resume saved!','check');
+  renderDashboard();
+}
+
+function renderDashboard(){
+  const c=document.getElementById('dashboardContent');
+  if(!user){c.innerHTML='<div style="text-align:center;padding:64px 24px"><div style="width:64px;height:64px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span data-lucide="log-in" style="width:28px;height:28px;color:var(--text-tertiary)"></span></div><h3 style="margin-bottom:8px">Sign in to see your resumes</h3><button class="btn btn-primary btn-sm" onclick="signIn()">Sign in</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
+  const resumes=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]');
+  if(!resumes.length){c.innerHTML='<div style="text-align:center;padding:64px 24px"><div style="width:64px;height:64px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span data-lucide="file-plus" style="width:28px;height:28px;color:var(--text-tertiary)"></span></div><h3 style="margin-bottom:8px">No resumes yet</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:16px">Create your first AI-powered resume</p><button class="btn btn-primary btn-sm" onclick="showPage(\'builder\')">Create resume</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
+  c.innerHTML='<div style="display:grid;gap:12px">'+resumes.map((r,i)=>{const t=r.name||'Untitled';return'<div class="card card-hover" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:10px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span data-lucide="file-text" style="width:20px;height:20px;color:var(--accent-primary)"></span></div><div style="flex:1;min-width:0"><div style="font-weight:500;font-size:var(--text-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+t+'</div><div style="font-size:var(--text-xs);color:var(--text-secondary)">'+getTimeAgo(r.createdAt)+'</div></div><div class="flex" style="gap:8px"><button class="btn btn-ghost btn-sm" onclick="restoreData(resumes['+i+']);showPage(\'builder\')" data-lucide="edit" style="width:36px;height:36px"></button><button class="btn btn-ghost btn-sm" onclick="downloadResumeData('+i+')" data-lucide="download" style="width:36px;height:36px"></button></div></div>'}).join('')+'</div>';
+  setTimeout(()=>lucide.createIcons(),50);
+}
+function getTimeAgo(d){const diff=Date.now()-new Date(d).getTime(),m=Math.floor(diff/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago'}
+function downloadResumeData(idx){if(!user)return;const r=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]')[idx];if(!r)return;if(['modern','executive','minimal','tech'].includes(r.template)&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');return}restoreData(r);setTimeout(()=>downloadResume(),300)}
+
+// ===== SCORE SILENT =====
+function silentReScore(){
+  if(!user||!document.getElementById('fName').value)return;
+  clearTimeout(window._st);window._st=setTimeout(async()=>{
+    try{const d=getResumeData();await callGemini('Score this resume out of 100. Return JSON: {"score":0,"tip":""}. Data: '+JSON.stringify(d))}catch(e){}
+  },3000);
+}
+
+// ===== COACH =====
+function checkFirstVisit(){
+  if(localStorage.getItem('resumeai_coach'))return;
+  localStorage.setItem('resumeai_coach','1');
+  setTimeout(()=>showCoach('Welcome to ResumeAI Pro','Build ATS-optimized resumes with AI. Start building your first resume.','center'),1000);
+}
+function showCoach(t,d,p){const ov=document.createElement('div');ov.className='coach';ov.style.cssText='top:50%;left:50%;transform:translate(-50%,-50%)';ov.innerHTML='<div style="font-weight:500;margin-bottom:4px">'+t+'</div><div style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:16px">'+d+'</div><button class="btn btn-primary btn-sm" onclick="this.parentElement.remove()">Got it</button>';document.body.appendChild(ov)}
+</script>
+</body>
+</html>

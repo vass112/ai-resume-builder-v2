@@ -714,21 +714,22 @@ async function initFirebase(){
     const fb=await import('firebase/auth');
     const app=fa.initializeApp(FIREBASE_CONFIG);const auth=fb.getAuth(app);
     window._auth=auth;window._firebaseLazy=fb;
-    window._signInWithRedirect=fb.signInWithRedirect;window._GoogleAuthProvider=fb.GoogleAuthProvider;window._signOut=fb.signOut;
-    try{const r=await fb.getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){}
+    window._signInWithPopup=fb.signInWithPopup;window._signInWithRedirect=fb.signInWithRedirect;
+    window._GoogleAuthProvider=fb.GoogleAuthProvider;window._signOut=fb.signOut;
+    try{const r=await fb.getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){console.error('redirectResult:',e)}
     fb.onAuthStateChanged(auth,u=>{if(u)setUser(u);else{user=null;updateAuthUI()}});
   }catch(e){showToast('Firebase init failed: '+(e.message||e));console.error('Firebase:',e)}
 }
 function setUser(u){user={uid:u.uid,name:u.displayName||'User',email:u.email,photo:u.photoURL};updateAuthUI();loadUserResumes()}
 function signIn(){
-  if(!window._auth||!window._signInWithRedirect){showToast('Firebase not configured');return}
-  window._signInWithRedirect(window._auth,new window._GoogleAuthProvider()).catch(e=>{
-    // fallback to popup if redirect blocked
-    showToast('Sign in failed, trying popup...');
-    setTimeout(()=>{
-      const {getAuth,signInWithPopup,GoogleAuthProvider}=window._firebaseLazy||{};
-      if(signInWithPopup)signInWithPopup(getAuth(),new GoogleAuthProvider()).catch(x=>showToast(x.message))
-    },500)
+  if(!window._auth||!window._signInWithPopup){showToast('Firebase not configured');return}
+  window._signInWithPopup(window._auth,new window._GoogleAuthProvider()).catch(e=>{
+    if(e.code==='auth/popup-blocked'||e.code==='auth/popup-closed-by-user'){
+      showToast('Popup blocked, trying redirect...');
+      window._signInWithRedirect(window._auth,new window._GoogleAuthProvider()).catch(x=>showToast('Sign in failed: '+x.message));
+    }else{
+      showToast('Sign in failed: '+(e.message||e));
+    }
   })
 }
 function signOutUser(){if(window._signOut&&window._auth){window._signOut(window._auth);closeActionSheet();showPage('home')}}
