@@ -175,6 +175,11 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
   cursor:pointer;transition:all var(--duration-fast) var(--ease-out);border:none;position:relative;
   -webkit-tap-highlight-color:transparent;white-space:nowrap}
 .btn:active{transform:scale(0.97)}
+.btn:focus-visible{outline:2px solid var(--accent-primary);outline-offset:2px;border-radius:var(--radius-lg)}
+.btn.loading{position:relative;pointer-events:none;opacity:0.7}
+.btn.loading .btn-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:currentColor;border-radius:50%;animation:spin 0.6s linear infinite}
+.btn-primary.loading{border-color:transparent}
+@keyframes spin{to{transform:rotate(360deg)}}
 .btn-primary{background:var(--accent-primary);color:#0D1117}
 .btn-primary:hover{background:var(--accent-secondary);transform:translateY(-1px);box-shadow:0 8px 24px var(--accent-glow)}
 .btn-secondary{background:transparent;border:1px solid var(--border-glass);color:var(--text-primary)}
@@ -196,6 +201,15 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 .btn-ai.loading .ai-star{animation:spinStar 0.8s linear infinite}
 @keyframes spinStar{to{transform:rotate(360deg)}}
 
+/* AI glow effect on AI buttons */
+.btn-ai{position:relative;overflow:hidden}
+.btn-ai::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(200,169,126,0.15),transparent 50%,rgba(200,169,126,0.05));opacity:0;transition:opacity var(--duration-normal)}.btn-ai:hover::after{opacity:1}
+.btn-ai .btn-inner{position:relative;z-index:1}
+
+/* AI result card accent */
+.ai-result-card{border-left:2px solid var(--accent-primary);position:relative}
+.ai-result-card::before{content:'AI';position:absolute;top:-1px;right:-1px;font-size:9px;font-weight:700;font-family:var(--font-mono);background:var(--accent-primary);color:#0D1117;padding:1px 6px 2px;border-radius:0 var(--radius-lg) 0 6px;letter-spacing:0.5px;line-height:1.4}
+
 /* ============================================
    INPUTS
    ============================================ */
@@ -214,13 +228,18 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 }
 .input-group textarea{height:auto;min-height:48px;padding-top:24px;resize:vertical}
 .input-group select{padding-top:22px;padding-bottom:6px;-webkit-appearance:none;appearance:none}
-.input-group input:focus,.input-group textarea:focus{border-color:var(--border-accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.input-group input:focus,.input-group textarea:focus,.input-group select:focus{border-color:var(--border-accent);box-shadow:0 0 0 3px var(--accent-dim);outline:none}
 .input-group input:focus+label,.input-group input:not(:placeholder-shown)+label,
 .input-group textarea:focus+label,.input-group textarea:not(:placeholder-shown)+label,
 .input-group select:focus+label,.input-group select:not([value=""])+label{
   top:6px;font-size:var(--text-xs);color:var(--accent-primary);font-weight:500;
 }
 .input-group input::placeholder,.input-group textarea::placeholder{color:transparent}
+.input-group.error input,.input-group.error textarea,.input-group.error select{border-color:var(--ember);box-shadow:0 0 0 3px rgba(255,107,71,0.15)}
+.input-group.error label{color:var(--ember)}
+.input-error{font-size:var(--text-xs);color:var(--ember);margin-top:4px;padding-left:4px;display:none}
+.input-group.error .input-error{display:flex;align-items:center;gap:4px}
+.input-group.success input,.input-group.success textarea,.input-group.success select{border-color:var(--jade);box-shadow:0 0 0 3px rgba(78,205,196,0.12)}
 
 /* ============================================
    CARDS
@@ -325,10 +344,18 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 .toast{position:fixed;top:var(--space-24);left:50%;transform:translateX(-50%) translateY(-100px);z-index:10000;
   background:var(--bg-overlay);border:1px solid var(--border-glass);backdrop-filter:blur(24px);
   padding:12px 24px;border-radius:100px;font-size:var(--text-sm);font-weight:500;
-  transition:transform var(--duration-normal) var(--spring);box-shadow:0 8px 32px rgba(0,0,0,0.3);
+  transition:transform var(--duration-normal) var(--spring),background var(--duration-fast);box-shadow:0 8px 32px rgba(0,0,0,0.3);
   display:flex;align-items:center;gap:10px;white-space:nowrap}
 .toast.show{transform:translateX(-50%) translateY(0)}
+.toast.toast-success{border-color:rgba(78,205,196,0.3)}
+.toast.toast-error{border-color:rgba(255,107,71,0.3);color:var(--ember)}
+.toast.toast-info{border-color:rgba(200,169,126,0.3)}
 @media(max-width:640px){.toast{top:auto;bottom:var(--space-24);left:var(--space-16);right:var(--space-16);transform:translateY(100px);border-radius:var(--radius-lg)}.toast.show{transform:translateY(0)}}
+
+/* Focus-visible for all interactive */
+a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus-visible,.tag:focus-visible,.modal-overlay .btn:focus-visible{outline:2px solid var(--accent-primary);outline-offset:2px;border-radius:var(--radius-sm)}
+.user-btn:focus-visible{outline:2px solid var(--accent-primary);outline-offset:2px}
+.toast-icon{margin-right:2px;flex-shrink:0}
 
 /* ============================================
    ENTRY CARDS
@@ -406,12 +433,12 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
   <!-- Navbar -->
   <nav class="navbar" id="navbar">
     <div class="navbar-wordmark" onclick="showPage('home')">ResumeAI</div>
-    <div class="nav-tabs" id="navTabs">
+    <div class="nav-tabs" id="navTabs" role="tablist">
       <div class="nav-tab-indicator" id="navIndicator"></div>
-      <div class="nav-tab active" data-page="home" onclick="showPage('home')">Home</div>
-      <div class="nav-tab" data-page="builder" onclick="showPage('builder')">Builder</div>
-      <div class="nav-tab" data-page="score" onclick="showPage('score')">Score</div>
-      <div class="nav-tab" data-page="dashboard" onclick="showPage('dashboard')">Dashboard</div>
+      <div class="nav-tab active" data-page="home" onclick="showPage('home')" tabindex="0" role="tab" aria-selected="true" onkeydown="if(event.key==='Enter')showPage('home')">Home</div>
+      <div class="nav-tab" data-page="builder" onclick="showPage('builder')" tabindex="-1" role="tab" aria-selected="false" onkeydown="if(event.key==='Enter')showPage('builder')">Builder</div>
+      <div class="nav-tab" data-page="score" onclick="showPage('score')" tabindex="-1" role="tab" aria-selected="false" onkeydown="if(event.key==='Enter')showPage('score')">Score</div>
+      <div class="nav-tab" data-page="dashboard" onclick="showPage('dashboard')" tabindex="-1" role="tab" aria-selected="false" onkeydown="if(event.key==='Enter')showPage('dashboard')">Dashboard</div>
     </div>
     <div class="navbar-right">
       <button class="btn btn-icon btn-ghost" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">
@@ -425,10 +452,10 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 
   <!-- Bottom Tabs -->
   <div class="bottom-tabs" id="bottomTabs">
-    <div class="bottom-tab active" data-page="home" onclick="showPage('home')"><span data-lucide="home"></span><span class="bottom-tab-label">Home</span></div>
-    <div class="bottom-tab" data-page="builder" onclick="showPage('builder')"><span data-lucide="file-text"></span><span class="bottom-tab-label">Builder</span></div>
-    <div class="bottom-tab" data-page="score" onclick="showPage('score')"><span data-lucide="target"></span><span class="bottom-tab-label">Score</span></div>
-    <div class="bottom-tab" data-page="dashboard" onclick="showPage('dashboard')"><span data-lucide="layout-dashboard"></span><span class="bottom-tab-label">Dashboard</span></div>
+    <div class="bottom-tab active" data-page="home" onclick="showPage('home')" tabindex="0" aria-label="Home" onkeydown="if(event.key==='Enter')showPage('home')"><span data-lucide="home"></span><span class="bottom-tab-label">Home</span></div>
+    <div class="bottom-tab" data-page="builder" onclick="showPage('builder')" tabindex="0" aria-label="Builder" onkeydown="if(event.key==='Enter')showPage('builder')"><span data-lucide="file-text"></span><span class="bottom-tab-label">Builder</span></div>
+    <div class="bottom-tab" data-page="score" onclick="showPage('score')" tabindex="0" aria-label="Score" onkeydown="if(event.key==='Enter')showPage('score')"><span data-lucide="target"></span><span class="bottom-tab-label">Score</span></div>
+    <div class="bottom-tab" data-page="dashboard" onclick="showPage('dashboard')" tabindex="0" aria-label="Dashboard" onkeydown="if(event.key==='Enter')showPage('dashboard')"><span data-lucide="layout-dashboard"></span><span class="bottom-tab-label">Dashboard</span></div>
   </div>
 
   <!-- Main Content -->
@@ -437,13 +464,19 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
     <!-- Landing Page -->
     <div class="page active" id="page-home">
       <div class="landing">
+        <div class="badge badge-premium" style="margin-bottom:var(--space-24);font-size:var(--text-xs);padding:6px 16px;height:auto">AI-Powered Resume Builder</div>
         <h1 class="text-display" style="margin-bottom:var(--space-16)">Resume intelligence<br>for serious candidates</h1>
         <p style="font-family:var(--font-body);font-size:var(--text-lg);color:var(--text-secondary);max-width:480px;margin-bottom:var(--space-40);font-weight:300;letter-spacing:-0.01em">ATS-optimized resumes crafted with AI. Beautiful by design.</p>
         <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px;width:100%;height:52px;font-size:16px">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
-        <div class="trust-row" style="margin-top:var(--space-24)">
+        <div class="flex" style="gap:var(--space-24);margin-top:var(--space-24);flex-wrap:wrap;justify-content:center">
+          <div class="flex" style="align-items:center;gap:var(--space-8);font-size:var(--text-sm);color:var(--text-secondary)"><span data-lucide="sparkles" style="width:16px;height:16px;color:var(--accent-primary)"></span> AI summary &amp; bullet enhancement</div>
+          <div class="flex" style="align-items:center;gap:var(--space-8);font-size:var(--text-sm);color:var(--text-secondary)"><span data-lucide="target" style="width:16px;height:16px;color:var(--accent-primary)"></span> ATS scoring &amp; keyword analysis</div>
+          <div class="flex" style="align-items:center;gap:var(--space-8);font-size:var(--text-sm);color:var(--text-secondary)"><span data-lucide="file-down" style="width:16px;height:16px;color:var(--accent-primary)"></span> Premium PDF export templates</div>
+        </div>
+        <div class="trust-row" style="margin-top:var(--space-32)">
           <span>Free to start</span><span>₹10 to download</span><span>ATS-optimized</span>
         </div>
       </div>
@@ -478,13 +511,13 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
             <div class="text-eyebrow">Step 1 of 6</div>
             <h3 class="step-title">Personal info</h3>
             <p class="step-subtitle">The essentials — name, contact, links</p>
-            <div class="input-group"><input type="text" id="fName" placeholder=" " oninput="autoSave();updatePreview()"><label>Full name</label></div>
-            <div class="input-group"><input type="text" id="fTitle" placeholder=" " oninput="autoSave();updatePreview()"><label>Job title</label></div>
+            <div class="input-group"><input type="text" id="fName" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Full name</label><span class="input-error"></span></div>
+            <div class="input-group"><input type="text" id="fTitle" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Job title</label><span class="input-error"></span></div>
             <div class="entry-card-grid">
-              <div class="input-group"><input type="email" id="fEmail" placeholder=" " oninput="autoSave();updatePreview()"><label>Email</label></div>
-              <div class="input-group"><input type="tel" id="fPhone" placeholder=" " oninput="autoSave();updatePreview()"><label>Phone</label></div>
+              <div class="input-group"><input type="email" id="fEmail" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Email</label><span class="input-error"></span></div>
+              <div class="input-group"><input type="tel" id="fPhone" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Phone</label><span class="input-error"></span></div>
             </div>
-            <div class="input-group"><input type="text" id="fLocation" placeholder=" " oninput="autoSave();updatePreview()"><label>Location</label></div>
+            <div class="input-group"><input type="text" id="fLocation" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Location</label></div>
             <div class="entry-card-grid">
               <div class="input-group"><input type="text" id="fLinkedin" placeholder=" " oninput="autoSave()"><label>LinkedIn</label></div>
               <div class="input-group"><input type="text" id="fPortfolio" placeholder=" " oninput="autoSave()"><label>Portfolio</label></div>
@@ -679,6 +712,11 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
       <div id="actionSheetItems"></div>
     </div>
   </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;padding:var(--space-32) var(--space-24) calc(var(--space-24) + 64px);font-size:var(--text-xs);color:var(--text-tertiary);border-top:1px solid var(--border-subtle);margin-top:var(--space-48)">
+    <span style="display:inline-flex;align-items:center;gap:6px">ResumeAI Pro · <span data-lucide="sparkles" style="width:12px;height:12px"></span> Powered by Gemini</span>
+  </div>
 </div>
 
 <script>
@@ -704,7 +742,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   getRemainingDownloads();
   setTimeout(()=>{lucide.createIcons();checkFirstVisit()},100);
-  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveResumeData();showToast('Saved','check')}});
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveResumeData();showToast('Saved','check','success')}});
+  document.getElementById('navTabs').addEventListener('keydown',e=>{
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+    e.preventDefault();
+    const tabs=[...document.querySelectorAll('.nav-tab')];
+    const idx=tabs.findIndex(t=>t.classList.contains('active'));
+    const next=e.key==='ArrowRight'?(idx+1)%tabs.length:(idx-1+tabs.length)%tabs.length;
+    tabs[next].focus();tabs[next].click();
+  });
   const sz=document.getElementById('scoreZone');
   sz.addEventListener('dragover',e=>{e.preventDefault();sz.classList.add('dragover')});
   sz.addEventListener('dragleave',()=>sz.classList.remove('dragover'));
@@ -721,19 +767,19 @@ async function initFirebase(){
     window._auth=auth;window._firebaseLazy=fb;
     window._signInWithPopup=fb.signInWithPopup;window._signInWithRedirect=fb.signInWithRedirect;
     window._GoogleAuthProvider=fb.GoogleAuthProvider;window._signOut=fb.signOut;
-    try{const r=await fb.getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){console.error('redirectResult:',e)}
+    try{const r=await fb.getRedirectResult(auth);if(r&&r.user){setUser(r.user);return}}catch(e){} // silent
     fb.onAuthStateChanged(auth,u=>{if(u)setUser(u);else{user=null;updateAuthUI()}});
-  }catch(e){showToast('Firebase init failed: '+(e.message||e));console.error('Firebase:',e)}
+  }catch(e){showToast('Firebase init failed: '+(e.message||e),'alert-circle','error');console.error('Firebase:',e)}
 }
 function setUser(u){user={uid:u.uid,name:u.displayName||'User',email:u.email,photo:u.photoURL};updateAuthUI();loadUserResumes()}
 function signIn(){
-  if(!window._auth||!window._signInWithPopup){showToast('Firebase not configured');return}
+  if(!window._auth||!window._signInWithPopup){showToast('Firebase not configured','alert-circle','error');return}
   window._signInWithPopup(window._auth,new window._GoogleAuthProvider()).catch(e=>{
     if(e.code==='auth/popup-blocked'||e.code==='auth/popup-closed-by-user'){
-      showToast('Popup blocked, trying redirect...');
-      window._signInWithRedirect(window._auth,new window._GoogleAuthProvider()).catch(x=>showToast('Sign in failed: '+x.message));
+      showToast('Popup blocked, trying redirect...','external-link','info');
+      window._signInWithRedirect(window._auth,new window._GoogleAuthProvider()).catch(x=>showToast('Sign in failed: '+x.message,'alert-circle','error'));
     }else{
-      showToast('Sign in failed: '+(e.message||e));
+      showToast('Sign in failed: '+(e.message||e),'alert-circle','error');
     }
   })
 }
@@ -744,7 +790,7 @@ function showPage(page){
   if(page==='builder'&&!user&&!confirm('Sign in to save your work. Continue anyway?'))return;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.page===page));
+  document.querySelectorAll('.nav-tab').forEach(t=>{const a=t.dataset.page===page;t.classList.toggle('active',a);t.setAttribute('aria-selected',a);t.tabIndex=a?0:-1});
   document.querySelectorAll('.bottom-tab').forEach(t=>t.classList.toggle('active',t.dataset.page===page));
   currentPage=page;
   updateNavIndicator();
@@ -769,13 +815,48 @@ function toggleTheme(){
 
 // ===== TOAST =====
 let toastTimeout;
-function showToast(msg,icon){
+function showToast(msg,icon,type){
   const t=document.getElementById('toast');
-  t.innerHTML=(icon?'<span data-lucide="'+icon+'" style="width:16px;height:16px"></span> ':'')+msg;
+  t.className='toast'+(type?' toast-'+type:'');
+  t.innerHTML=(icon?'<span class="toast-icon" data-lucide="'+icon+'" style="width:16px;height:16px"></span> ':'')+msg;
   t.classList.add('show');clearTimeout(toastTimeout);
   toastTimeout=setTimeout(()=>t.classList.remove('show'),3000);
   setTimeout(()=>lucide.createIcons(),50);
 }
+
+// ===== VALIDATION =====
+function validateField(id,rules){
+  const el=document.getElementById(id);if(!el)return true;
+  const group=el.closest('.input-group');if(!group)return true;
+  const errEl=group.querySelector('.input-error');
+  group.classList.remove('error','success');
+  if(errEl)errEl.textContent='';
+  let valid=true;
+  for(const rule of rules){
+    if(rule.required&&!el.value.trim()){valid=false;if(errEl)errEl.textContent=rule.message||'Required';break}
+    if(rule.pattern&&el.value.trim()&&!rule.pattern.test(el.value.trim())){valid=false;if(errEl)errEl.textContent=rule.message||'Invalid format';break}
+    if(rule.minLength&&el.value.trim().length<rule.minLength){valid=false;if(errEl)errEl.textContent=rule.message||'Too short';break}
+  }
+  if(!valid){group.classList.add('error');return false}
+  if(el.value.trim())group.classList.add('success');
+  return true
+}
+function clearValidation(el){
+  const group=el.closest('.input-group');
+  if(!group)return;
+  group.classList.remove('error','success');
+  const errEl=group.querySelector('.input-error');
+  if(errEl)errEl.textContent='';
+}
+document.addEventListener('blur',function(e){
+  const input=e.target.closest('.input-group input,.input-group textarea');
+  if(!input)return;
+  const id=input.id;
+  if(!id)return;
+  if(id==='fName')validateField('fName',[{required:true,message:'Enter your full name'}]);
+  if(id==='fEmail')validateField('fEmail',[{pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/,message:'Enter a valid email'}]);
+  if(id==='fPhone')validateField('fPhone',[{pattern:/^[\d\s\-+()]{7,20}$/,message:'Enter a valid phone number'}]);
+},true);
 
 // ===== STEPS =====
 function initSteps(){
@@ -792,8 +873,16 @@ function updateSteps(){
   document.querySelectorAll('.step-card').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.step)===currentStep));
 }
 function goToStep(n){if(n<1||n>totalSteps)return;currentStep=n;updateSteps();window.scrollTo(0,0)}
-function nextStep(n){goToStep(n)}
-function prevStep(n){goToStep(n)}
+function nextStep(n){
+  if(currentStep===1){
+    const nOk=validateField('fName',[{required:true,message:'Enter your full name'}]);
+    const eOk=!document.getElementById('fEmail').value.trim()||validateField('fEmail',[{pattern:/^[^\s@]+@[^\s@]+\.[^\s@]+$/,message:'Enter a valid email'}]);
+    const pOk=!document.getElementById('fPhone').value.trim()||validateField('fPhone',[{pattern:/^[\d\s\-+()]{7,20}$/,message:'Enter a valid phone number'}]);
+    if(!nOk||!eOk||!pOk){showToast('Fix the highlighted fields','alert-circle','error');return}
+  }
+  goToStep(n)
+}
+function prevStep(n){currentStep=n;updateSteps();window.scrollTo(0,0);updatePreview()}
 
 // ===== DATA =====
 function getResumeData(){return{
@@ -824,13 +913,13 @@ function restoreData(d){
 function importResume(){document.getElementById('importFileInput').click()}
 async function importFromFile(file){
   if(!file)return;
-  const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only');return}
-  showToast('Extracting text...','file-text');
+  const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only','file','error');return}
+  showToast('Extracting text...','file-text','info');
   try{
     let text='';
     if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}
     else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
-    showToast('Parsing with AI...','sparkles');
+    showToast('Parsing with AI...','sparkles','info');
     const json=await callGemini('Extract structured resume data from the text below. Return ONLY valid JSON with these fields: name, title, email, phone, location, linkedin, portfolio, summary, experiences (array of {company,position,startDate,endDate,description}), educations (array of {school,degree,field,gradYear}), skills (array of strings). Use empty strings for missing fields. RESUME:\n'+text);
     const d=JSON.parse(json.replace(/```json|```/g,'').trim());
     if(d.name)document.getElementById('fName').value=d.name;if(d.title)document.getElementById('fTitle').value=d.title;
@@ -841,8 +930,8 @@ async function importFromFile(file){
     if(d.experiences&&d.experiences.length){experiences=[];d.experiences.forEach(e=>addExperience({id:expId++,company:e.company||'',position:e.position||'',startDate:e.startDate||'',endDate:e.endDate||'',description:e.description||''}))}
     if(d.educations&&d.educations.length){educations=[];d.educations.forEach(e=>addEducation({id:expId++,school:e.school||'',degree:e.degree||'',field:e.field||'',gradYear:e.gradYear||''}))}
     updatePreview();autoSave();
-    showToast('Resume imported!','check');
-  }catch(e){showToast('Import failed: '+(e.message||e));console.error('Import:',e)}
+    showToast('Resume imported!','check','success');
+  }catch(e){    showToast('Import failed: '+(e.message||e),'alert-circle','error');console.error('Import:',e)}
 }
 
 // ===== EXPERIENCE =====
@@ -898,6 +987,13 @@ function removeLanguage(id){languages=languages.filter(x=>x.id!==id);renderLangs
 function renderLangs(){const c=document.getElementById('langEntries');c.innerHTML=languages.map(e=>`<div class="flex" style="gap:8px;margin-bottom:8px;align-items:center"><input type="text" value="${e.language}" oninput="uLang(${e.id},'language',this.value)" placeholder="Language" style="flex:1;height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><select onchange="uLang(${e.id},'proficiency',this.value)" style="height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);background:var(--bg-elevated);color:var(--text-primary);font-size:var(--text-sm)"><option value="">Level</option><option ${e.proficiency==='Native'?'selected':''}>Native</option><option ${e.proficiency==='Fluent'?'selected':''}>Fluent</option><option ${e.proficiency==='Advanced'?'selected':''}>Advanced</option><option ${e.proficiency==='Basic'?'selected':''}>Basic</option></select><button class="btn btn-icon btn-ghost" onclick="removeLanguage(${e.id})" data-lucide="x" style="width:36px;height:36px"></button></div>`).join('');setTimeout(()=>lucide.createIcons(),50)}
 function uLang(id,f,v){const e=languages.find(x=>x.id===id);if(e){e[f]=v;autoSave()}}
 
+// ===== BUTTON LOADING =====
+function setLoading(btn,loading){
+  if(!btn)return;
+  if(loading){btn.dataset.origHtml=btn.innerHTML;btn.classList.add('loading');btn.innerHTML='<span class="btn-spinner"></span>';btn.disabled=true}
+  else{btn.classList.remove('loading');if(btn.dataset.origHtml)btn.innerHTML=btn.dataset.origHtml;delete btn.dataset.origHtml;btn.disabled=false}
+}
+
 // ===== AUTH UI =====
 function updateAuthUI(){
   const area=document.getElementById('authArea');
@@ -929,10 +1025,10 @@ async function callGemini(p,retries=6){
   for(let i=0;i<retries;i++){
     try{
       const res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+GEMINI_API_KEY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:buildPrompt(sessionContext)+p}]}]})});
-      if(res.status===429&&i<retries-1){const w=2000*Math.pow(2,i);showToast('Rate limited, retrying in '+(w/1000)+'s...');await delay(w);continue}
+      if(res.status===429&&i<retries-1){const w=2000*Math.pow(2,i);showToast('Rate limited, retrying in '+(w/1000)+'s...','clock','info');await delay(w);continue}
       if(!res.ok)throw new Error(res.status===429?'Rate limited. Try again in a moment.':'API error '+res.status);
       return (await res.json()).candidates[0].content.parts[0].text;
-    }catch(e){if(i===retries-1)throw e;const w=2000*Math.pow(2,i);showToast('Retrying...');await delay(w)}
+    }catch(e){if(i===retries-1)throw e;const w=2000*Math.pow(2,i);showToast('Retrying...','refresh-cw','info');await delay(w)}
   }
 }
 function recordAccept(t){sessionContext.accepted.push(t);acceptedSuggestionCount++;if(acceptedSuggestionCount>=3)document.getElementById('aiLearnedBadge').style.display='inline-flex';silentReScore()}
@@ -945,29 +1041,29 @@ async function generateSummary(){
   try{
     const text=await callGemini('Write 3-4 line ATS-optimized summary for '+n+', a '+t+'. Skills: '+(skills.join(', ')||'various')+'. Return ONLY summary text.');
     _lastSummary=text;const enc=encodeURIComponent(text);
-    s.innerHTML='<div class="card ai-result"><div style="line-height:1.6;font-size:var(--text-base)">'+text.split(' ').map((w,i)=>'<span class="word" style="animation-delay:'+(i*16)+'ms">'+w+'</span>').join(' ')+'</div><div class="flex" style="gap:8px;margin-top:16px"><button class="btn btn-sm" style="background:rgba(78,205,196,0.15);color:var(--jade);border:none" onclick="acceptSummary(decodeURIComponent(\''+enc+'\'))"><span data-lucide="check" style="width:14px;height:14px"></span> Accept</button><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'fSummary\').value=decodeURIComponent(\''+enc+'\');showToast(\'Applied\',\'check\')"><span data-lucide="edit" style="width:14px;height:14px"></span> Use</button><button class="btn btn-ghost btn-sm" onclick="generateSummary()"><span data-lucide="refresh" style="width:14px;height:14px"></span> Retry</button></div></div>';
+    s.innerHTML='<div class="card ai-result-card" style="padding:var(--space-24)"><div style="line-height:1.6;font-size:var(--text-base)">'+text.split(' ').map((w,i)=>'<span class="word" style="animation-delay:'+(i*16)+'ms">'+w+'</span>').join(' ')+'</div><div class="flex" style="gap:8px;margin-top:16px"><button class="btn btn-sm" style="background:rgba(78,205,196,0.15);color:var(--jade);border:none" onclick="acceptSummary(decodeURIComponent(\''+enc+'\'))"><span data-lucide="check" style="width:14px;height:14px"></span> Accept</button><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'fSummary\').value=decodeURIComponent(\''+enc+'\');showToast(\'Summary applied\',\'check\',\'success\')"><span data-lucide="edit" style="width:14px;height:14px"></span> Use</button><button class="btn btn-ghost btn-sm" onclick="generateSummary()"><span data-lucide="refresh" style="width:14px;height:14px"></span> Retry</button></div></div>';
     setTimeout(()=>lucide.createIcons(),50);
   }catch(e){s.innerHTML='<div class="card" style="color:var(--ember)">'+e.message+'</div>'}
 }
 function acceptSummary(t){document.getElementById('fSummary').value=t;recordAccept('summary');document.getElementById('summaryResult').innerHTML='<div class="card" style="color:var(--jade);text-align:center">Summary accepted</div>';updatePreview()}
 
 async function enhanceBullets(id,btn){
-  const exp=experiences.find(e=>e.id===id);if(!exp||!exp.description){showToast('Write a description first');return}
-  if(btn){btn.innerHTML='<span class="spinner" style="display:inline-block;width:14px;height:14px;border:2px solid rgba(200,169,126,0.3);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite"></span>';btn.disabled=true}
-  try{const text=await callGemini('Rewrite these bullet points into quantified, action-verb-led lines: '+exp.description+'\nReturn ONLY the rewritten text.');exp.description=text;renderExp();recordAccept('bullets');showToast('Enhanced','check');updatePreview()}catch(e){showToast('Error: '+e.message)}
-  if(btn)btn.disabled=false
+  const exp=experiences.find(e=>e.id===id);if(!exp||!exp.description){showToast('Write a description first','edit','info');return}
+  setLoading(btn,true);
+  try{const text=await callGemini('Rewrite these bullet points into quantified, action-verb-led lines: '+exp.description+'\nReturn ONLY the rewritten text.');exp.description=text;renderExp();recordAccept('bullets');showToast('Bullets enhanced','check','success');updatePreview()}catch(e){showToast('Error: '+e.message,'alert-circle','error')}
+  setLoading(btn,false);
 }
 
 async function suggestSkills(){
-  const t=document.getElementById('fTitle').value;if(!t){showToast('Enter a job title first');return}
+  const t=document.getElementById('fTitle').value;if(!t){showToast('Enter a job title first','edit','info');return}
   const c=document.getElementById('suggestedSkillsResult');c.innerHTML='<div class="skeleton" style="height:40px"></div>';
   try{
     const text=await callGemini('Suggest 10-15 skills for a '+t+'. Return comma-separated list only.');
     const suggested=text.split(',').map(s=>s.trim()).filter(Boolean);
-    c.innerHTML='<div class="card"><div style="font-size:var(--text-sm);font-weight:500;margin-bottom:8px;color:var(--text-secondary)">Suggested skills — click to add</div><div style="display:flex;flex-wrap:wrap;gap:8px">'+suggested.map(s=>'<span class="tag" onclick="addSuggestedSkill(\''+s.replace(/'/g,"\\'")+'\')">'+s+' +</span>').join('')+'</div></div>';
+    c.innerHTML='<div class="card ai-result-card" style="padding:var(--space-24)"><div style="font-size:var(--text-sm);font-weight:500;margin-bottom:12px;color:var(--text-secondary)">Click skills to add them</div><div style="display:flex;flex-wrap:wrap;gap:8px">'+suggested.map(s=>'<span class="tag" onclick="addSuggestedSkill(\''+s.replace(/'/g,"\\'")+'\')">'+s+' +</span>').join('')+'</div></div>';
   }catch(e){c.innerHTML='<div class="card" style="color:var(--ember)">'+e.message+'</div>'}
 }
-function addSuggestedSkill(s){if(!skills.includes(s)){skills.push(s);renderSkills();autoSave();updatePreview();showToast('Added '+s,'check')}}
+function addSuggestedSkill(s){if(!skills.includes(s)){skills.push(s);renderSkills();autoSave();updatePreview();showToast('Added '+s,'check','success')}}
 
 // ===== DOWNLOADS =====
 function getRemainingDownloads(){remainingDownloads=parseInt(localStorage.getItem('resumeai_downloads')||'0');const b=document.getElementById('downloadBadge');if(b){b.style.display=remainingDownloads>0?'inline-flex':'none';b.textContent=remainingDownloads+' left'}return remainingDownloads}
@@ -991,7 +1087,7 @@ function cycleTemplate(){
   const idx=templates.indexOf(selectedTemplate);
   selectedTemplate=templates[(idx+1)%templates.length];
   updateBadge();updatePreview();
-  showToast(selectedTemplate.charAt(0).toUpperCase()+selectedTemplate.slice(1),'file-text');
+  showToast(selectedTemplate.charAt(0).toUpperCase()+selectedTemplate.slice(1)+' template','image','info');
 }
 
 function renderResume(d){
@@ -1027,16 +1123,16 @@ function redeemCode(){
 
 // ===== PAYMENT =====
 function startPayment(){
-  if(RAZORPAY_KEY==="YOUR_RAZORPAY_KEY_ID"){addDownloads(3);closeModal('payModal');showToast('3 downloads added (demo)','download');getRemainingDownloads();return}
-  const rzp=new Razorpay({key:RAZORPAY_KEY,amount:1000,currency:"INR",name:"ResumeAI Pro",description:"3 Premium Resume Downloads",handler:function(r){addDownloads(3);closeModal('payModal');showToast('3 downloads unlocked!','download')},prefill:{email:user?.email||''},theme:{color:'#C8A97E'}});rzp.open()
+  if(RAZORPAY_KEY==="YOUR_RAZORPAY_KEY_ID"){addDownloads(3);closeModal('payModal');showToast('3 downloads added (demo)','download','success');getRemainingDownloads();return}
+  const rzp=new Razorpay({key:RAZORPAY_KEY,amount:1000,currency:"INR",name:"ResumeAI Pro",description:"3 Premium Resume Downloads",handler:function(r){addDownloads(3);closeModal('payModal');showToast('3 downloads unlocked!','download','success')},prefill:{email:user?.email||''},theme:{color:'#C8A97E'}});rzp.open()
 }
 
 // ===== DOWNLOAD =====
 async function downloadResume(){
-  const d=getResumeData();if(!d.name){showToast('Enter your name first');return}
+  const d=getResumeData();if(!d.name){showToast('Enter your name first','edit','info');return}
   const isPremium=['modern','executive','minimal','tech'].includes(selectedTemplate);
   if(isPremium&&!useDownload()){document.getElementById('payModal').classList.add('open');return}
-  showToast('Generating PDF...','file-down');
+  showToast('Generating PDF...','file-down','info');
   const el=document.createElement('div');
   el.innerHTML='<div class="resume-a4" style="padding:40px 36px;background:#FAFAF8;color:#1A1C20;max-width:595px;font-family:Inter,sans-serif">'+renderResume(d)+'</div>';
   el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:-1;opacity:0.01;pointer-events:none';
@@ -1044,22 +1140,22 @@ async function downloadResume(){
   await new Promise(r=>setTimeout(r,200));
   try{
     await html2pdf().set({margin:0,filename:(d.name||'Resume')+'_Resume.pdf',html2canvas:{scale:2,useCORS:true,logging:false},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(el).save();
-    showToast(getRemainingDownloads()>0?'Downloaded ('+getRemainingDownloads()+' left)':'Downloaded ✓')
-  }catch(e){showToast('PDF error: '+(e.message||e))}
+    showToast(getRemainingDownloads()>0?'Downloaded ('+getRemainingDownloads()+' left)':'Downloaded ✓','download','success')
+  }catch(e){showToast('PDF error: '+(e.message||e),'alert-circle','error')}
   document.body.removeChild(el);getRemainingDownloads()
 }
 
 // ===== SCORE =====
 function handleResumeUpload(e){const f=e.target.files[0];if(f)handleFile(f)}
 async function handleFile(file){
-  const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only');return}
-  showToast('Extracting...','file-text');
+  const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only','file','error');return}
+  showToast('Extracting...','file-text','info');
   try{let text='';if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
-  uploadedResumeText=text;document.getElementById('extractedTextPreview').textContent=text.substring(0,1500)+(text.length>1500?'...':'');showToast('Extracted','check')}catch(e){showToast('Error extracting')}
+  uploadedResumeText=text;document.getElementById('extractedTextPreview').textContent=text.substring(0,1500)+(text.length>1500?'...':'');showToast('Text extracted','check','success')}catch(e){showToast('Error extracting text','alert-circle','error')}
 }
 
 async function analyzeResume(){
-  if(!uploadedResumeText){showToast('Upload a resume first');return}
+  if(!uploadedResumeText){showToast('Upload a resume first','cloud-upload','info');return}
   if(analyzing)return;analyzing=true;
   const btn=document.querySelector('#page-score .btn-ai');const orig=btn.innerHTML;btn.innerHTML='<span class="spinner" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,169,126,0.3);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite"></span> Analyzing...';btn.disabled=true;
   const rd=document.getElementById('scoreResults');rd.style.display='block';rd.innerHTML='<div class="skeleton" style="height:200px"></div>';
@@ -1093,29 +1189,29 @@ function renderScore(r){
   setTimeout(()=>lucide.createIcons(),50);
 }
 
-async function downloadScoreReport(){showToast('Generating report...');try{await html2pdf().set({margin:10,filename:'ResumeAI_Score_Report.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(document.getElementById('scoreResults')).save()}catch(e){}}
+async function downloadScoreReport(){showToast('Generating report...','file-down','info');try{await html2pdf().set({margin:10,filename:'ResumeAI_Score_Report.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(document.getElementById('scoreResults')).save()}catch(e){showToast('Report failed','alert-circle','error')}}
 
 // ===== FINISH & DASHBOARD =====
 function finishBuild(){
-  const d=getResumeData();if(!d.name){showToast('Enter your name');return}
-  if(!user){showToast('Sign in to save');return}
+  const d=getResumeData();if(!d.name){showToast('Enter your name','alert-circle','error');return}
+  if(!user){showToast('Sign in to save','log-in','info');return}
   const resumes=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]');
   resumes.unshift({...d,id:Date.now(),createdAt:new Date().toISOString()});
   localStorage.setItem('resumeai_resumes_'+user.uid,JSON.stringify(resumes));
-  showToast('Resume saved!','check');
+  showToast('Resume saved!','check','success');
   renderDashboard();
 }
 
 function renderDashboard(){
   const c=document.getElementById('dashboardContent');
-  if(!user){c.innerHTML='<div style="text-align:center;padding:64px 24px"><div style="width:64px;height:64px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span data-lucide="log-in" style="width:28px;height:28px;color:var(--text-tertiary)"></span></div><h3 style="margin-bottom:8px">Sign in to see your resumes</h3><button class="btn btn-primary btn-sm" onclick="signIn()">Sign in</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
+  if(!user){c.innerHTML='<div class="glass" style="text-align:center;padding:64px 32px;max-width:400px;margin:var(--space-48) auto"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><span data-lucide="log-in" style="width:32px;height:32px;color:var(--accent-primary)"></span></div><h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">Sign in to continue</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-24)">Sign in with Google to save your resumes, access AI features, and download premium templates.</p><button class="btn btn-primary" onclick="signIn()" style="width:200px"><span data-lucide="google" style="width:16px;height:16px"></span> Continue with Google</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
   const resumes=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]');
-  if(!resumes.length){c.innerHTML='<div style="text-align:center;padding:64px 24px"><div style="width:64px;height:64px;border-radius:50%;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;margin:0 auto 16px"><span data-lucide="file-plus" style="width:28px;height:28px;color:var(--text-tertiary)"></span></div><h3 style="margin-bottom:8px">No resumes yet</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:16px">Create your first AI-powered resume</p><button class="btn btn-primary btn-sm" onclick="showPage(\'builder\')">Create resume</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
+  if(!resumes.length){c.innerHTML='<div class="glass" style="text-align:center;padding:64px 32px;max-width:400px;margin:var(--space-48) auto"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><span data-lucide="file-plus" style="width:32px;height:32px;color:var(--accent-primary)"></span></div><h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">No resumes yet</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-24);line-height:1.6">Create your first AI-powered resume. Get AI-generated summaries, ATS-optimized bullet points, and professional templates.</p><div class="flex" style="flex-direction:column;gap:var(--space-8);align-items:center"><button class="btn btn-primary" onclick="showPage(\'builder\')" style="width:200px"><span data-lucide="plus" style="width:16px;height:16px"></span> Create resume</button><button class="btn btn-ghost btn-sm" onclick="showPage(\'score\')" style="width:200px"><span data-lucide="target" style="width:14px;height:14px"></span> Score existing resume</button></div></div>';setTimeout(()=>lucide.createIcons(),50);return}
   c.innerHTML='<div style="display:grid;gap:12px">'+resumes.map((r,i)=>{const t=r.name||'Untitled';return'<div class="card card-hover" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:10px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span data-lucide="file-text" style="width:20px;height:20px;color:var(--accent-primary)"></span></div><div style="flex:1;min-width:0"><div style="font-weight:500;font-size:var(--text-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+t+'</div><div style="font-size:var(--text-xs);color:var(--text-secondary)">'+getTimeAgo(r.createdAt)+'</div></div><div class="flex" style="gap:8px"><button class="btn btn-ghost btn-sm" onclick="restoreData(resumes['+i+']);showPage(\'builder\')" data-lucide="edit" style="width:36px;height:36px"></button><button class="btn btn-ghost btn-sm" onclick="downloadResumeData('+i+')" data-lucide="download" style="width:36px;height:36px"></button></div></div>'}).join('')+'</div>';
   setTimeout(()=>lucide.createIcons(),50);
 }
 function getTimeAgo(d){const diff=Date.now()-new Date(d).getTime(),m=Math.floor(diff/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago'}
-function downloadResumeData(idx){if(!user)return;const r=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]')[idx];if(!r)return;if(['modern','executive','minimal','tech'].includes(r.template)&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');return}restoreData(r);setTimeout(()=>downloadResume(),300)}
+function downloadResumeData(idx){if(!user)return;const r=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]')[idx];if(!r)return;if(['modern','executive','minimal','tech'].includes(r.template)&&getRemainingDownloads()<=0){showToast('Unlock downloads to export','lock','info');document.getElementById('payModal').classList.add('open');return}restoreData(r);setTimeout(()=>downloadResume(),300)}
 
 // ===== SCORE SILENT =====
 function silentReScore(){
