@@ -9,3 +9,10 @@ portfolio/
 profile-readme/
 
 .vercel
+node_modules/
+package.json
+package-lock.json
+idp*.json
+vercel_env*.json
+update_domains.json
+auth_handler.html
