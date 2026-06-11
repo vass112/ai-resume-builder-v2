@@ -12,6 +12,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="env.js"></script>
 <script type="importmap">
 {
   "imports": {
@@ -677,9 +678,9 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 
 <script>
 // ===== CONFIG =====
-const GEMINI_API_KEY = "AIzaSyCYt_zObO-zL94VqOlSw2UjJ8H7N_oOTYE";
-const RAZORPAY_KEY = "rzp_test_yCYpgLv6tZ3Lek";
-const FIREBASE_CONFIG = { apiKey:"AIzaSyAlcNBRlCn2ZHPyW9ZyCU5poKulkqFzxpk", authDomain:"resumeai-pro-2025.firebaseapp.com", projectId:"resumeai-pro-2025", storageBucket:"resumeai-pro-2025.firebasestorage.app", messagingSenderId:"889582200423", appId:"1:889582200423:web:8fe8af25666cc721f196c2" };
+const GEMINI_API_KEY = window._env?.GEMINI_API_KEY || "";
+const RAZORPAY_KEY = window._env?.RAZORPAY_KEY || "";
+const FIREBASE_CONFIG = window._env?.FIREBASE_CONFIG || { apiKey:"", authDomain:"", projectId:"" };
 const VALID_REDEEM_CODES = ['TEST10','FREE3','DEV2024','PREMIUM','BETA'];
 
 // ===== STATE =====
