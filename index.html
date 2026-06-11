@@ -453,7 +453,7 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
     <div class="page" id="page-builder">
       <div class="builder-layout">
         <div class="builder-form">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-24)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-16)">
             <h2 style="font-size:var(--text-xl)">Build your resume</h2>
             <div style="display:flex;gap:var(--space-8);align-items:center">
               <span class="ai-learned" id="aiLearnedBadge" style="display:none;font-size:var(--text-xs);color:var(--accent-secondary);padding:4px 12px;border-radius:var(--radius-sm);background:var(--accent-dim);gap:6px">
@@ -463,6 +463,11 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
                 <span data-lucide="eye" style="width:16px;height:16px"></span>
               </button>
             </div>
+          </div>
+          <div class="card" style="padding:var(--space-16);margin-bottom:var(--space-24);text-align:center;background:var(--accent-dim);border:1px dashed var(--accent-primary)">
+            <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-8)">Already have a resume? Import and auto-fill everything.</p>
+            <button class="btn btn-secondary btn-sm" onclick="importResume()"><span data-lucide="upload" style="width:16px;height:16px"></span> Import existing resume</button>
+            <input type="file" id="importFileInput" accept=".pdf,.docx" style="display:none" onchange="importFromFile(this.files[0])">
           </div>
 
           <!-- Steps -->
@@ -814,6 +819,30 @@ function restoreData(d){
   if(d.educations){educations=d.educations;renderEdu()}
   if(d.template){selectedTemplate=d.template}
   updatePreview();
+  autoSave();
+}
+function importResume(){document.getElementById('importFileInput').click()}
+async function importFromFile(file){
+  if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only');return}
+  showToast('Extracting text...','file-text');
+  try{
+    let text='';
+    if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}
+    else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
+    showToast('Parsing with AI...','sparkles');
+    const json=await callGemini('Extract structured resume data from the text below. Return ONLY valid JSON with these fields: name, title, email, phone, location, linkedin, portfolio, summary, experiences (array of {company,position,startDate,endDate,description}), educations (array of {school,degree,field,gradYear}), skills (array of strings). Use empty strings for missing fields. RESUME:\n'+text);
+    const d=JSON.parse(json.replace(/```json|```/g,'').trim());
+    if(d.name)document.getElementById('fName').value=d.name;if(d.title)document.getElementById('fTitle').value=d.title;
+    if(d.email)document.getElementById('fEmail').value=d.email;if(d.phone)document.getElementById('fPhone').value=d.phone;
+    if(d.location)document.getElementById('fLocation').value=d.location;if(d.linkedin)document.getElementById('fLinkedin').value=d.linkedin;
+    if(d.portfolio)document.getElementById('fPortfolio').value=d.portfolio;if(d.summary)document.getElementById('fSummary').value=d.summary;
+    if(d.skills&&d.skills.length){skills=d.skills;renderSkills()}
+    if(d.experiences&&d.experiences.length){experiences=[];d.experiences.forEach(e=>addExperience({id:expId++,company:e.company||'',position:e.position||'',startDate:e.startDate||'',endDate:e.endDate||'',description:e.description||''}))}
+    if(d.educations&&d.educations.length){educations=[];d.educations.forEach(e=>addEducation({id:expId++,school:e.school||'',degree:e.degree||'',field:e.field||'',gradYear:e.gradYear||''}))}
+    updatePreview();autoSave();
+    showToast('Resume imported!','check');
+  }catch(e){showToast('Import failed: '+(e.message||e));console.error('Import:',e)}
 }
 
 // ===== EXPERIENCE =====
