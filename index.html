@@ -878,7 +878,7 @@ function updateAuthUI(){
     area.innerHTML=`<button class="btn btn-primary btn-sm" onclick="signIn()">Continue with Google</button>`;
   }
   document.getElementById('signInBtn')&&(document.getElementById('signInBtn').style.display='none');
-  document.getElementById('landingCta')&&(document.getElementById('landingCta').textContent=user?'Start building →':'Continue with Google');
+  const cta=document.getElementById('landingCta');if(cta){cta.textContent=user?'Start building →':'Continue with Google';cta.onclick=user?()=>showPage('builder'):signIn}
   setTimeout(()=>lucide.createIcons(),50);
 }
 
