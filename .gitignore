@@ -16,3 +16,6 @@ idp*.json
 vercel_env*.json
 update_domains.json
 auth_handler.html
+
+vercel_*.json
+new_*.json
