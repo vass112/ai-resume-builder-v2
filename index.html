@@ -26,24 +26,29 @@
    DESIGN TOKENS
    ============================================ */
 :root{
-  /* Colors */
-  --bg-void:#080A0F;--bg-base:#0D1117;--bg-elevated:#13181F;--bg-overlay:#1A2130;
-  --bg-glass:rgba(19,24,31,0.6);--bg-glass-light:rgba(255,255,255,0.03);
-  --accent-primary:#C8A97E;--accent-secondary:#E8C99A;--accent-dim:rgba(200,169,126,0.15);
-  --accent-glow:rgba(200,169,126,0.25);
-  --jade:#4ECDC4;--ember:#FF6B47;--frost:#A8C4D4;
-  --text-primary:#F0EDE8;--text-secondary:#8B92A0;--text-tertiary:#4A5260;
-  --border-subtle:rgba(255,255,255,0.06);--border-glass:rgba(255,255,255,0.10);
-  --border-accent:rgba(200,169,126,0.30);
+  /* Colors - Dark */
+  --bg-void:#07090E;--bg-base:#0B0E14;--bg-elevated:#11151E;--bg-overlay:#181E2A;
+  --bg-glass:rgba(17,21,30,0.65);--bg-glass-light:rgba(255,255,255,0.03);
+  --accent-primary:#C8A97E;--accent-secondary:#E8C99A;--accent-dim:rgba(200,169,126,0.12);
+  --accent-glow:rgba(200,169,126,0.20);
+  --jade:#4ECDC4;--ember:#FF6B47;--amber:#F59E0B;--frost:#A8C4D4;
+  --success:#4ECDC4;--warning:#F59E0B;--error:#FF6B47;--info:#A8C4D4;
+  --text-primary:#EDE9E3;--text-secondary:#8891A5;--text-tertiary:#4A5265;
+  --border-subtle:rgba(255,255,255,0.06);--border-glass:rgba(255,255,255,0.08);
+  --border-accent:rgba(200,169,126,0.25);
 
   /* Typography */
   --font-display:'Instrument Serif',Georgia,serif;
-  --font-body:'Inter',system-ui,sans-serif;
-  --font-mono:'JetBrains Mono',monospace;
+  --font-body:'Inter',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono','SF Mono',monospace;
 
-  /* Type scale */
-  --text-xs:11px;--text-sm:13px;--text-base:15px;--text-md:17px;--text-lg:20px;
-  --text-xl:24px;--text-2xl:30px;--text-3xl:38px;--text-4xl:52px;
+  /* Type scale — modular 1.25 (major third) */
+  --text-xs:12px;--text-sm:14px;--text-base:16px;--text-md:18px;--text-lg:20px;
+  --text-xl:25px;--text-2xl:31px;--text-3xl:39px;--text-4xl:49px;--text-5xl:61px;
+
+  /* Font features */
+  --fw-normal:400;--fw-medium:500;--fw-semibold:600;
+  --leading-tight:1.15;--leading-snug:1.35;--leading-normal:1.6;--leading-relaxed:1.75;
 
   /* Motion */
   --spring:cubic-bezier(0.34,1.56,0.64,1);
@@ -60,27 +65,39 @@
 
   /* Radii */
   --radius-sm:6px;--radius-md:10px;--radius-lg:12px;--radius-xl:16px;--radius-2xl:20px;
+
+  /* Shadows */
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.3);--shadow-md:0 4px 12px rgba(0,0,0,0.25),0 1px 3px rgba(0,0,0,0.15);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.35),0 2px 8px rgba(0,0,0,0.2);
+  --shadow-xl:0 24px 64px rgba(0,0,0,0.4),0 8px 16px rgba(0,0,0,0.2);
 }
 .light{
-  --bg-void:#F5F3EF;--bg-base:#FAFAF8;--bg-elevated:#FFFFFF;--bg-overlay:#FFFFFF;
-  --bg-glass:rgba(255,255,255,0.65);--bg-glass-light:rgba(0,0,0,0.02);
-  --accent-primary:#B8956A;--accent-secondary:#A07D55;--accent-dim:rgba(184,149,106,0.12);
-  --accent-glow:rgba(184,149,106,0.20);
+  --bg-void:#F2F0EB;--bg-base:#F8F7F4;--bg-elevated:#FFFFFF;--bg-overlay:#FFFFFF;
+  --bg-glass:rgba(255,255,255,0.70);--bg-glass-light:rgba(0,0,0,0.02);
+  --accent-primary:#B8956A;--accent-secondary:#A07D55;--accent-dim:rgba(184,149,106,0.10);
+  --accent-glow:rgba(184,149,106,0.18);
   --text-primary:#1A1C20;--text-secondary:#6B7280;--text-tertiary:#9CA3AF;
-  --border-subtle:rgba(0,0,0,0.06);--border-glass:rgba(0,0,0,0.08);
-  --border-accent:rgba(184,149,106,0.25);
+  --border-subtle:rgba(0,0,0,0.06);--border-glass:rgba(0,0,0,0.07);
+  --border-accent:rgba(184,149,106,0.22);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.06);--shadow-md:0 4px 12px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.08),0 2px 8px rgba(0,0,0,0.04);
+  --shadow-xl:0 24px 64px rgba(0,0,0,0.10),0 8px 16px rgba(0,0,0,0.06);
 }
 
 /* ============================================
    RESET & BASE
    ============================================ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+html{font-size:16px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
 body{
   font-family:var(--font-body);font-size:var(--text-base);color:var(--text-primary);
-  background:var(--bg-base);min-height:100vh;overflow-x:hidden;line-height:1.6;
-  letter-spacing:-0.01em;
+  background:var(--bg-base);min-height:100vh;overflow-x:hidden;
+  line-height:var(--leading-normal);letter-spacing:-0.01em;
+  font-weight:var(--fw-normal);font-feature-settings:'calt' 1,'kern' 1;
 }
+p,li{line-height:var(--leading-relaxed)}
+p+p{margin-top:1em}
+::selection{background:var(--accent-dim);color:var(--accent-secondary)}
 
 /* ============================================
    BACKDROP ORBS
@@ -100,23 +117,43 @@ body{
   -webkit-backdrop-filter:blur(24px) saturate(180%);
   border:1px solid var(--border-glass);border-radius:var(--radius-2xl);
   box-shadow:0 0 0 0.5px rgba(255,255,255,0.04) inset,0 1px 0 rgba(255,255,255,0.06) inset,
-    0 24px 48px rgba(0,0,0,0.4),0 8px 16px rgba(0,0,0,0.2);
+    var(--shadow-xl);
   position:relative;
 }
 .glass::before{
   content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
   background:linear-gradient(135deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.02) 30%,transparent 60%);
 }
-.glass-subtle{backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 0 0 0.5px rgba(255,255,255,0.03) inset,0 1px 0 rgba(255,255,255,0.04) inset,0 8px 24px rgba(0,0,0,0.2);}
-.glass-prominent{backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);box-shadow:0 0 0 0.5px rgba(255,255,255,0.05) inset,0 1px 0 rgba(255,255,255,0.08) inset,0 32px 64px rgba(0,0,0,0.5),0 12px 24px rgba(0,0,0,0.3);}
+.glass-subtle{backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);box-shadow:0 0 0 0.5px rgba(255,255,255,0.03) inset,0 1px 0 rgba(255,255,255,0.04) inset,var(--shadow-lg);}
+.glass-prominent{backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);box-shadow:0 0 0 0.5px rgba(255,255,255,0.05) inset,0 1px 0 rgba(255,255,255,0.08) inset,var(--shadow-xl);}
 
 /* ============================================
    TYPOGRAPHY
    ============================================ */
-h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing:-0.02em;line-height:1.2}
-.text-eyebrow{font-family:var(--font-body);font-size:var(--text-xs);font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:var(--space-8)}
-.text-display{font-family:var(--font-display);font-size:var(--text-4xl);line-height:1.1;letter-spacing:-0.02em}
-.mono{font-family:var(--font-mono);letter-spacing:0}
+h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:var(--fw-normal);letter-spacing:-0.02em;color:var(--text-primary)}
+h1{font-size:var(--text-4xl);line-height:1.1;letter-spacing:-0.03em;font-weight:400}
+h2{font-size:var(--text-3xl);line-height:1.15;letter-spacing:-0.025em}
+h3{font-size:var(--text-2xl);line-height:1.2;letter-spacing:-0.02em}
+h4{font-size:var(--text-xl);line-height:1.25;letter-spacing:-0.015em}
+h5{font-size:var(--text-lg);line-height:1.3;letter-spacing:-0.01em;font-family:var(--font-body);font-weight:600}
+h6{font-size:var(--text-base);line-height:1.35;letter-spacing:-0.01em;font-family:var(--font-body);font-weight:600}
+
+.text-eyebrow{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:var(--space-8)}
+.text-display{font-family:var(--font-display);font-size:var(--text-4xl);line-height:1.08;letter-spacing:-0.03em;font-weight:400}
+.text-display-lg{font-family:var(--font-display);font-size:var(--text-5xl);line-height:1.05;letter-spacing:-0.035em;font-weight:400}
+.text-mono{font-family:var(--font-mono);letter-spacing:0;font-feature-settings:'tnum' 1,'zero' 1}
+.text-balance{text-wrap:balance}
+.text-pretty{text-wrap:pretty}
+.text-center{text-align:center}
+.text-sm{font-size:var(--text-sm)}
+.text-xs{font-size:var(--text-xs)}
+.text-sm{font-size:var(--text-sm)}
+.text-base{font-size:var(--text-base)}
+.text-lg{font-size:var(--text-lg)}
+.text-secondary{color:var(--text-secondary)}
+.text-tertiary{color:var(--text-tertiary)}
+.text-accent{color:var(--accent-primary)}
+a{color:var(--accent-primary);text-decoration:none;transition:opacity var(--duration-fast)}a:hover{opacity:0.8}
 
 /* ============================================
    LAYOUT
@@ -171,40 +208,45 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
    ============================================ */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--space-8);
   height:44px;padding:0 24px;border-radius:var(--radius-lg);font-family:var(--font-body);
-  font-size:14px;font-weight:600;letter-spacing:-0.01em;line-height:1;
+  font-size:var(--text-sm);font-weight:600;letter-spacing:-0.01em;line-height:1;
   cursor:pointer;transition:all var(--duration-fast) var(--ease-out);border:none;position:relative;
-  -webkit-tap-highlight-color:transparent;white-space:nowrap}
-.btn:active{transform:scale(0.97)}
+  -webkit-tap-highlight-color:transparent;white-space:nowrap;text-decoration:none}
+.btn:active{transform:scale(0.96)}
 .btn:focus-visible{outline:2px solid var(--accent-primary);outline-offset:2px;border-radius:var(--radius-lg)}
-.btn.loading{position:relative;pointer-events:none;opacity:0.7}
+.btn.loading{pointer-events:none;opacity:0.7}
 .btn.loading .btn-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:currentColor;border-radius:50%;animation:spin 0.6s linear infinite}
 .btn-primary.loading{border-color:transparent}
 @keyframes spin{to{transform:rotate(360deg)}}
-.btn-primary{background:var(--accent-primary);color:#0D1117}
-.btn-primary:hover{background:var(--accent-secondary);transform:translateY(-1px);box-shadow:0 8px 24px var(--accent-glow)}
-.btn-secondary{background:transparent;border:1px solid var(--border-glass);color:var(--text-primary)}
-.btn-secondary:hover{background:var(--bg-elevated);border-color:var(--border-accent)}
+
+/* Button hierarchy */
+.btn-primary{background:var(--accent-primary);color:#0D1117;box-shadow:0 1px 0 rgba(255,255,255,0.15) inset,0 2px 4px rgba(0,0,0,0.2)}
+.btn-primary:hover{background:var(--accent-secondary);transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,0.2) inset,0 8px 24px var(--accent-glow)}
+.btn-primary:active{transform:translateY(0px);box-shadow:0 1px 0 rgba(255,255,255,0.1) inset,0 2px 4px rgba(0,0,0,0.2)}
+
+.btn-secondary{background:transparent;border:1px solid var(--border-glass);color:var(--text-primary);box-shadow:0 1px 0 rgba(255,255,255,0.04) inset}
+.btn-secondary:hover{background:var(--bg-elevated);border-color:var(--border-accent);box-shadow:0 1px 0 rgba(255,255,255,0.06) inset,var(--shadow-md)}
+
 .btn-ghost{background:transparent;color:var(--text-secondary)}
-.btn-ghost:hover{color:var(--text-primary);background:rgba(255,255,255,0.04)}
+.btn-ghost:hover{color:var(--text-primary);background:var(--accent-dim)}
+
 .btn-ai{
   background:linear-gradient(135deg,rgba(200,169,126,0.15),rgba(200,169,126,0.05));
   border:1px solid rgba(200,169,126,0.25);color:var(--accent-secondary);font-weight:500;
-  font-size:var(--text-sm);min-height:44px;
+  font-size:var(--text-sm);min-height:44px;box-shadow:0 1px 0 rgba(255,255,255,0.04) inset;
+  overflow:hidden;position:relative;
 }
-.btn-ai:hover{background:linear-gradient(135deg,rgba(200,169,126,0.25),rgba(200,169,126,0.10));border-color:rgba(200,169,126,0.40)}
+.btn-ai::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(200,169,126,0.15),transparent 50%,rgba(200,169,126,0.05));opacity:0;transition:opacity var(--duration-normal)}.btn-ai:hover::after{opacity:1}
+.btn-ai:hover{background:linear-gradient(135deg,rgba(200,169,126,0.25),rgba(200,169,126,0.10));border-color:rgba(200,169,126,0.40);transform:translateY(-1px)}
+
 .btn-full{width:100%;justify-content:center}
 .btn-sm{height:36px;padding:0 16px;font-size:var(--text-xs)}
+.btn-lg{height:52px;padding:0 32px;font-size:var(--text-base)}
 .btn-icon{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* AI star animation */
 .ai-star{display:inline-block;animation:spinStar 6s linear infinite;font-size:16px}
 .btn-ai.loading .ai-star{animation:spinStar 0.8s linear infinite}
 @keyframes spinStar{to{transform:rotate(360deg)}}
-
-/* AI glow effect on AI buttons */
-.btn-ai{position:relative;overflow:hidden}
-.btn-ai::after{content:'';position:absolute;inset:-1px;border-radius:inherit;background:linear-gradient(135deg,rgba(200,169,126,0.15),transparent 50%,rgba(200,169,126,0.05));opacity:0;transition:opacity var(--duration-normal)}.btn-ai:hover::after{opacity:1}
-.btn-ai .btn-inner{position:relative;z-index:1}
 
 /* AI result card accent */
 .ai-result-card{border-left:2px solid var(--accent-primary);position:relative}
@@ -244,8 +286,9 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 /* ============================================
    CARDS
    ============================================ */
-.card{padding:var(--space-32);border-radius:var(--radius-2xl);background:var(--bg-elevated);border:1px solid var(--border-subtle)}
-.card-hover{transition:all var(--duration-fast) var(--ease-out)}.card-hover:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,0.3)}
+.card{padding:var(--space-32);border-radius:var(--radius-2xl);background:var(--bg-elevated);border:1px solid var(--border-subtle);transition:all var(--duration-fast) var(--ease-out)}
+.card-hover:hover{transform:translateY(-2px);border-color:var(--border-glass);box-shadow:var(--shadow-lg)}
+.card-subtle{background:var(--bg-glass-light);border-color:transparent}
 
 /* ============================================
    BADGES
@@ -287,8 +330,8 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 @keyframes stepIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
 .step-out{animation:stepOut var(--duration-normal) var(--ease-out)}
 @keyframes stepOut{to{opacity:0;transform:translateX(-24px)}}
-.step-title{font-size:var(--text-xl);margin-bottom:var(--space-8);font-weight:400}
-.step-subtitle{color:var(--text-secondary);font-size:var(--text-base);margin-bottom:var(--space-32)}
+.step-title{font-size:var(--text-xl);margin-bottom:var(--space-8);font-weight:var(--fw-normal);line-height:var(--leading-snug)}
+.step-subtitle{color:var(--text-secondary);font-size:var(--text-base);margin-bottom:var(--space-32);line-height:var(--leading-snug)}
 
 /* ============================================
    BUILDER LAYOUT
@@ -304,7 +347,7 @@ h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:400;letter-spacing
 .score-ring{width:160px;height:160px;position:relative;flex-shrink:0}
 .score-ring svg{transform:rotate(-90deg)}
 .score-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.score-ring-num{font-family:var(--font-mono);font-size:var(--text-3xl);font-weight:500;line-height:1}
+.score-ring-num{font-family:var(--font-mono);font-size:var(--text-3xl);font-weight:500;line-height:1;font-feature-settings:'tnum' 1,'zero' 1}
 .score-ring-label{font-size:var(--text-sm);color:var(--text-secondary);font-family:var(--font-body)}
 
 /* ============================================
@@ -396,7 +439,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
    LANDING
    ============================================ */
 .landing{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--space-48) var(--space-24)}
-.landing .trust-row{font-family:var(--font-body);font-size:var(--text-sm);color:var(--text-tertiary);display:flex;gap:var(--space-16);flex-wrap:wrap;justify-content:center}
+.landing .trust-row{font-size:var(--text-sm);color:var(--text-tertiary);display:flex;gap:var(--space-16);flex-wrap:wrap;justify-content:center}
 .landing .trust-row span::after{content:'·';margin-left:var(--space-16);color:var(--border-glass)}.landing .trust-row span:last-child::after{content:''}
 
 /* ============================================
@@ -464,10 +507,10 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
     <!-- Landing Page -->
     <div class="page active" id="page-home">
       <div class="landing">
-        <div class="badge badge-premium" style="margin-bottom:var(--space-24);font-size:var(--text-xs);padding:6px 16px;height:auto">AI-Powered Resume Builder</div>
-        <h1 class="text-display" style="margin-bottom:var(--space-16)">Resume intelligence<br>for serious candidates</h1>
-        <p style="font-family:var(--font-body);font-size:var(--text-lg);color:var(--text-secondary);max-width:480px;margin-bottom:var(--space-40);font-weight:300;letter-spacing:-0.01em">ATS-optimized resumes crafted with AI. Beautiful by design.</p>
-        <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px;width:100%;height:52px;font-size:16px">
+        <div class="badge badge-premium" style="margin-bottom:var(--space-24);padding:6px 16px;height:auto;text-wrap:balance">AI-Powered Resume Builder</div>
+        <h1 class="text-display text-balance" style="margin-bottom:var(--space-16)">Resume intelligence<br>for serious candidates</h1>
+        <p class="text-lg text-secondary text-balance" style="max-width:480px;margin-bottom:var(--space-40);line-height:var(--leading-snug)">ATS-optimized resumes crafted with AI. Beautiful by design.</p>
+        <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px;width:100%">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
           Continue with Google
         </button>
@@ -487,7 +530,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
       <div class="builder-layout">
         <div class="builder-form">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-16)">
-            <h2 style="font-size:var(--text-xl)">Build your resume</h2>
+            <h3>Build your resume</h3>
             <div style="display:flex;gap:var(--space-8);align-items:center">
               <span class="ai-learned" id="aiLearnedBadge" style="display:none;font-size:var(--text-xs);color:var(--accent-secondary);padding:4px 12px;border-radius:var(--radius-sm);background:var(--accent-dim);gap:6px">
                 <span class="ai-star">✦</span> AI learned your style
@@ -641,8 +684,8 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 
     <!-- Score -->
     <div class="page" id="page-score">
-      <h2 style="font-size:var(--text-xl);margin-bottom:var(--space-8)">Score my resume</h2>
-      <p style="color:var(--text-secondary);margin-bottom:var(--space-32)">Upload your resume for AI-powered ATS analysis</p>
+      <h2 style="margin-bottom:var(--space-8)">Score my resume</h2>
+      <p class="text-secondary" style="margin-bottom:var(--space-32)">Upload your resume for AI-powered ATS analysis</p>
       <div class="upload-zone glass" id="scoreZone">
         <div style="margin-bottom:var(--space-16)"><span data-lucide="cloud-upload" style="width:32px;height:32px;color:var(--accent-primary)"></span></div>
         <p style="font-weight:500;margin-bottom:4px">Drop your resume here</p>
@@ -664,7 +707,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
     <!-- Dashboard -->
     <div class="page" id="page-dashboard">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-24)">
-        <h2 style="font-size:var(--text-xl)">My resumes</h2>
+        <h2>My resumes</h2>
         <button class="btn btn-primary btn-sm" onclick="showPage('builder')"><span data-lucide="plus" style="width:16px;height:16px"></span> New</button>
       </div>
       <div id="dashboardContent"></div>
