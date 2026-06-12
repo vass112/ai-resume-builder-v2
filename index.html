@@ -463,23 +463,21 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .preview-panel{background:var(--bg-elevated);border:1px solid var(--border-glass);border-radius:var(--radius-2xl);overflow:hidden}
 .preview-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-16) var(--space-24);border-bottom:1px solid var(--border-glass)}
 .preview-body{padding:var(--space-24);min-height:400px;position:relative}
-/* Template selector */
-.template-strip{display:flex;gap:var(--space-6);margin-bottom:var(--space-20);overflow-x:auto;padding:var(--space-4) var(--space-4) var(--space-8);flex-shrink:0;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
-.template-strip::-webkit-scrollbar{height:2px}
-.template-card{flex-shrink:0;scroll-snap-align:start;padding:var(--space-10) var(--space-16) var(--space-10) var(--space-12);border-radius:var(--radius-xl);border:1px solid var(--border-subtle);cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);background:var(--bg-glass);text-align:left;min-width:0;user-select:none;display:flex;align-items:center;gap:var(--space-8);position:relative}
-.template-card:hover{border-color:var(--border-accent);background:var(--accent-dim);transform:translateY(-1px)}
-.template-card.active{border-color:var(--accent-primary);background:rgba(200,169,126,0.12);box-shadow:0 0 20px rgba(200,169,126,0.12),inset 0 1px 0 rgba(200,169,126,0.15)}
-.template-card .t-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:transform 0.25s cubic-bezier(0.16,1,0.3,1)}
-.template-card.active .t-dot{transform:scale(1.25)}
-.template-card .t-info{display:flex;flex-direction:column;gap:1px;min-width:0}
-.template-card .t-name{font-size:var(--text-sm);font-weight:500;color:var(--text-primary);white-space:nowrap;letter-spacing:-0.01em}
-.template-card .t-row{display:flex;align-items:center;gap:var(--space-4)}
-.template-card .t-tag{font-size:9px;padding:1px 6px;border-radius:4px;font-weight:600;letter-spacing:0.02em;line-height:1.4}
-.template-card .t-tag.t-free{background:rgba(78,205,196,0.15);color:var(--jade)}
-.template-card .t-tag.t-premium{background:rgba(200,169,126,0.15);color:var(--accent-primary)}
-.template-card .t-lock{font-size:9px;opacity:0.5;margin-left:auto;padding-left:var(--space-4)}
-.template-card.active .t-lock{opacity:0.8}
-@media(max-width:640px){.template-card{padding:var(--space-8) var(--space-12)}.template-card .t-name{font-size:var(--text-xs)}}
+/* Template gallery modal */
+.tg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--space-12);padding:var(--space-4) 0}
+.tg-card{border-radius:var(--radius-xl);border:2px solid var(--border-subtle);cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);background:var(--bg-elevated);overflow:hidden;position:relative}
+.tg-card:hover{border-color:var(--border-accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+.tg-card.active{border-color:var(--accent-primary);box-shadow:0 0 20px rgba(200,169,126,0.15),inset 0 0 0 1px var(--accent-primary)}
+.tg-card .tg-preview{height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.tg-card .tg-preview svg{width:100%;height:100%;display:block}
+.tg-card .tg-info{padding:var(--space-10) var(--space-12);display:flex;align-items:center;justify-content:space-between;gap:var(--space-8)}
+.tg-card .tg-info .tg-name{font-size:var(--text-sm);font-weight:500;color:var(--text-primary)}
+.tg-card .tg-info .tg-tag{font-size:9px;padding:2px 7px;border-radius:4px;font-weight:600;letter-spacing:0.02em}
+.tg-card .tg-info .tg-tag.tg-free{background:rgba(78,205,196,0.15);color:var(--jade)}
+.tg-card .tg-info .tg-tag.tg-premium{background:rgba(200,169,126,0.15);color:var(--accent-primary)}
+.tg-card .tg-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--accent-primary);display:none;align-items:center;justify-content:center;color:#1A1C20;z-index:2}
+.tg-card.active .tg-check{display:flex}
+.tg-card .tg-lock-badge{position:absolute;top:8px;left:8px;font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.5);color:var(--accent-primary);font-weight:600;letter-spacing:0.02em;display:flex;align-items:center;gap:3px;z-index:2;backdrop-filter:blur(4px)}
 /* Smooth preview transition on template switch */
 #resumePreview{transition:opacity 0.3s ease}
 
@@ -802,8 +800,6 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
               </div>
             </div>
             <div class="preview-body" id="previewBody">
-              <!-- Template selector -->
-              <div class="template-strip" id="templateStrip"></div>
               <!-- Resume preview -->
               <div id="resumePreview" class="resume-a4 resume-preview-bg resume-template-classic">
                 <div style="text-align:center;padding:80px 20px;color:#999">
@@ -813,6 +809,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
               </div>
               <div class="flex" style="justify-content:center;gap:var(--space-8);margin-top:var(--space-16)">
                 <button class="btn btn-ghost btn-sm" onclick="fullPreview()"><span data-lucide="maximize-2" style="width:16px;height:16px"></span> Full view</button>
+                <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()"><span data-lucide="grid-3x3" style="width:16px;height:16px"></span> Templates</button>
                 <button class="btn btn-primary btn-sm" onclick="downloadResume()"><span data-lucide="download" style="width:16px;height:16px"></span> Download PDF</button>
               </div>
             </div>
@@ -887,6 +884,15 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
     </div>
   </div>
 
+  <!-- Template Gallery Modal -->
+  <div class="modal-overlay" id="templateGalleryModal">
+    <div class="modal-sheet glass-prominent" style="max-width:640px">
+      <div class="grabber"></div>
+      <div class="modal-header"><h2 style="font-size:var(--text-lg)">Choose a template</h2><button class="btn btn-icon btn-ghost" onclick="closeModal('templateGalleryModal')" data-lucide="x"></button></div>
+      <div class="modal-body" id="templateGalleryBody"></div>
+    </div>
+  </div>
+
   <!-- Signature: Stamp -->
   <div class="stamp-overlay" id="stampOverlay">
     <div class="stamp">
@@ -931,7 +937,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   initSteps(); addExperience(); addEducation();
   if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   getRemainingDownloads();
-  renderTemplateStrip();
+  updateBadge();
   const p=new URLSearchParams(window.location.search).get('payment');
   if(p==='success'){addDownloads(3);showToast('3 downloads unlocked!','check','success');window.history.replaceState({},'','/')}
   setTimeout(()=>{lucide.createIcons();checkFirstVisit()},100);
@@ -1100,7 +1106,7 @@ function restoreData(d){
   if(d.experiences){experiences=d.experiences;renderExp()}
   if(d.educations){educations=d.educations;renderEdu()}
   if(d.template){selectedTemplate=d.template}
-  renderTemplateStrip();updatePreview();
+  updateBadge();updatePreview();
   autoSave();
 }
 function importResume(){document.getElementById('importFileInput').click()}
@@ -1272,21 +1278,30 @@ function doPreview(){
   c.innerHTML=renderResume(d);
   updateBadge();
 }
-const TEMPLATE_COLORS={classic:'#6B7280',modern:'#C8A97E',executive:'#1A1C20',minimal:'#4ECDC4',tech:'#A8C4D4'};
-function renderTemplateStrip(){
-  const c=document.getElementById('templateStrip');if(!c)return;
-  c.innerHTML=TEMPLATES.map(t=>{
+function tgPreviewSVG(id,c1,c2){
+  const bars=id==='classic'?'<rect x="24" y="80" width="60" height="6" rx="2"/><rect x="24" y="92" width="40" height="4" rx="2"/><rect x="24" y="102" width="56" height="4" rx="2"/>':
+    id==='modern'?'<rect x="24" y="76" width="56" height="8" rx="2" fill="'+c1+'"/><rect x="24" y="92" width="60" height="4" rx="2"/><rect x="24" y="100" width="44" height="4" rx="2"/><rect x="0" y="0" width="4" height="100" fill="'+c1+'" opacity="0.15"/>':
+    id==='executive'?'<rect x="24" y="76" width="50" height="7" rx="1"/><rect x="24" y="90" width="64" height="4" rx="1"/><rect x="24" y="100" width="42" height="4" rx="1"/><rect x="24" y="108" width="56" height="3" rx="1"/>':
+    id==='minimal'?'<text x="30" y="85" font-size="14" font-weight="300" fill="'+c1+'" letter-spacing="2">NAME</text><rect x="24" y="98" width="56" height="3" rx="1"/><rect x="24" y="106" width="40" height="3" rx="1"/>':
+    '<rect x="24" y="78" width="50" height="6" rx="0" font-family="monospace"/><rect x="24" y="90" width="60" height="4" rx="0"/><rect x="24" y="99" width="44" height="4" rx="0"/>';
+  return '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="'+(id==='tech'?'#1a1c23':'#FAFAF8')+'" rx="8"/><rect x="16" y="16" width="88" height="16" rx="4" fill="'+(id==='executive'?'#2d2d2d':id==='minimal'?'transparent':'#E5E7EB')+'" opacity="0.4"/>'+bars+'</svg>';
+}
+function openTemplateGallery(){
+  const body=document.getElementById('templateGalleryBody');
+  if(!body)return;
+  body.innerHTML='<div class="tg-grid">'+TEMPLATES.map(t=>{
     const active=t.id===selectedTemplate;
-    const tag=t.premium?'<span class="t-tag t-premium">PREMIUM</span>':'<span class="t-tag t-free">FREE</span>';
-    const lock=t.premium?'<span class="t-lock" data-lucide="lock" style="width:12px;height:12px"></span>':'';
-    return'<div class="template-card'+(active?' active':'')+'" data-template="'+t.id+'" onclick="selectTemplate(\''+t.id+'\')"><span class="t-dot" style="background:'+(TEMPLATE_COLORS[t.id]||'#6B7280')+'"></span><div class="t-info"><div class="t-name">'+t.name+'</div><div class="t-row">'+tag+lock+'</div></div></div>'
-  }).join('');
+    const tag=t.premium?'<span class="tg-tag tg-premium">Premium</span>':'<span class="tg-tag tg-free">Free</span>';
+    const lock=t.premium?'<div class="tg-lock-badge"><span data-lucide="lock" style="width:10px;height:10px"></span> ₹10</div>':'';
+    return'<div class="tg-card'+(active?' active':'')+'" onclick="selectTemplate(\''+t.id+'\')"><div class="tg-preview">'+tgPreviewSVG(t.id,'#C8A97E','#6B7280')+'<div class="tg-check"><span data-lucide="check" style="width:14px;height:14px;stroke-width:3"></span></div>'+lock+'</div><div class="tg-info"><span class="tg-name">'+t.name+'</span>'+tag+'</div></div>'
+  }).join('')+'</div>';
   setTimeout(()=>lucide.createIcons(),50);
+  document.getElementById('templateGalleryModal').classList.add('open');
 }
 function selectTemplate(id){
   const t=TEMPLATES.find(x=>x.id===id);if(!t)return;
-  if(t.premium&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');showToast('Unlock premium templates','lock','info');return}
-  selectedTemplate=id;renderTemplateStrip();updateBadge();
+  if(t.premium&&getRemainingDownloads()<=0){closeModal('templateGalleryModal');document.getElementById('payModal').classList.add('open');showToast('Unlock premium templates','lock','info');return}
+  selectedTemplate=id;closeModal('templateGalleryModal');updateBadge();
   const p=document.getElementById('resumePreview');p.style.opacity='0.3';
   setTimeout(()=>{updatePreview();p.style.opacity='1'},50);
 }
