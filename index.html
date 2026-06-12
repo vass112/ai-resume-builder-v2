@@ -901,7 +901,13 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
         <div class="builder-preview" id="builderPreview">
           <div class="preview-panel glass">
               <div class="preview-header">
-              <div><h3 style="font-size:var(--text-sm);font-weight:500">Live preview</h3><span id="pageInfo" style="font-size:10px;color:var(--text-tertiary)">A4 · 210×297mm</span></div>
+                <div style="display:flex;gap:var(--space-8);align-items:center">
+                  <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
+                  <button class="btn btn-primary" onclick="downloadResume()" style="white-space:nowrap;gap:8px;padding:8px 20px">
+                    <span data-lucide="download" style="width:18px;height:18px"></span> Download PDF
+                  </button>
+                </div>
+                <div style="text-align:right"><h3 style="font-size:var(--text-sm);font-weight:500">Live preview</h3><span id="pageInfo" style="font-size:10px;color:var(--text-tertiary)">A4 · 210×297mm</span></div>
               <div style="display:flex;gap:var(--space-8);align-items:center">
                 <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
                 <button class="btn btn-primary" onclick="downloadResume()" style="white-space:nowrap;gap:8px;padding:8px 20px">
