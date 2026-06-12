@@ -1046,6 +1046,7 @@ function restoreData(d){
 }
 function importResume(){document.getElementById('importFileInput').click()}
 async function importFromFile(file){
+  if(!requireAI())return;
   if(!file)return;
   const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only','file','error');return}
   showToast('Extracting text...','file-text','info');
@@ -1168,8 +1169,18 @@ async function callGemini(p,retries=6){
 function recordAccept(t){sessionContext.accepted.push(t);acceptedSuggestionCount++;if(acceptedSuggestionCount>=3)document.getElementById('aiLearnedBadge').style.display='inline-flex';silentReScore()}
 function recordReject(t){sessionContext.rejected.push(t)}
 
+// ===== AI GATE =====
+function requireAI(){
+  getRemainingDownloads();
+  if(remainingDownloads>0)return true;
+  showToast('Purchase to unlock AI features','lock','info');
+  document.getElementById('payModal').classList.add('open');
+  return false;
+}
+
 // ===== AI FEATURES =====
 async function generateSummary(){
+  if(!requireAI())return;
   const n=document.getElementById('fName').value||'the candidate',t=document.getElementById('fTitle').value||'professional';
   const s=document.getElementById('summaryResult');s.innerHTML='<div class="skeleton" style="height:80px"></div>';
   try{
@@ -1182,6 +1193,7 @@ async function generateSummary(){
 function acceptSummary(t){document.getElementById('fSummary').value=t;recordAccept('summary');document.getElementById('summaryResult').innerHTML='<div class="card" style="color:var(--jade);text-align:center">Summary accepted</div>';updatePreview()}
 
 async function enhanceBullets(id,btn){
+  if(!requireAI())return;
   const exp=experiences.find(e=>e.id===id);if(!exp||!exp.description){showToast('Write a description first','edit','info');return}
   setLoading(btn,true);
   try{const text=await callGemini('Rewrite these bullet points into quantified, action-verb-led lines: '+exp.description+'\nReturn ONLY the rewritten text.');exp.description=text;renderExp();recordAccept('bullets');showToast('Bullets enhanced','check','success');updatePreview()}catch(e){showToast('Error: '+e.message,'alert-circle','error')}
@@ -1189,6 +1201,7 @@ async function enhanceBullets(id,btn){
 }
 
 async function suggestSkills(){
+  if(!requireAI())return;
   const t=document.getElementById('fTitle').value;if(!t){showToast('Enter a job title first','edit','info');return}
   const c=document.getElementById('suggestedSkillsResult');c.innerHTML='<div class="skeleton" style="height:40px"></div>';
   try{
@@ -1289,6 +1302,7 @@ async function handleFile(file){
 }
 
 async function analyzeResume(){
+  if(!requireAI())return;
   if(!uploadedResumeText){showToast('Upload a resume first','cloud-upload','info');return}
   if(analyzing)return;analyzing=true;
   const btn=document.querySelector('#page-score .btn-ai');const orig=btn.innerHTML;btn.innerHTML='<span class="spinner" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,169,126,0.3);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite"></span> Analyzing...';btn.disabled=true;
@@ -1354,6 +1368,7 @@ function downloadResumeData(idx){if(!user)return;const r=JSON.parse(localStorage
 
 // ===== SCORE SILENT =====
 function silentReScore(){
+  getRemainingDownloads();if(remainingDownloads<=0)return;
   if(!user||!document.getElementById('fName').value)return;
   clearTimeout(window._st);window._st=setTimeout(async()=>{
     try{const d=getResumeData();await callGemini('Score this resume out of 100. Return JSON: {"score":0,"tip":""}. Data: '+JSON.stringify(d))}catch(e){}
