@@ -13,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<!-- Razorpay Payment Pages used (no inline checkout needed) -->
 <script src="env.js"></script>
 <script type="importmap">
 {
@@ -875,7 +875,6 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 <script>
 // ===== CONFIG =====
 const GEMINI_API_KEY = window._env?.GEMINI_API_KEY || "";
-const RAZORPAY_KEY = window._env?.RAZORPAY_KEY || "";
 const FIREBASE_CONFIG = window._env?.FIREBASE_CONFIG || { apiKey:"", authDomain:"", projectId:"" };
 const VALID_REDEEM_CODES = ['TEST10','FREE3','DEV2024','PREMIUM','BETA'];
 
@@ -894,6 +893,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   initSteps(); addExperience(); addEducation();
   if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   getRemainingDownloads();
+  const p=new URLSearchParams(window.location.search).get('payment');
+  if(p==='success'){addDownloads(3);showToast('3 downloads unlocked!','check','success');window.history.replaceState({},'','/')}
   setTimeout(()=>{lucide.createIcons();checkFirstVisit()},100);
   document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveResumeData();showToast('Saved','check','success')}});
   document.getElementById('navTabs').addEventListener('keydown',e=>{
@@ -1288,10 +1289,8 @@ function redeemCode(){
 }
 
 // ===== PAYMENT =====
-function startPayment(){
-  if(RAZORPAY_KEY==="YOUR_RAZORPAY_KEY_ID"){addDownloads(3);closeModal('payModal');showToast('3 downloads added (demo)','download','success');getRemainingDownloads();return}
-  const rzp=new Razorpay({key:RAZORPAY_KEY,amount:1000,currency:"INR",name:"ResumeAI Pro",description:"3 Premium Resume Downloads",handler:function(r){addDownloads(3);closeModal('payModal');showToast('3 downloads unlocked!','download','success')},prefill:{email:user?.email||''},theme:{color:'#C8A97E'}});rzp.open()
-}
+const PAYMENT_PAGE_URL = "https://rzp.io/rzp/88bem17o";
+function startPayment(){closeModal('payModal');window.location.href=PAYMENT_PAGE_URL}
 
 // ===== DOWNLOAD =====
 async function downloadResume(){
