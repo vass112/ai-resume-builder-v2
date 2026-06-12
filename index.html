@@ -1641,20 +1641,11 @@ async function downloadResume(){
   showToast('Generating PDF...','file-down','info');
   try{
     await document.fonts.ready;
-    const src=document.getElementById('resumePreview');
-    const cl=src.cloneNode(true);
-    cl.style.boxSizing='border-box';cl.style.width='595px';cl.style.maxWidth='595px';
-    cl.style.position='fixed';cl.style.left='-9999px';cl.style.top='0';cl.style.boxShadow='none';cl.style.margin='0';cl.style.zIndex='-1';
-    document.body.appendChild(cl);
-    const canvas=await html2canvas(cl,{scale:3,useCORS:true,backgroundColor:null,logging:false});
-    document.body.removeChild(cl);
-    const imgData=canvas.toDataURL('image/jpeg',0.92);
+    const el=document.getElementById('resumePreview');
+    const canvas=await html2canvas(el,{scale:3,useCORS:true,logging:false});
     const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
-    const pw=210,ph=297;
-    const ch=canvas.height,cw=canvas.width;
-    const ih=pw*ch/cw;
-    if(ih<=ph)p.addImage(imgData,'JPEG',0,0,pw,ih);
-    else p.addImage(imgData,'JPEG',0,0,pw,ph);
+    const ih=210*canvas.height/canvas.width;
+    p.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',0,0,210,ih);
     p.save((d.name||'Resume')+'_Resume.pdf');
     if(isPremium)useDownload();
     getRemainingDownloads();trackDownload();refreshAnalytics();showToast('Downloaded ✓','download','success');
