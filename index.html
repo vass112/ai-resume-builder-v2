@@ -900,14 +900,12 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
         <div class="builder-preview" id="builderPreview">
           <div class="preview-panel glass">
               <div class="preview-header">
-                <div style="display:flex;gap:var(--space-8);align-items:center">
+                <div class="flex" style="gap:var(--space-8);align-items:center">
                   <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
                   <button class="btn btn-primary" onclick="downloadResume()" style="white-space:nowrap;gap:8px;padding:8px 20px">
                     <span data-lucide="download" style="width:18px;height:18px"></span> Download PDF
                   </button>
-                </div>
-                <div style="display:flex;align-items:center;gap:var(--space-16)">
-                  <div class="template-strip-row" id="templateStrip"></div>
+                  <div class="template-strip-row" id="templateStrip" style="margin-left:var(--space-12)"></div>
                 </div>
               </div>
             <div class="preview-body" id="previewBody">
