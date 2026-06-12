@@ -11,7 +11,8 @@
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="env.js"></script>
 <script type="importmap">
@@ -1296,17 +1297,25 @@ function startPayment(){
 async function downloadResume(){
   const d=getResumeData();if(!d.name){showToast('Enter your name first','edit','info');return}
   const isPremium=['modern','executive','minimal','tech'].includes(selectedTemplate);
-  if(isPremium&&!useDownload()){document.getElementById('payModal').classList.add('open');return}
+  if(isPremium&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');return}
   showToast('Generating PDF...','file-down','info');
-  const el=document.getElementById('resumePreview').cloneNode(true);
-  el.style.cssText='position:fixed;left:0;top:0;width:595px;margin:0;z-index:10000';
+  const el=document.createElement('div');
+  el.className='resume-a4';
+  el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:10000;margin:0';
+  el.innerHTML=renderResume(d);
   document.body.appendChild(el);
-  await new Promise(r=>setTimeout(r,300));
+  await new Promise(r=>setTimeout(r,400));
   try{
-    await html2pdf().set({margin:0,filename:(d.name||'Resume')+'_Resume.pdf',html2canvas:{scale:2,useCORS:true,logging:false},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(el).save();
-    showToast(getRemainingDownloads()>0?'Downloaded ('+getRemainingDownloads()+' left)':'Downloaded ✓','download','success')
-  }catch(e){showToast('PDF error: '+(e.message||e),'alert-circle','error')}
-  document.body.removeChild(el);getRemainingDownloads()
+    const c=await html2canvas(el,{scale:2,useCORS:true,logging:false,backgroundColor:'#FAFAF8'});
+    const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+    const pw=p.internal.pageSize.getWidth(),ph=p.internal.pageSize.getHeight();
+    const r=c.height/c.width,iw=pw,ih=pw*r;
+    p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,Math.min(iw,ph/r),Math.min(ih,ph));
+    p.save((d.name||'Resume')+'_Resume.pdf');
+    if(isPremium)useDownload();
+    const left=getRemainingDownloads();showToast(left>0?'Downloaded ('+left+' left)':'Downloaded ✓','download','success');
+  }catch(e){showToast('PDF error: '+(e.message||e),'alert-circle','error');console.error('PDF err:',e)}
+  document.body.removeChild(el);
 }
 
 // ===== SCORE =====
