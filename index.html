@@ -1298,23 +1298,29 @@ async function downloadResume(){
   const isPremium=['modern','executive','minimal','tech'].includes(selectedTemplate);
   if(isPremium&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');return}
   showToast('Generating PDF...','file-down','info');
-  const el=document.createElement('div');
-  el.className='resume-a4';
-  el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:10000;margin:0';
-  el.innerHTML=renderResume(d);
+  // Temporarily move preview out of clipped container, capture, restore
+  const el=document.getElementById('resumePreview');
+  const parent=el.parentElement;
+  const ref=el.nextSibling;
+  parent.removeChild(el);
+  el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:10000;margin:0;box-shadow:none';
   document.body.appendChild(el);
-  await new Promise(r=>setTimeout(r,400));
+  await new Promise(r=>setTimeout(r,300));
   try{
     const c=await html2canvas(el,{scale:2,useCORS:true,logging:false,backgroundColor:'#FAFAF8'});
     const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
-    const pw=p.internal.pageSize.getWidth(),ph=p.internal.pageSize.getHeight();
-    const r=c.height/c.width,iw=pw,ih=pw*r;
-    p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,Math.min(iw,ph/r),Math.min(ih,ph));
+    const pw=210,ph=297,r=c.height/c.width;
+    // Fit to page width; if too tall, fit to height
+    if(r<=ph/pw){p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,pw,pw*r)}else{p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,ph/r,ph)}
     p.save((d.name||'Resume')+'_Resume.pdf');
     if(isPremium)useDownload();
     const left=getRemainingDownloads();showToast(left>0?'Downloaded ('+left+' left)':'Downloaded ✓','download','success');
   }catch(e){showToast('PDF error: '+(e.message||e),'alert-circle','error');console.error('PDF err:',e)}
+  // Restore preview to original position
   document.body.removeChild(el);
+  el.style.cssText='';
+  el.className='resume-a4 resume-classic resume-preview-bg';
+  parent.insertBefore(el,ref);
 }
 
 // ===== SCORE =====
