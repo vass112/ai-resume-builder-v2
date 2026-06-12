@@ -1640,6 +1640,7 @@ async function downloadResume(){
   if(isPremium&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');return}
   showToast('Generating PDF...','file-down','info');
   try{
+    await document.fonts.ready;
     const el=document.getElementById('resumePreview');
     const canvas=await html2canvas(el,{scale:3,useCORS:true,backgroundColor:null,logging:false,width:el.scrollWidth,height:el.scrollHeight});
     const imgData=canvas.toDataURL('image/jpeg',0.92);
