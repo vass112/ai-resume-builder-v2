@@ -463,7 +463,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .preview-panel{background:var(--bg-elevated);border:1px solid var(--border-glass);border-radius:var(--radius-2xl);overflow:hidden;position:relative}
 .preview-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-14) var(--space-24);border-bottom:1px solid var(--border-glass);background:var(--bg-canvas)}
 .preview-body{padding:var(--space-20) var(--space-24) var(--space-16);min-height:400px;position:relative}
-.preview-stage{background:var(--bg-canvas);border-radius:var(--radius-xl);padding:var(--space-24) var(--space-16);display:flex;justify-content:center;position:relative;border:1px solid var(--border-subtle)}
+.preview-stage{background:var(--bg-canvas);border-radius:var(--radius-xl);padding:var(--space-24) var(--space-16);display:flex;justify-content:center;position:relative;border:1px solid var(--border-subtle);overflow:hidden}
 .preview-stage::before{content:'';position:absolute;inset:0;border-radius:var(--radius-xl);box-shadow:inset 0 2px 8px rgba(0,0,0,0.04);pointer-events:none}
 #resumePreview{filter:drop-shadow(0 4px 24px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.04))}
 .preview-toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-12);padding:var(--space-6) var(--space-4)}
@@ -485,19 +485,19 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .tg-card .tg-lock-badge{position:absolute;top:8px;left:8px;font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.5);color:var(--accent-primary);font-weight:600;letter-spacing:0.02em;display:flex;align-items:center;gap:3px;z-index:2;backdrop-filter:blur(4px)}
 
 /* Template strip (inline) */
-.template-strip{display:flex;gap:var(--space-8);padding:var(--space-12) var(--space-24);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border-glass)}
+.template-strip{display:flex;gap:var(--space-4);padding:var(--space-10) var(--space-20);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border-glass)}
 .template-strip::-webkit-scrollbar{display:none}
-.template-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:var(--radius-lg);border:1.5px solid var(--border-subtle);cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);min-width:70px;flex-shrink:0;background:var(--bg-glass-light)}
-.template-chip:hover{border-color:var(--border-accent);transform:translateY(-1px)}
-.template-chip.active{border-color:var(--accent-primary);background:var(--accent-dim);box-shadow:0 0 12px rgba(200,169,126,0.1)}
-.template-chip .tc-svg{width:52px;height:52px;border-radius:var(--radius-sm);overflow:hidden}
+.template-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 7px 4px;border-radius:var(--radius-lg);border:1.5px solid transparent;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);min-width:54px;flex-shrink:0;background:transparent}
+.template-chip:hover{background:var(--bg-elevated);border-color:var(--border-subtle)}
+.template-chip.active{border-color:var(--border-accent);background:var(--accent-dim);box-shadow:0 0 8px rgba(200,169,126,0.08)}
+.template-chip .tc-svg{width:38px;height:38px;border-radius:4px;overflow:hidden;background:var(--bg-canvas);border:1px solid var(--border-subtle);transition:all 0.2s ease}
+.template-chip.active .tc-svg{border-color:var(--accent-primary);box-shadow:0 0 8px rgba(200,169,126,0.1)}
 .template-chip .tc-svg svg{width:100%;height:100%;display:block}
-.template-chip .tc-label{font-size:9px;font-weight:500;color:var(--text-secondary);white-space:nowrap;letter-spacing:0.02em}
+.template-chip .tc-label{font-size:8px;font-weight:500;color:var(--text-secondary);white-space:nowrap;letter-spacing:0.01em;line-height:1}
 .template-chip.active .tc-label{color:var(--accent-primary)}
-.template-chip .tc-badge{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:600;letter-spacing:0.02em;margin-top:1px}
-.template-chip .tc-badge.free{background:rgba(78,205,196,0.15);color:var(--jade)}
-.template-chip .tc-badge.premium{background:rgba(200,169,126,0.15);color:var(--accent-primary)}
-.template-chip .tc-lock{position:absolute;top:4px;right:4px;opacity:0.5}
+.template-chip .tc-badge{font-size:6px;padding:1px 4px;border-radius:2px;font-weight:600;letter-spacing:0.02em;line-height:1.1}
+.template-chip .tc-badge.free{background:rgba(78,205,196,0.12);color:var(--jade)}
+.template-chip .tc-badge.premium{background:rgba(200,169,126,0.12);color:var(--accent-primary)}
 
 /* Font selector */
 .input-select-sm{padding:4px 24px 4px 8px;border-radius:var(--radius-sm);background:var(--bg-glass);border:1px solid var(--border-subtle);color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%238891A5'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;font-family:inherit}
