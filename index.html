@@ -1643,21 +1643,18 @@ async function downloadResume(){
     await document.fonts.ready;
     const src=document.getElementById('resumePreview');
     const cl=src.cloneNode(true);
-    cl.style.position='fixed';cl.style.left='-9999px';cl.style.top='0';cl.style.width='595px';cl.style.maxWidth='595px';cl.style.boxShadow='none';cl.style.margin='0';cl.style.zIndex='-1';
+    cl.style.boxSizing='border-box';cl.style.width='595px';cl.style.maxWidth='595px';
+    cl.style.position='fixed';cl.style.left='-9999px';cl.style.top='0';cl.style.boxShadow='none';cl.style.margin='0';cl.style.zIndex='-1';
     document.body.appendChild(cl);
-    const canvas=await html2canvas(cl,{scale:3,useCORS:true,backgroundColor:null,logging:false,width:595,height:cl.scrollHeight});
+    const canvas=await html2canvas(cl,{scale:3,useCORS:true,backgroundColor:null,logging:false});
     document.body.removeChild(cl);
     const imgData=canvas.toDataURL('image/jpeg',0.92);
     const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
     const pw=210,ph=297;
-    const cw=canvas.width,ch=canvas.height;
-    const pageImgH=pw*(ch/cw);
-    if(pageImgH<=ph){
-      p.addImage(imgData,'JPEG',0,0,pw,pageImgH);
-    }else{
-      const pageImgW=cw*(ph/ch);
-      p.addImage(imgData,'JPEG',(pw-pageImgW)/2,0,pageImgW,ph);
-    }
+    const ch=canvas.height,cw=canvas.width;
+    const ih=pw*ch/cw;
+    if(ih<=ph)p.addImage(imgData,'JPEG',0,0,pw,ih);
+    else p.addImage(imgData,'JPEG',0,0,pw,ph);
     p.save((d.name||'Resume')+'_Resume.pdf');
     if(isPremium)useDownload();
     getRemainingDownloads();trackDownload();refreshAnalytics();showToast('Downloaded ✓','download','success');
