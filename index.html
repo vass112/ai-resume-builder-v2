@@ -1654,8 +1654,13 @@ async function downloadResume(){
     const el=document.getElementById('resumePreview');
     const canvas=await html2canvas(el,{scale:3,useCORS:true,logging:false});
     const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
-    const ih=210*canvas.height/canvas.width;
-    p.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',0,0,210,ih);
+    const pw=210,ph=297,cw=canvas.width,ch=canvas.height,pgH=cw*ph/pw,pg=Math.ceil(ch/pgH);
+    for(let i=0;i<pg;i++){
+      if(i>0)p.addPage();
+      const sy=i*pgH,sh=Math.min(pgH,ch-sy),tmp=document.createElement('canvas');
+      tmp.width=cw;tmp.height=sh;tmp.getContext('2d').drawImage(canvas,0,sy,cw,sh,0,0,cw,sh);
+      p.addImage(tmp.toDataURL('image/jpeg',0.92),'JPEG',0,0,pw,pw*sh/cw);
+    }
     p.save((d.name||'Resume')+'_Resume.pdf');
     if(isPremium)useDownload();
     getRemainingDownloads();trackDownload();refreshAnalytics();showToast('Downloaded ✓','download','success');
