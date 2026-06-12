@@ -1280,11 +1280,10 @@ async function downloadResume(){
   const isPremium=['modern','executive','minimal','tech'].includes(selectedTemplate);
   if(isPremium&&!useDownload()){document.getElementById('payModal').classList.add('open');return}
   showToast('Generating PDF...','file-down','info');
-  const el=document.createElement('div');
-  el.innerHTML='<div class="resume-a4" style="padding:40px 36px;background:#FAFAF8;color:#1A1C20;max-width:595px;font-family:Inter,sans-serif">'+renderResume(d)+'</div>';
-  el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:-1;opacity:0.01;pointer-events:none';
+  const el=document.getElementById('resumePreview').cloneNode(true);
+  el.style.cssText='position:fixed;left:0;top:0;width:595px;margin:0;z-index:10000';
   document.body.appendChild(el);
-  await new Promise(r=>setTimeout(r,200));
+  await new Promise(r=>setTimeout(r,300));
   try{
     await html2pdf().set({margin:0,filename:(d.name||'Resume')+'_Resume.pdf',html2canvas:{scale:2,useCORS:true,logging:false},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(el).save();
     showToast(getRemainingDownloads()>0?'Downloaded ('+getRemainingDownloads()+' left)':'Downloaded ✓','download','success')
