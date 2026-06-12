@@ -460,9 +460,14 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* ============================================
    PREVIEW
    ============================================ */
-.preview-panel{background:var(--bg-elevated);border:1px solid var(--border-glass);border-radius:var(--radius-2xl);overflow:hidden}
-.preview-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-16) var(--space-24);border-bottom:1px solid var(--border-glass)}
-.preview-body{padding:var(--space-24);min-height:400px;position:relative}
+.preview-panel{background:var(--bg-elevated);border:1px solid var(--border-glass);border-radius:var(--radius-2xl);overflow:hidden;position:relative}
+.preview-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-14) var(--space-24);border-bottom:1px solid var(--border-glass);background:var(--bg-canvas)}
+.preview-body{padding:var(--space-20) var(--space-24) var(--space-16);min-height:400px;position:relative}
+.preview-stage{background:var(--bg-canvas);border-radius:var(--radius-xl);padding:var(--space-24) var(--space-16);display:flex;justify-content:center;position:relative;border:1px solid var(--border-subtle)}
+.preview-stage::before{content:'';position:absolute;inset:0;border-radius:var(--radius-xl);box-shadow:inset 0 2px 8px rgba(0,0,0,0.04);pointer-events:none}
+#resumePreview{filter:drop-shadow(0 4px 24px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.04))}
+.preview-toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-12);padding:var(--space-6) var(--space-4)}
+.tb-sep{width:1px;height:16px;background:var(--border-subtle);margin:0 var(--space-4)}
 /* Template gallery modal */
 .tg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--space-12);padding:var(--space-4) 0}
 .tg-card{border-radius:var(--radius-xl);border:2px solid var(--border-subtle);cursor:pointer;transition:all 0.25s cubic-bezier(0.16,1,0.3,1);background:var(--bg-elevated);overflow:hidden;position:relative}
@@ -895,7 +900,10 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
         <div class="builder-preview" id="builderPreview">
           <div class="preview-panel glass">
             <div class="preview-header">
-              <h3 style="font-size:var(--text-sm);font-weight:500">Live preview</h3>
+              <div class="flex" style="gap:var(--space-10);align-items:center">
+                <div style="width:28px;height:28px;border-radius:var(--radius-md);background:var(--accent-dim);display:flex;align-items:center;justify-content:center"><span data-lucide="eye" style="width:14px;height:14px;color:var(--accent-primary)"></span></div>
+                <div><h3 style="font-size:var(--text-sm);font-weight:500;line-height:1.2">Live preview</h3><span id="pageInfo" style="font-size:10px;color:var(--text-tertiary)">A4 · 210×297mm</span></div>
+              </div>
               <div style="display:flex;gap:var(--space-8);align-items:center">
                 <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
                 <button class="btn btn-primary" onclick="downloadResume()" style="white-space:nowrap;gap:8px;padding:8px 20px">
@@ -905,20 +913,22 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
             </div>
             <div class="template-strip" id="templateStrip"></div>
             <div class="preview-body" id="previewBody" style="padding-top:var(--space-16)">
-              <!-- Resume preview -->
-              <div id="resumePreview" class="resume-a4 resume-preview-bg resume-template-classic">
-                <div style="text-align:center;padding:80px 20px;color:#999">
-                  <span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>
-                  Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span>
+              <div class="preview-stage">
+                <div id="resumePreview" class="resume-a4 resume-preview-bg resume-template-classic">
+                  <div style="text-align:center;padding:80px 20px;color:#999">
+                    <span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>
+                    Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span>
+                  </div>
                 </div>
               </div>
-              <div class="flex" style="justify-content:space-between;align-items:center;margin-top:var(--space-16)">
-                <div class="flex" style="gap:var(--space-8);align-items:center">
-                  <button class="btn btn-ghost btn-sm" onclick="fullPreview()"><span data-lucide="maximize-2" style="width:16px;height:16px"></span> Full view</button>
-                  <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()"><span data-lucide="grid-3x3" style="width:16px;height:16px"></span> All templates</button>
+              <div class="preview-toolbar">
+                <div class="flex" style="gap:var(--space-6);align-items:center">
+                  <button class="btn btn-ghost btn-sm" onclick="fullPreview()" title="Full screen"><span data-lucide="maximize-2" style="width:14px;height:14px"></span> Full view</button>
+                  <span class="tb-sep"></span>
+                  <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()" title="Browse all templates"><span data-lucide="grid-3x3" style="width:14px;height:14px"></span> Templates</button>
                 </div>
                 <div class="flex" style="gap:var(--space-8);align-items:center">
-                  <span style="font-size:var(--text-xs);color:var(--text-tertiary)">Font</span>
+                  <span style="font-size:10px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em">Typeface</span>
                   <div class="font-picker" id="fontPicker"></div>
                 </div>
               </div>
