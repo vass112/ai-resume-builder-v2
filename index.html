@@ -1368,7 +1368,7 @@ function renderScore(r){
   setTimeout(()=>lucide.createIcons(),50);
 }
 
-async function downloadScoreReport(){showToast('Generating report...','file-down','info');try{await html2pdf().set({margin:10,filename:'ResumeAI_Score_Report.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(document.getElementById('scoreResults')).save()}catch(e){showToast('Report failed','alert-circle','error')}}
+async function downloadScoreReport(){showToast('Generating report...','file-down','info');try{const el=document.getElementById('scoreResults');const c=await html2canvas(el,{scale:2,useCORS:true,backgroundColor:'#fff'});const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});const pw=210,ph=297,r=c.height/c.width;if(r<=ph/pw){p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',10,10,pw-20,(pw-20)*r)}else{p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',10,10,(ph-20)/r,ph-20)}p.save('ResumeAI_Score_Report.pdf')}catch(e){showToast('Report failed','alert-circle','error')}}
 
 // ===== FINISH & DASHBOARD =====
 function showStamp(cb){
