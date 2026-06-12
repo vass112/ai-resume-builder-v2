@@ -462,11 +462,12 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
    ============================================ */
 .preview-panel{background:var(--bg-elevated);border:1px solid var(--border-glass);border-radius:var(--radius-2xl);overflow:hidden;position:relative}
 .preview-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-14) var(--space-24);border-bottom:1px solid var(--border-glass);background:var(--bg-canvas)}
-.preview-body{padding:var(--space-20) var(--space-24) var(--space-16);min-height:400px;position:relative}
-.preview-stage{background:var(--bg-canvas);border-radius:var(--radius-xl);padding:var(--space-24) var(--space-16);display:flex;justify-content:center;position:relative;border:1px solid var(--border-subtle);overflow:hidden}
+.preview-body{padding:var(--space-16) var(--space-20) var(--space-16);min-height:400px;position:relative;display:flex;gap:var(--space-16)}
+.preview-body-left{flex:1;min-width:0;display:flex;flex-direction:column}
+.preview-stage{background:var(--bg-canvas);border-radius:var(--radius-xl);padding:var(--space-24) var(--space-16);display:flex;justify-content:center;position:relative;border:1px solid var(--border-subtle);overflow:hidden;flex:1}
 .preview-stage::before{content:'';position:absolute;inset:0;border-radius:var(--radius-xl);box-shadow:inset 0 2px 8px rgba(0,0,0,0.04);pointer-events:none}
 #resumePreview{filter:drop-shadow(0 4px 24px rgba(0,0,0,0.08)) drop-shadow(0 1px 3px rgba(0,0,0,0.04))}
-.preview-toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-12);padding:var(--space-6) var(--space-4)}
+.preview-toolbar{display:flex;justify-content:space-between;align-items:center;margin-top:var(--space-10);padding:var(--space-4) var(--space-2)}
 .tb-sep{width:1px;height:16px;background:var(--border-subtle);margin:0 var(--space-4)}
 /* Template gallery modal */
 .tg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--space-12);padding:var(--space-4) 0}
@@ -484,18 +485,18 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .tg-card.active .tg-check{display:flex}
 .tg-card .tg-lock-badge{position:absolute;top:8px;left:8px;font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.5);color:var(--accent-primary);font-weight:600;letter-spacing:0.02em;display:flex;align-items:center;gap:3px;z-index:2;backdrop-filter:blur(4px)}
 
-/* Template strip (inline) */
-.template-strip{display:flex;gap:var(--space-4);padding:var(--space-10) var(--space-20);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border-glass)}
+/* Template strip (inline - right sidebar) */
+.template-strip{display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-4);overflow-y:auto;scrollbar-width:none;background:var(--bg-canvas);border:1px solid var(--border-subtle);border-radius:var(--radius-xl);min-width:64px;width:64px;flex-shrink:0;align-items:center}
 .template-strip::-webkit-scrollbar{display:none}
-.template-chip{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 7px 4px;border-radius:var(--radius-lg);border:1.5px solid transparent;cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);min-width:54px;flex-shrink:0;background:transparent}
+.template-chip{display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 2px 3px;border-radius:var(--radius-md);border:1.5px solid transparent;cursor:pointer;transition:all 0.15s cubic-bezier(0.16,1,0.3,1);width:54px;flex-shrink:0;background:transparent}
 .template-chip:hover{background:var(--bg-elevated);border-color:var(--border-subtle)}
-.template-chip.active{border-color:var(--border-accent);background:var(--accent-dim);box-shadow:0 0 8px rgba(200,169,126,0.08)}
-.template-chip .tc-svg{width:38px;height:38px;border-radius:4px;overflow:hidden;background:var(--bg-canvas);border:1px solid var(--border-subtle);transition:all 0.2s ease}
-.template-chip.active .tc-svg{border-color:var(--accent-primary);box-shadow:0 0 8px rgba(200,169,126,0.1)}
+.template-chip.active{border-color:var(--border-accent);background:var(--accent-dim);box-shadow:0 0 6px rgba(200,169,126,0.08)}
+.template-chip .tc-svg{width:44px;height:44px;border-radius:4px;overflow:hidden;background:var(--bg-canvas);border:1px solid var(--border-subtle);transition:all 0.2s ease}
+.template-chip.active .tc-svg{border-color:var(--accent-primary);box-shadow:0 0 6px rgba(200,169,126,0.1)}
 .template-chip .tc-svg svg{width:100%;height:100%;display:block}
-.template-chip .tc-label{font-size:8px;font-weight:500;color:var(--text-secondary);white-space:nowrap;letter-spacing:0.01em;line-height:1}
+.template-chip .tc-label{font-size:7px;font-weight:500;color:var(--text-secondary);white-space:nowrap;letter-spacing:0.01em;line-height:1}
 .template-chip.active .tc-label{color:var(--accent-primary)}
-.template-chip .tc-badge{font-size:6px;padding:1px 4px;border-radius:2px;font-weight:600;letter-spacing:0.02em;line-height:1.1}
+.template-chip .tc-badge{font-size:5px;padding:1px 3px;border-radius:2px;font-weight:600;letter-spacing:0.01em;line-height:1}
 .template-chip .tc-badge.free{background:rgba(78,205,196,0.12);color:var(--jade)}
 .template-chip .tc-badge.premium{background:rgba(200,169,126,0.12);color:var(--accent-primary)}
 
@@ -899,11 +900,8 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
         <!-- Preview Panel -->
         <div class="builder-preview" id="builderPreview">
           <div class="preview-panel glass">
-            <div class="preview-header">
-              <div class="flex" style="gap:var(--space-10);align-items:center">
-                <div style="width:28px;height:28px;border-radius:var(--radius-md);background:var(--accent-dim);display:flex;align-items:center;justify-content:center"><span data-lucide="eye" style="width:14px;height:14px;color:var(--accent-primary)"></span></div>
-                <div><h3 style="font-size:var(--text-sm);font-weight:500;line-height:1.2">Live preview</h3><span id="pageInfo" style="font-size:10px;color:var(--text-tertiary)">A4 · 210×297mm</span></div>
-              </div>
+              <div class="preview-header">
+              <div><h3 style="font-size:var(--text-sm);font-weight:500">Live preview</h3><span id="pageInfo" style="font-size:10px;color:var(--text-tertiary)">A4 · 210×297mm</span></div>
               <div style="display:flex;gap:var(--space-8);align-items:center">
                 <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
                 <button class="btn btn-primary" onclick="downloadResume()" style="white-space:nowrap;gap:8px;padding:8px 20px">
@@ -911,27 +909,29 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
                 </button>
               </div>
             </div>
-            <div class="template-strip" id="templateStrip"></div>
             <div class="preview-body" id="previewBody" style="padding-top:var(--space-16)">
-              <div class="preview-stage">
-                <div id="resumePreview" class="resume-a4 resume-preview-bg resume-template-classic">
-                  <div style="text-align:center;padding:80px 20px;color:#999">
-                    <span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>
-                    Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span>
+              <div class="preview-body-left">
+                <div class="preview-stage">
+                  <div id="resumePreview" class="resume-a4 resume-preview-bg resume-template-classic">
+                    <div style="text-align:center;padding:80px 20px;color:#999">
+                      <span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>
+                      Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="preview-toolbar">
+                  <div class="flex" style="gap:var(--space-6);align-items:center">
+                    <button class="btn btn-ghost btn-sm" onclick="fullPreview()" title="Full screen"><span data-lucide="maximize-2" style="width:14px;height:14px"></span> Full view</button>
+                    <span class="tb-sep"></span>
+                    <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()" title="Browse all templates"><span data-lucide="grid-3x3" style="width:14px;height:14px"></span> All</button>
+                  </div>
+                  <div class="flex" style="gap:var(--space-8);align-items:center">
+                    <span style="font-size:10px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em">Typeface</span>
+                    <div class="font-picker" id="fontPicker"></div>
                   </div>
                 </div>
               </div>
-              <div class="preview-toolbar">
-                <div class="flex" style="gap:var(--space-6);align-items:center">
-                  <button class="btn btn-ghost btn-sm" onclick="fullPreview()" title="Full screen"><span data-lucide="maximize-2" style="width:14px;height:14px"></span> Full view</button>
-                  <span class="tb-sep"></span>
-                  <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()" title="Browse all templates"><span data-lucide="grid-3x3" style="width:14px;height:14px"></span> Templates</button>
-                </div>
-                <div class="flex" style="gap:var(--space-8);align-items:center">
-                  <span style="font-size:10px;font-weight:500;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em">Typeface</span>
-                  <div class="font-picker" id="fontPicker"></div>
-                </div>
-              </div>
+              <div class="template-strip" id="templateStrip"></div>
             </div>
           </div>
         </div>
