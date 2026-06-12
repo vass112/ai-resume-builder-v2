@@ -478,6 +478,33 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .tg-card .tg-check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--accent-primary);display:none;align-items:center;justify-content:center;color:#1A1C20;z-index:2}
 .tg-card.active .tg-check{display:flex}
 .tg-card .tg-lock-badge{position:absolute;top:8px;left:8px;font-size:9px;padding:2px 6px;border-radius:4px;background:rgba(0,0,0,0.5);color:var(--accent-primary);font-weight:600;letter-spacing:0.02em;display:flex;align-items:center;gap:3px;z-index:2;backdrop-filter:blur(4px)}
+
+/* Template strip (inline) */
+.template-strip{display:flex;gap:var(--space-8);padding:var(--space-12) var(--space-24);overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--border-glass)}
+.template-strip::-webkit-scrollbar{display:none}
+.template-chip{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:var(--radius-lg);border:1.5px solid var(--border-subtle);cursor:pointer;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);min-width:70px;flex-shrink:0;background:var(--bg-glass-light)}
+.template-chip:hover{border-color:var(--border-accent);transform:translateY(-1px)}
+.template-chip.active{border-color:var(--accent-primary);background:var(--accent-dim);box-shadow:0 0 12px rgba(200,169,126,0.1)}
+.template-chip .tc-svg{width:52px;height:52px;border-radius:var(--radius-sm);overflow:hidden}
+.template-chip .tc-svg svg{width:100%;height:100%;display:block}
+.template-chip .tc-label{font-size:9px;font-weight:500;color:var(--text-secondary);white-space:nowrap;letter-spacing:0.02em}
+.template-chip.active .tc-label{color:var(--accent-primary)}
+.template-chip .tc-badge{font-size:7px;padding:1px 5px;border-radius:3px;font-weight:600;letter-spacing:0.02em;margin-top:1px}
+.template-chip .tc-badge.free{background:rgba(78,205,196,0.15);color:var(--jade)}
+.template-chip .tc-badge.premium{background:rgba(200,169,126,0.15);color:var(--accent-primary)}
+.template-chip .tc-lock{position:absolute;top:4px;right:4px;opacity:0.5}
+
+/* Font selector */
+.input-select-sm{padding:4px 24px 4px 8px;border-radius:var(--radius-sm);background:var(--bg-glass);border:1px solid var(--border-subtle);color:var(--text-primary);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%238891A5'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;font-family:inherit}
+.input-select-sm:hover{border-color:var(--border-accent)}
+.input-select-sm:focus{outline:none;border-color:var(--accent-primary)}
+
+/* Section manager */
+.section-row{display:flex;align-items:center;gap:var(--space-8);padding:8px 10px;border-radius:var(--radius-lg);background:var(--bg-elevated);border:1px solid var(--border-subtle);transition:all 0.2s ease}
+.section-row:hover{border-color:var(--border-accent)}
+.section-row .section-row-handle{cursor:grab;color:var(--text-tertiary);display:flex;align-items:center;flex-shrink:0}
+.section-row .section-row-label{font-size:var(--text-sm);color:var(--text-primary);font-weight:500}
+.btn-xs{padding:4px;width:28px;height:28px;min-width:0;border-radius:var(--radius-sm)}
 /* Smooth preview transition on template switch */
 #resumePreview{transition:opacity 0.3s ease}
 
@@ -497,6 +524,15 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .resume-template-tech{font-family:Inter,sans-serif}
 .resume-template-tech .r-name{font-family:'JetBrains Mono',monospace;font-weight:500}
 .resume-template-tech .r-section-title{font-family:'JetBrains Mono',monospace;border-bottom-color:#333}
+
+/* Resume font-family overrides (user selectable) */
+.resume-a4.resume-font-inter{font-family:'Inter',system-ui,sans-serif}
+.resume-a4.resume-font-serif{font-family:'Instrument Serif',Georgia,serif}
+.resume-a4.resume-font-serif .r-name{font-weight:500}
+.resume-a4.resume-font-georgia{font-family:Georgia,'Times New Roman',serif}
+.resume-a4.resume-font-arial{font-family:Arial,Helvetica,sans-serif}
+.resume-a4.resume-font-mono{font-family:'JetBrains Mono',monospace}
+.resume-a4.resume-font-mono{font-size:11px}
 
 /* Paper texture */
 .paper-bg{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");background-repeat:repeat}
@@ -532,7 +568,8 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .landing .trust-row{font-size:var(--text-sm);color:var(--text-tertiary);display:flex;gap:var(--space-16);flex-wrap:wrap}
 .landing .trust-row span::after{content:'·';margin-left:var(--space-16);color:var(--border-glass)}.landing .trust-row span:last-child::after{content:''}
 .landing-benefits{display:flex;flex-direction:column;gap:var(--space-12)}
-.landing-benefit{display:flex;align-items:center;gap:var(--space-12);font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-snug)}
+.landing-benefit{display:flex;align-items:flex-start;gap:var(--space-10);font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-relaxed)}
+.landing-benefit .icon-circle{flex-shrink:0;margin-top:2px}
 .landing-benefit .benefit-icon{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent-primary)}
 @media(max-width:768px){.landing{min-height:auto;padding:var(--space-32) var(--space-16) var(--space-48)}.landing-grid{grid-template-columns:1fr;gap:var(--space-32)}.landing-right{display:none}}
 
@@ -766,23 +803,36 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <!-- Step 6 -->
           <div class="step-card" data-step="6">
             <div class="text-eyebrow">Step 6 of 6</div>
-            <h3 class="step-title">Extras</h3>
-            <p class="step-subtitle">Certifications, projects, and languages that set you apart</p>
-            <details class="card" style="margin-bottom:var(--space-16);padding:var(--space-16);cursor:pointer">
-              <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="certificate" style="width:16px;height:16px"></span> Certifications</summary>
-              <div class="mt-16" id="certEntries"></div>
-              <button class="btn btn-ghost btn-sm btn-full" onclick="addCert()" style="margin-top:var(--space-8)">+ Add certification</button>
-            </details>
-            <details class="card" style="margin-bottom:var(--space-16);padding:var(--space-16);cursor:pointer">
-              <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="folder-git-2" style="width:16px;height:16px"></span> Projects</summary>
-              <div class="mt-16" id="projectEntries"></div>
-              <button class="btn btn-ghost btn-sm btn-full" onclick="addProject()" style="margin-top:var(--space-8)">+ Add project</button>
-            </details>
-            <details class="card" style="padding:var(--space-16);cursor:pointer">
-              <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="languages" style="width:16px;height:16px"></span> Languages</summary>
-              <div class="mt-16" id="langEntries"></div>
-              <button class="btn btn-ghost btn-sm btn-full" onclick="addLanguage()" style="margin-top:var(--space-8)">+ Add language</button>
-            </details>
+            <h3 class="step-title">Sections</h3>
+            <p class="step-subtitle">Choose which sections appear and rearrange them</p>
+            <div id="sectionManager" style="margin-bottom:var(--space-16)"></div>
+            <div style="padding:var(--space-16);background:var(--bg-glass-light);border-radius:var(--radius-xl);border:1px dashed var(--border-subtle);margin-bottom:var(--space-16)">
+              <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-8)">Need a custom section?</p>
+              <button class="btn btn-secondary btn-sm btn-full" onclick="addCustomSection()"><span data-lucide="plus" style="width:16px;height:16px"></span> Add custom section</button>
+            </div>
+            <div id="extraSectionContent">
+              <div class="card" style="padding:var(--space-16);margin-bottom:var(--space-12)">
+                <div class="flex" style="align-items:center;justify-content:space-between;margin-bottom:var(--space-12)">
+                  <span style="font-weight:500;font-size:var(--text-sm);display:flex;align-items:center;gap:8px"><span data-lucide="certificate" style="width:16px;height:16px;color:var(--accent-primary)"></span> Certifications</span>
+                  <div class="flex" style="gap:8px"><button class="btn btn-ghost btn-sm" onclick="addCert()"><span data-lucide="plus" style="width:14px;height:14px"></span></button></div>
+                </div>
+                <div id="certEntries"></div>
+              </div>
+              <div class="card" style="padding:var(--space-16);margin-bottom:var(--space-12)">
+                <div class="flex" style="align-items:center;justify-content:space-between;margin-bottom:var(--space-12)">
+                  <span style="font-weight:500;font-size:var(--text-sm);display:flex;align-items:center;gap:8px"><span data-lucide="folder-git-2" style="width:16px;height:16px;color:var(--accent-primary)"></span> Projects</span>
+                  <div class="flex" style="gap:8px"><button class="btn btn-ghost btn-sm" onclick="addProject()"><span data-lucide="plus" style="width:14px;height:14px"></span></button></div>
+                </div>
+                <div id="projectEntries"></div>
+              </div>
+              <div class="card" style="padding:var(--space-16);margin-bottom:var(--space-12)">
+                <div class="flex" style="align-items:center;justify-content:space-between;margin-bottom:var(--space-12)">
+                  <span style="font-weight:500;font-size:var(--text-sm);display:flex;align-items:center;gap:8px"><span data-lucide="languages" style="width:16px;height:16px;color:var(--accent-primary)"></span> Languages</span>
+                  <div class="flex" style="gap:8px"><button class="btn btn-ghost btn-sm" onclick="addLanguage()"><span data-lucide="plus" style="width:14px;height:14px"></span></button></div>
+                </div>
+                <div id="langEntries"></div>
+              </div>
+            </div>
             <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
               <button class="btn btn-ghost" onclick="prevStep(5)">Back</button>
               <button class="btn btn-primary" onclick="finishBuild()">Save resume</button>
@@ -797,9 +847,13 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
               <h3 style="font-size:var(--text-sm);font-weight:500">Live preview</h3>
               <div style="display:flex;gap:var(--space-8);align-items:center">
                 <span id="downloadBadge" class="badge badge-premium" style="display:none"></span>
+                <button class="btn btn-primary" onclick="downloadResume()" style="white-space:nowrap;gap:8px;padding:8px 20px">
+                  <span data-lucide="download" style="width:18px;height:18px"></span> Download PDF
+                </button>
               </div>
             </div>
-            <div class="preview-body" id="previewBody">
+            <div class="template-strip" id="templateStrip"></div>
+            <div class="preview-body" id="previewBody" style="padding-top:var(--space-16)">
               <!-- Resume preview -->
               <div id="resumePreview" class="resume-a4 resume-preview-bg resume-template-classic">
                 <div style="text-align:center;padding:80px 20px;color:#999">
@@ -807,10 +861,21 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
                   Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span>
                 </div>
               </div>
-              <div class="flex" style="justify-content:center;gap:var(--space-8);margin-top:var(--space-16)">
-                <button class="btn btn-ghost btn-sm" onclick="fullPreview()"><span data-lucide="maximize-2" style="width:16px;height:16px"></span> Full view</button>
-                <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()"><span data-lucide="grid-3x3" style="width:16px;height:16px"></span> Templates</button>
-                <button class="btn btn-primary btn-sm" onclick="downloadResume()"><span data-lucide="download" style="width:16px;height:16px"></span> Download PDF</button>
+              <div class="flex" style="justify-content:space-between;align-items:center;margin-top:var(--space-16)">
+                <div class="flex" style="gap:var(--space-8);align-items:center">
+                  <button class="btn btn-ghost btn-sm" onclick="fullPreview()"><span data-lucide="maximize-2" style="width:16px;height:16px"></span> Full view</button>
+                  <button class="btn btn-ghost btn-sm" onclick="openTemplateGallery()"><span data-lucide="grid-3x3" style="width:16px;height:16px"></span> All templates</button>
+                </div>
+                <div class="flex" style="gap:var(--space-8);align-items:center">
+                  <label for="fontSelector" style="font-size:var(--text-xs);color:var(--text-tertiary)">Font</label>
+                  <select id="fontSelector" class="input-select input-select-sm" onchange="changeFont(this.value)" style="font-size:var(--text-xs)">
+                    <option value="inter">Inter</option>
+                    <option value="serif">Instrument Serif</option>
+                    <option value="georgia">Georgia</option>
+                    <option value="arial">Arial / Helvetica</option>
+                    <option value="mono">JetBrains Mono</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>
@@ -934,7 +999,7 @@ remainingDownloads = parseInt(localStorage.getItem('resumeai_downloads')||'0');
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded',()=>{
   if(isLight)document.body.classList.add('light');
-  initSteps(); addExperience(); addEducation();
+  initSteps(); addExperience(); addEducation(); renderSectionManager(); renderTemplateStrip();
   if(typeof pdfjsLib!=='undefined')pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   getRemainingDownloads();
   updateBadge();
@@ -993,6 +1058,7 @@ function showPage(page){
   document.querySelectorAll('.bottom-tab').forEach(t=>t.classList.toggle('active',t.dataset.page===page));
   currentPage=page;
   updateNavIndicator();
+  if(page==='builder'){renderSectionManager();renderTemplateStrip();const fs=document.getElementById('fontSelector');if(fs)fs.value=resumeFont}
   if(page==='dashboard')renderDashboard();
   window.scrollTo(0,0);
 }
@@ -1084,13 +1150,17 @@ function nextStep(n){
 function prevStep(n){currentStep=n;updateSteps();window.scrollTo(0,0);updatePreview()}
 
 // ===== DATA =====
+let resumeFont='inter';
 function getResumeData(){return{
   name:document.getElementById('fName').value,title:document.getElementById('fTitle').value,
   email:document.getElementById('fEmail').value,phone:document.getElementById('fPhone').value,
   location:document.getElementById('fLocation').value,linkedin:document.getElementById('fLinkedin').value,
   portfolio:document.getElementById('fPortfolio').value,summary:document.getElementById('fSummary').value,
-  experiences:getExp(),educations:getEdu(),skills:skills,template:selectedTemplate
+  experiences:getExp(),educations:getEdu(),skills:skills,template:selectedTemplate,font:resumeFont,
+  certifications,projects,languages,sectionOrder,customSections
 }}
+
+function changeFont(v){resumeFont=v;updatePreview();autoSave()}
 function autoSave(){clearTimeout(window._as);window._as=setTimeout(saveResumeData,500)}
 function saveResumeData(){const d=getResumeData();resumeData=d;if(user)localStorage.setItem('resumeai_draft_'+user.uid,JSON.stringify(d))}
 function loadUserResumes(){if(!user)return;try{const d=JSON.parse(localStorage.getItem('resumeai_draft_'+user.uid));if(d)restoreData(d)}catch(e){}}
@@ -1106,6 +1176,12 @@ function restoreData(d){
   if(d.experiences){experiences=d.experiences;renderExp()}
   if(d.educations){educations=d.educations;renderEdu()}
   if(d.template){selectedTemplate=d.template}
+  if(d.font){resumeFont=d.font;const fs=document.getElementById('fontSelector');if(fs)fs.value=d.font}
+  if(d.certifications){certifications=d.certifications;renderCerts()}
+  if(d.projects){projects=d.projects;renderProjects()}
+  if(d.languages){languages=d.languages;renderLangs()}
+  if(d.sectionOrder){sectionOrder=d.sectionOrder;renderSectionManager()}
+  if(d.customSections){customSections=d.customSections;renderSectionManager()}
   updateBadge();updatePreview();
   autoSave();
 }
@@ -1160,6 +1236,64 @@ function removeSkill(s){skills=skills.filter(x=>x!==s);renderSkills();autoSave()
 function renderSkills(){
   const c=document.getElementById('skillsTags');
   c.innerHTML=skills.map(s=>`<span class="tag">${s}<span class="tag-remove" onclick="removeSkill('${s}')">✕</span></span>`).join('');
+}
+
+// ===== SECTION MANAGEMENT =====
+const SECTION_DEFS=[
+  {id:'summary',label:'Professional Summary',icon:'align-left',builtin:true},
+  {id:'experience',label:'Experience',icon:'briefcase',builtin:true},
+  {id:'education',label:'Education',icon:'graduation-cap',builtin:true},
+  {id:'skills',label:'Skills',icon:'wrench',builtin:true},
+  {id:'certifications',label:'Certifications',icon:'certificate',builtin:false},
+  {id:'projects',label:'Projects',icon:'folder-git-2',builtin:false},
+  {id:'languages',label:'Languages',icon:'languages',builtin:false},
+];
+let sectionOrder=['summary','experience','education','skills','certifications','projects','languages'];
+let customSections=[];
+
+function renderSectionManager(){
+  const c=document.getElementById('sectionManager');if(!c)return;
+  const available=SECTION_DEFS.filter(s=>!sectionOrder.includes(s.id));
+  c.innerHTML='<div style="display:flex;flex-direction:column;gap:6px">'+
+    sectionOrder.map((id,i)=>{
+      const def=SECTION_DEFS.find(s=>s.id===id)||customSections.find(s=>s.id===id);
+      if(!def)return '';
+      const isBuiltin=def.builtin;
+      return'<div class="section-row" data-id="'+id+'"><div class="section-row-handle"><span data-lucide="grip-vertical" style="width:14px;height:14px"></span></div>'+
+        '<span class="section-row-label">'+def.label+'</span>'+
+        '<div class="flex" style="gap:4px;margin-left:auto">'+
+        (i>0?'<button class="btn btn-icon btn-ghost btn-xs" onclick="moveSection(\''+id+'\',-1)" title="Move up"><span data-lucide="chevron-up" style="width:12px;height:12px"></span></button>':'')+
+        (i<sectionOrder.length-1?'<button class="btn btn-icon btn-ghost btn-xs" onclick="moveSection(\''+id+'\',1)" title="Move down"><span data-lucide="chevron-down" style="width:12px;height:12px"></span></button>':'')+
+        (!isBuiltin?'<button class="btn btn-icon btn-ghost btn-xs" onclick="removeSection(\''+id+'\')" title="Remove"><span data-lucide="x" style="width:12px;height:12px"></span></button>':'')+
+        '</div></div>'
+    }).join('')+'</div>'+
+    (available.length?'<div style="margin-top:var(--space-12)"><p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-bottom:var(--space-6)">Add section</p><div class="flex" style="gap:6px;flex-wrap:wrap">'+
+    available.map(s=>'<button class="btn btn-ghost btn-xs" onclick="toggleSection(\''+s.id+'\')" style="font-size:var(--text-xs);gap:4px"><span data-lucide="plus" style="width:10px;height:10px"></span> '+s.label+'</button>').join('')+
+    '</div></div>':'');
+  setTimeout(()=>lucide.createIcons(),50);
+}
+function toggleSection(id){
+  if(!sectionOrder.includes(id))sectionOrder.push(id);
+  renderSectionManager();updatePreview();autoSave();
+}
+function moveSection(id,dir){
+  const i=sectionOrder.indexOf(id);if(i<0)return;
+  const j=i+dir;if(j<0||j>=sectionOrder.length)return;
+  [sectionOrder[i],sectionOrder[j]]=[sectionOrder[j],sectionOrder[i]];
+  renderSectionManager();updatePreview();autoSave();
+}
+function removeSection(id){
+  sectionOrder=sectionOrder.filter(s=>s!==id);
+  customSections=customSections.filter(s=>s.id!==id);
+  renderSectionManager();updatePreview();autoSave();
+}
+function addCustomSection(){
+  const label=prompt('Section name:');
+  if(!label||!label.trim())return;
+  const id='custom_'+Date.now();
+  customSections.push({id,label:label.trim(),icon:'file-text',builtin:false});
+  if(!sectionOrder.includes(id))sectionOrder.push(id);
+  renderSectionManager();updatePreview();autoSave();
 }
 
 // ===== EXTRAS =====
@@ -1274,17 +1408,38 @@ function addDownloads(n){let c=parseInt(localStorage.getItem('resumeai_downloads
 function updatePreview(){clearTimeout(window._pt);window._pt=setTimeout(doPreview,300)}
 function doPreview(){
   const d=getResumeData(),c=document.getElementById('resumePreview');
-  c.className='resume-a4 resume-preview-bg resume-template-'+selectedTemplate;
+  c.className='resume-a4 resume-preview-bg resume-template-'+selectedTemplate+' resume-font-'+(d.font||'inter');
   c.innerHTML=renderResume(d);
   updateBadge();
+  renderTemplateStrip();
+}
+function renderTemplateStrip(){
+  const s=document.getElementById('templateStrip');if(!s)return;
+  s.innerHTML=TEMPLATES.map(t=>{
+    const active=t.id===selectedTemplate;
+    const tag=t.premium?'<span class="tc-badge premium">Premium</span>':'<span class="tc-badge free">Free</span>';
+    return'<div class="template-chip'+(active?' active':'')+'" onclick="selectTemplate(\''+t.id+'\')" title="'+t.name+'"><div class="tc-svg">'+tgPreviewSVG(t.id,'#C8A97E','#6B7280')+'</div><span class="tc-label">'+t.name+'</span>'+tag+'</div>'
+  }).join('');
 }
 function tgPreviewSVG(id,c1,c2){
-  const bars=id==='classic'?'<rect x="24" y="80" width="60" height="6" rx="2"/><rect x="24" y="92" width="40" height="4" rx="2"/><rect x="24" y="102" width="56" height="4" rx="2"/>':
-    id==='modern'?'<rect x="24" y="76" width="56" height="8" rx="2" fill="'+c1+'"/><rect x="24" y="92" width="60" height="4" rx="2"/><rect x="24" y="100" width="44" height="4" rx="2"/><rect x="0" y="0" width="4" height="100" fill="'+c1+'" opacity="0.15"/>':
-    id==='executive'?'<rect x="24" y="76" width="50" height="7" rx="1"/><rect x="24" y="90" width="64" height="4" rx="1"/><rect x="24" y="100" width="42" height="4" rx="1"/><rect x="24" y="108" width="56" height="3" rx="1"/>':
-    id==='minimal'?'<text x="30" y="85" font-size="14" font-weight="300" fill="'+c1+'" letter-spacing="2">NAME</text><rect x="24" y="98" width="56" height="3" rx="1"/><rect x="24" y="106" width="40" height="3" rx="1"/>':
-    '<rect x="24" y="78" width="50" height="6" rx="0" font-family="monospace"/><rect x="24" y="90" width="60" height="4" rx="0"/><rect x="24" y="99" width="44" height="4" rx="0"/>';
-  return '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="'+(id==='tech'?'#1a1c23':'#FAFAF8')+'" rx="8"/><rect x="16" y="16" width="88" height="16" rx="4" fill="'+(id==='executive'?'#2d2d2d':id==='minimal'?'transparent':'#E5E7EB')+'" opacity="0.4"/>'+bars+'</svg>';
+  const bg=id==='tech'?'#1a1c23':'#FAFAF8';
+  const tc=id==='tech'?'#FFF':'#1A1C20';
+  const sC=id==='minimal'?'transparent':'#E5E7EB';
+  const sT=id==='tech'?'#444':c2;
+  const ac=id==='modern'?c1:'#9CA3AF';
+  let content='';
+  if(id==='classic'){
+    content='<rect x="16" y="16" width="88" height="12" rx="3" fill="#E5E7EB"/><rect x="16" y="32" width="50" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="42" width="88" height="1" fill="#E5E7EB"/><rect x="16" y="50" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="58" width="80" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="64" width="60" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="70" width="72" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="80" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="88" width="50" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="94" width="40" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="104" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="112" width="88" height="3" rx="1.5" fill="#D1D5DB"/>';
+  }else if(id==='modern'){
+    content='<rect x="0" y="0" width="4" height="120" fill="'+c1+'" opacity="0.2"/><rect x="16" y="16" width="88" height="12" rx="3" fill="'+c1+'" opacity="0.15"/><rect x="28" y="18" width="40" height="8" rx="2" fill="'+c1+'"/><rect x="16" y="34" width="60" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="44" width="88" height="1" fill="rgba(200,169,126,0.15)"/><rect x="16" y="52" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="60" width="80" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="66" width="56" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="76" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="84" width="88" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="90" width="70" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="100" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="108" width="64" height="3" rx="1.5" fill="#D1D5DB"/>';
+  }else if(id==='executive'){
+    content='<rect x="16" y="16" width="88" height="12" rx="2" fill="#2d2d2d"/><text x="20" y="25" font-size="6" font-weight="bold" fill="#FFF">NAME HERE</text><rect x="16" y="34" width="40" height="3" rx="1" fill="#9CA3AF"/><rect x="16" y="42" width="88" height="2" fill="#2d2d2d"/><rect x="16" y="50" width="50" height="4" rx="2" fill="#2d2d2d" opacity="0.4"/><rect x="16" y="58" width="88" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="64" width="72" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="70" width="60" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="80" width="50" height="4" rx="2" fill="#2d2d2d" opacity="0.4"/><rect x="16" y="88" width="88" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="104" width="50" height="4" rx="2" fill="#2d2d2d" opacity="0.4"/><rect x="16" y="112" width="60" height="3" rx="1.5" fill="#D1D5DB"/>';
+  }else if(id==='minimal'){
+    content='<text x="60" y="28" font-size="10" font-weight="300" fill="'+c1+'" letter-spacing="2" text-anchor="middle">NAME</text><rect x="40" y="34" width="40" height="1" fill="'+c1+'" opacity="0.3"/><rect x="40" y="38" width="30" height="3" rx="1" fill="#9CA3AF"/><rect x="16" y="48" width="88" height="1" fill="#E5E7EB"/><rect x="16" y="56" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="64" width="88" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="70" width="60" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="76" width="76" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="88" width="30" height="4" rx="2" fill="#9CA3AF"/><rect x="16" y="96" width="88" height="3" rx="1.5" fill="#D1D5DB"/><rect x="16" y="102" width="56" height="3" rx="1.5" fill="#D1D5DB"/>';
+  }else{ // tech
+    content='<rect x="16" y="16" width="88" height="12" rx="2" fill="#2a2d35"/><text x="20" y="25" font-size="6" font-weight="bold" fill="#C8A97E" font-family="monospace">NAME</text><rect x="16" y="34" width="50" height="3" rx="0" fill="#555"/><rect x="16" y="42" width="88" height="1" fill="#2a2d35"/><rect x="16" y="50" width="40" height="4" rx="0" fill="'+c1+'" opacity="0.6"/><rect x="16" y="58" width="88" height="3" rx="0" fill="#444"/><rect x="16" y="64" width="70" height="3" rx="0" fill="#444"/><rect x="16" y="70" width="60" height="3" rx="0" fill="#444"/><rect x="16" y="80" width="40" height="4" rx="0" fill="'+c1+'" opacity="0.6"/><rect x="16" y="88" width="88" height="3" rx="0" fill="#444"/><rect x="16" y="94" width="56" height="3" rx="0" fill="#444"/><rect x="16" y="104" width="40" height="4" rx="0" fill="'+c1+'" opacity="0.6"/><rect x="16" y="112" width="70" height="3" rx="0" fill="#444"/>';
+  }
+  return '<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="120" height="120" fill="'+bg+'" rx="6"/>'+content+'</svg>';
 }
 function openTemplateGallery(){
   const body=document.getElementById('templateGalleryBody');
@@ -1304,6 +1459,8 @@ function selectTemplate(id){
   selectedTemplate=id;closeModal('templateGalleryModal');updateBadge();
   const p=document.getElementById('resumePreview');p.style.opacity='0.3';
   setTimeout(()=>{updatePreview();p.style.opacity='1'},50);
+  renderTemplateStrip();
+  autoSave();
 }
 function updateBadge(){
   const t=TEMPLATES.find(x=>x.id===selectedTemplate);
@@ -1314,16 +1471,38 @@ function updateBadge(){
 
 function renderResume(d){
   if(!d||!d.name)return '<div style="text-align:center;padding:80px 20px;color:#999"><span data-lucide="file-text" style="width:48px;height:48px;margin:0 auto 16px;display:block;opacity:0.2"></span>Your resume preview<br><span style="font-size:var(--text-sm)">Complete the form</span></div>';
-  const r=[];
-  r.push('<div class="r-name">'+esc(d.name)+'</div>');
+  const order=d.sectionOrder||sectionOrder;
+  const cSec=d.customSections||customSections;
+  const sections={};
+  // Summary
+  if(d.summary)sections.summary='<div class="r-section-title">Summary</div><div style="font-size:var(--text-xs);color:#4B5563;line-height:1.5;margin-bottom:12px">'+esc(d.summary)+'</div>';
+  // Experience
+  const exp=(d.experiences||[]).filter(e=>e.company).map(e=>'<div style="margin-bottom:8px"><div style="font-weight:500;font-size:var(--text-sm)">'+esc(e.position||'')+'</div><div style="font-size:var(--text-xs);color:#6B7280">'+esc(e.company)+(e.startDate?' · '+esc(e.startDate)+(e.endDate?' – '+esc(e.endDate):''):'')+'</div>'+(e.description?'<div style="font-size:var(--text-xs);color:#4B5563;margin-top:4px">'+esc(e.description)+'</div>':'')+'</div>').join('');
+  if(exp)sections.experience='<div class="r-section-title">Experience</div>'+exp;
+  // Education
+  const edu=(d.educations||[]).filter(e=>e.school).map(e=>'<div style="margin-bottom:6px;font-size:var(--text-xs)"><div style="font-weight:500">'+esc(e.degree||'')+(e.field?' in '+esc(e.field):'')+'</div><div style="color:#6B7280">'+esc(e.school)+(e.gradYear?' · '+esc(e.gradYear):'')+'</div></div>').join('');
+  if(edu)sections.education='<div class="r-section-title">Education</div>'+edu;
+  // Skills
+  if(d.skills&&d.skills.length)sections.skills='<div class="r-section-title">Skills</div><div style="margin-bottom:12px">'+d.skills.map(s=>'<span style="display:inline-block;background:#E5E7EB;padding:2px 8px;border-radius:4px;margin:2px;font-size:var(--text-xs)">'+esc(s)+'</span>').join(' ')+'</div>';
+  // Certifications
+  const certs=(d.certifications||[]).filter(c=>c.name).map(c=>'<div style="font-size:var(--text-xs);margin-bottom:4px">'+esc(c.name)+(c.issuer?' — '+esc(c.issuer):'')+(c.year?' ('+esc(c.year)+')':'')+'</div>').join('');
+  if(certs)sections.certifications='<div class="r-section-title">Certifications</div>'+certs;
+  // Projects
+  const projs=(d.projects||[]).filter(p=>p.name).map(p=>'<div style="margin-bottom:6px"><div style="font-weight:500;font-size:var(--text-sm)">'+esc(p.name)+'</div>'+(p.description?'<div style="font-size:var(--text-xs);color:#4B5563">'+esc(p.description)+'</div>':'')+'</div>').join('');
+  if(projs)sections.projects='<div class="r-section-title">Projects</div>'+projs;
+  // Languages
+  const langs=(d.languages||[]).filter(l=>l.language).map(l=>'<span style="display:inline-block;margin-right:12px;font-size:var(--text-xs)">'+esc(l.language)+(l.proficiency?' <span style="color:#6B7280">· '+esc(l.proficiency)+'</span>':'')+'</span>').join('');
+  if(langs)sections.languages='<div class="r-section-title">Languages</div><div style="margin-bottom:12px">'+langs+'</div>';
+  // Custom sections
+  cSec.forEach(s=>{
+    const data=d[s.id];
+    if(data&&data.trim())sections[s.id]='<div class="r-section-title">'+esc(s.label)+'</div><div style="font-size:var(--text-xs);color:#4B5563;line-height:1.5;margin-bottom:12px">'+esc(data)+'</div>';
+  });
+  // Build in order
+  const r=['<div class="r-name">'+esc(d.name)+'</div>'];
   if(d.title)r.push('<div style="color:#6B7280;margin-bottom:12px;font-size:var(--text-sm)">'+esc(d.title)+'</div>');
   if(d.email||d.phone||d.location)r.push('<div style="color:#6B7280;margin-bottom:16px;font-size:var(--text-xs)">'+(d.email?esc(d.email):'')+(d.phone?' · '+esc(d.phone):'')+(d.location?' · '+esc(d.location):'')+'</div>');
-  if(d.summary){r.push('<div class="r-section-title">Summary</div><div style="font-size:var(--text-xs);color:#4B5563;line-height:1.5;margin-bottom:12px">'+esc(d.summary)+'</div>')}
-  const exp=(d.experiences||[]).filter(e=>e.company).map(e=>'<div style="margin-bottom:8px"><div style="font-weight:500;font-size:var(--text-sm)">'+esc(e.position||'')+'</div><div style="font-size:var(--text-xs);color:#6B7280">'+esc(e.company)+(e.startDate?' · '+esc(e.startDate)+(e.endDate?' – '+esc(e.endDate):''):'')+'</div>'+(e.description?'<div style="font-size:var(--text-xs);color:#4B5563;margin-top:4px">'+esc(e.description)+'</div>':'')+'</div>').join('');
-  if(exp)r.push('<div class="r-section-title">Experience</div>'+exp);
-  const edu=(d.educations||[]).filter(e=>e.school).map(e=>'<div style="margin-bottom:6px;font-size:var(--text-xs)"><div style="font-weight:500">'+esc(e.degree||'')+(e.field?' in '+esc(e.field):'')+'</div><div style="color:#6B7280">'+esc(e.school)+(e.gradYear?' · '+esc(e.gradYear):'')+'</div></div>').join('');
-  if(edu)r.push('<div class="r-section-title">Education</div>'+edu);
-  if(d.skills&&d.skills.length)r.push('<div class="r-section-title">Skills</div><div style="margin-bottom:12px">'+d.skills.map(s=>'<span style="display:inline-block;background:#E5E7EB;padding:2px 8px;border-radius:4px;margin:2px;font-size:var(--text-xs)">'+esc(s)+'</span>').join(' ')+'</div>');
+  order.forEach(id=>{if(sections[id])r.push(sections[id])});
   return r.join('');
 }
 function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
@@ -1353,29 +1532,66 @@ async function downloadResume(){
   const isPremium=TEMPLATES.find(t=>t.id===selectedTemplate)?.premium;
   if(isPremium&&getRemainingDownloads()<=0){document.getElementById('payModal').classList.add('open');return}
   showToast('Generating PDF...','file-down','info');
-  // Temporarily move preview out of clipped container, capture, restore
-  const el=document.getElementById('resumePreview');
-  const parent=el.parentElement;
-  const ref=el.nextSibling;
-  parent.removeChild(el);
-  el.style.cssText='position:fixed;left:0;top:0;width:595px;z-index:10000;margin:0;box-shadow:none';
-  document.body.appendChild(el);
-  await new Promise(r=>setTimeout(r,300));
   try{
-    const c=await html2canvas(el,{scale:2,useCORS:true,logging:false,backgroundColor:'#FAFAF8'});
     const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
-    const pw=210,ph=297,r=c.height/c.width;
-    // Fit to page width; if too tall, fit to height
-    if(r<=ph/pw){p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,pw,pw*r)}else{p.addImage(c.toDataURL('image/jpeg',0.95),'JPEG',0,0,ph/r,ph)}
+    const pw=210,ph=297,ml=22,mt=22,w=pw-ml*2;
+    const fontMap={inter:'Helvetica',arial:'Helvetica',serif:'Times',georgia:'Times',mono:'Courier'};
+    const pdfFont=fontMap[d.font]||'Helvetica';
+    const bFont=pdfFont+' bold';
+    const iFont=pdfFont+(pdfFont==='Helvetica'?'-Oblique':'-Italic');
+    let y=mt;
+
+    function chk(h){if(y+h>ph-22){p.addPage();y=mt}}
+
+    function printBold(t,f,cl){p.setFont(pdfFont,'bold');p.setFontSize(f);p.setTextColor(cl||0,0,0);p.text(t,ml,y);y+=f*0.45}
+
+    function printLight(t,f,cl){p.setFont(pdfFont,'normal');p.setFontSize(f);p.setTextColor(cl||100,100,100);p.text(t,ml,y);y+=f*0.4}
+
+    function printWrapped(t,f,cl,lead){
+      const l=p.splitTextToSize(t||'',w);
+      p.setFont(pdfFont,'normal');p.setFontSize(f);p.setTextColor(cl||60,60,60);
+      l.forEach(x=>{if(y+lead>ph-22){p.addPage();y=mt}p.text(x,ml,y);y+=lead});
+    }
+
+    // === HEADER ===
+    chk(16);
+    p.setFont(pdfFont,'bold');p.setFontSize(28);p.setTextColor(25,25,25);p.text(d.name,ml,y);y+=10;
+
+    if(d.title){chk(6);p.setFont(pdfFont,'normal');p.setFontSize(12);p.setTextColor(100,100,100);p.text(d.title,ml,y);y+=6}
+
+    const cts=[d.email,d.phone,d.location,d.linkedin].filter(Boolean);
+    if(cts.length){chk(5);p.setFont(pdfFont,'normal');p.setFontSize(9);p.setTextColor(140,140,140);p.text(cts.join('  ·  '),ml,y);y+=7}
+
+    // Thin divider
+    chk(2);p.setDrawColor(220,220,220);p.line(ml,y,pw-ml,y);y+=7;
+
+    // === SECTIONS (in order) ===
+    const order=d.sectionOrder||['summary','experience','education','skills','certifications','projects','languages'];
+    const cSec=d.customSections||[];
+    const pdfSections={};
+
+    function sec(title,fn){chk(12);p.setFont(pdfFont,'bold');p.setFontSize(10);p.setTextColor(140,140,140);const tw=p.getTextWidth(title.toUpperCase())+4;p.text(title.toUpperCase(),ml,y);y+=1;p.setDrawColor(200,200,200);p.line(ml,y,ml+tw,y);y+=6;fn()}
+
+    if(d.summary)pdfSections.summary=()=>{sec('Summary',()=>printWrapped(d.summary,10,60,4.5));y+=2};
+    const exps=(d.experiences||[]).filter(e=>e.company);
+    if(exps.length)pdfSections.experience=()=>{sec('Experience',()=>{exps.forEach((e,i)=>{chk(14);p.setFont(pdfFont,'bold');p.setFontSize(11);p.setTextColor(30,30,30);const pos=e.position||'',comp=e.company||'',dt=e.startDate?(e.endDate?e.startDate+' – '+e.endDate:e.startDate):'';p.text(pos,ml,y);if(dt||comp){y+=5;chk(5);p.setFont(pdfFont,'normal');p.setFontSize(9);p.setTextColor(120,120,120);p.text([comp,dt].filter(Boolean).join('  |  '),ml,y);y+=5}if(e.description){chk(4);printWrapped(e.description,9,60,4);y+=2}if(i<exps.length-1)y+=2})})};
+    const edus=(d.educations||[]).filter(e=>e.school);
+    if(edus.length)pdfSections.education=()=>{sec('Education',()=>{edus.forEach((e,i)=>{chk(10);p.setFont(pdfFont,'bold');p.setFontSize(11);p.setTextColor(30,30,30);p.text((e.degree||'')+(e.field?' in '+e.field:''),ml,y);y+=5;chk(5);p.setFont(pdfFont,'normal');p.setFontSize(9);p.setTextColor(120,120,120);p.text(e.school+(e.gradYear?'  |  '+e.gradYear:''),ml,y);y+=6})})};
+    if(d.skills&&d.skills.length)pdfSections.skills=()=>{sec('Skills',()=>printWrapped(d.skills.join('  ·  '),10,60,4.5));y+=2};
+    const certs=(d.certifications||[]).filter(c=>c.name);
+    if(certs.length)pdfSections.certifications=()=>{sec('Certifications',()=>certs.forEach(c=>{chk(6);printLight(c.name+(c.issuer?' — '+c.issuer:'')+(c.year?' ('+c.year+')':''),9,100)}));y+=2};
+    const projs=(d.projects||[]).filter(p=>p.name);
+    if(projs.length)pdfSections.projects=()=>{sec('Projects',()=>projs.forEach((p,i)=>{chk(10);p.setFont(pdfFont,'bold');p.setFontSize(11);p.setTextColor(30,30,30);p.text(p.name,ml,y);y+=5;if(p.description){chk(4);printWrapped(p.description,9,60,4)}if(i<projs.length-1)y+=2}))};
+    const langs=(d.languages||[]).filter(l=>l.language);
+    if(langs.length)pdfSections.languages=()=>{sec('Languages',()=>{chk(6);printLight(langs.map(l=>l.language+(l.proficiency?' ('+l.proficiency+')':'')).join('  ·  '),9,100)});y+=2};
+    cSec.forEach(s=>{const data=d[s.id];if(data&&data.trim())pdfSections[s.id]=()=>{sec(s.label,()=>printWrapped(data,10,60,4.5));y+=2}});
+
+    order.forEach(id=>{if(pdfSections[id])pdfSections[id]()});
+
     p.save((d.name||'Resume')+'_Resume.pdf');
     if(isPremium)useDownload();
-    const left=getRemainingDownloads();showToast(left>0?'Downloaded ('+left+' left)':'Downloaded ✓','download','success');
+    getRemainingDownloads();showToast('Downloaded ✓','download','success');
   }catch(e){showToast('PDF error: '+(e.message||e),'alert-circle','error');console.error('PDF err:',e)}
-  // Restore preview to original position
-  document.body.removeChild(el);
-  el.style.cssText='';
-  el.className='resume-a4 resume-preview-bg resume-template-'+selectedTemplate;
-  parent.insertBefore(el,ref);
 }
 
 // ===== IMPORT SCORED TO BUILDER =====
@@ -1498,3 +1714,4 @@ function showCoach(t,d,p){const ov=document.createElement('div');ov.className='c
 </script>
 </body>
 </html>
+
