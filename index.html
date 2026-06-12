@@ -6,7 +6,8 @@
 <title>ResumeAI Pro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@latest"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
@@ -100,14 +101,11 @@ p+p{margin-top:1em}
 ::selection{background:var(--accent-dim);color:var(--accent-secondary)}
 
 /* ============================================
-   BACKDROP ORBS
+   EDITORIAL GRID
    ============================================ */
-.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(120px);animation:float 30s ease-in-out infinite alternate}
-.orb-1{width:600px;height:600px;background:rgba(200,169,126,0.10);top:-200px;left:-200px;animation-duration:35s}
-.orb-2{width:500px;height:500px;background:rgba(78,205,196,0.06);bottom:-150px;right:-150px;animation-duration:40s;animation-delay:-10s}
-.orb-3{width:400px;height:400px;background:rgba(255,255,255,0.03);top:40%;right:-100px;animation-duration:25s;animation-delay:-5s}
-.orb-4{width:800px;height:800px;background:rgba(200,169,126,0.05);bottom:10%;left:-300px;animation-duration:45s;animation-delay:-15s}
-@keyframes float{0%{transform:translate(0,0)}33%{transform:translate(40px,-30px)}66%{transform:translate(-20px,40px)}100%{transform:translate(30px,-20px)}}
+.grid-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.grid-bg::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:64px 64px;background-position:-1px -1px}
+.grid-bg::after{content:'';position:absolute;top:0;left:50%;width:1px;height:100%;background:linear-gradient(180deg,transparent,var(--accent-dim) 15%,var(--accent-dim) 85%,transparent);opacity:0.15}
 
 /* ============================================
    GLASS
@@ -130,30 +128,67 @@ p+p{margin-top:1em}
 /* ============================================
    TYPOGRAPHY
    ============================================ */
-h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:var(--fw-normal);letter-spacing:-0.02em;color:var(--text-primary)}
-h1{font-size:var(--text-4xl);line-height:1.1;letter-spacing:-0.03em;font-weight:400}
-h2{font-size:var(--text-3xl);line-height:1.15;letter-spacing:-0.025em}
-h3{font-size:var(--text-2xl);line-height:1.2;letter-spacing:-0.02em}
-h4{font-size:var(--text-xl);line-height:1.25;letter-spacing:-0.015em}
-h5{font-size:var(--text-lg);line-height:1.3;letter-spacing:-0.01em;font-family:var(--font-body);font-weight:600}
+h1,h2,h3,h4,h5,h6{font-family:var(--font-display);font-weight:var(--fw-normal);letter-spacing:-0.02em;color:var(--text-primary);text-wrap:balance}
+h1{font-size:var(--text-4xl);line-height:1.08;letter-spacing:-0.03em;font-weight:400}
+h2{font-size:var(--text-3xl);line-height:1.12;letter-spacing:-0.025em}
+h3{font-size:var(--text-2xl);line-height:1.18;letter-spacing:-0.02em}
+h4{font-size:var(--text-xl);line-height:1.22;letter-spacing:-0.015em}
+h5{font-size:var(--text-lg);line-height:1.28;letter-spacing:-0.01em;font-family:var(--font-body);font-weight:600}
 h6{font-size:var(--text-base);line-height:1.35;letter-spacing:-0.01em;font-family:var(--font-body);font-weight:600}
 
-.text-eyebrow{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:var(--space-8)}
-.text-display{font-family:var(--font-display);font-size:var(--text-4xl);line-height:1.08;letter-spacing:-0.03em;font-weight:400}
-.text-display-lg{font-family:var(--font-display);font-size:var(--text-5xl);line-height:1.05;letter-spacing:-0.035em;font-weight:400}
+/* Decorative typography */
+h1 em,h2 em{font-style:italic;color:var(--accent-primary)}
+.lede{font-size:var(--text-md);line-height:var(--leading-relaxed);color:var(--text-secondary);max-width:65ch}
+.measure{max-width:65ch}
+.measure-sm{max-width:45ch}
+
+.text-eyebrow{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:var(--space-8)}
+.text-display{font-family:var(--font-display);font-size:var(--text-4xl);line-height:1.06;letter-spacing:-0.035em;font-weight:400}
+.text-display-lg{font-family:var(--font-display);font-size:var(--text-5xl);line-height:1.04;letter-spacing:-0.04em;font-weight:400}
+
+/* Type utilities */
 .text-mono{font-family:var(--font-mono);letter-spacing:0;font-feature-settings:'tnum' 1,'zero' 1}
 .text-balance{text-wrap:balance}
 .text-pretty{text-wrap:pretty}
 .text-center{text-align:center}
-.text-sm{font-size:var(--text-sm)}
+.text-left{text-align:left}
 .text-xs{font-size:var(--text-xs)}
 .text-sm{font-size:var(--text-sm)}
 .text-base{font-size:var(--text-base)}
 .text-lg{font-size:var(--text-lg)}
+.text-xl{font-size:var(--text-xl)}
 .text-secondary{color:var(--text-secondary)}
 .text-tertiary{color:var(--text-tertiary)}
 .text-accent{color:var(--accent-primary)}
+.text-muted{color:var(--text-tertiary);font-size:var(--text-sm)}
+.leading-snug{line-height:var(--leading-snug)}
+.leading-tight{line-height:var(--leading-tight)}
 a{color:var(--accent-primary);text-decoration:none;transition:opacity var(--duration-fast)}a:hover{opacity:0.8}
+
+/* ============================================
+   ICON SYSTEM
+   ============================================ */
+svg[data-lucide]{display:inline-block;width:1em;height:1em;stroke-width:1.5;vertical-align:-0.125em;flex-shrink:0}
+.btn svg[data-lucide]{width:16px;height:16px;stroke-width:2}
+.btn-icon svg[data-lucide]{width:20px;height:20px}
+.lucide-sm svg[data-lucide]{width:14px;height:14px}
+.lucide-md svg[data-lucide]{width:18px;height:18px}
+.lucide-lg svg[data-lucide]{width:24px;height:24px}
+.lucide-xl svg[data-lucide]{width:32px;height:32px}
+.icon-circle{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;flex-shrink:0;background:var(--accent-dim);color:var(--accent-primary)}.icon-circle svg[data-lucide]{stroke-width:2}
+.icon-circle-xs{width:28px;height:28px}.icon-circle-xs svg[data-lucide]{width:14px;height:14px}
+.icon-circle-sm{width:36px;height:36px}.icon-circle-sm svg[data-lucide]{width:18px;height:18px}
+.icon-circle-md{width:48px;height:48px}.icon-circle-md svg[data-lucide]{width:24px;height:24px}
+.icon-circle-lg{width:64px;height:64px}.icon-circle-lg svg[data-lucide]{width:28px;height:28px}
+.btn svg[data-lucide]{width:1em;height:1em}
+.btn-icon svg[data-lucide]{width:20px;height:20px}
+
+/* Animated AI sparkle */
+.ai-icon{position:relative;display:inline-flex}
+.ai-icon .sparkle-1,.ai-icon .sparkle-2{position:absolute;width:4px;height:4px;border-radius:50%;background:currentColor;opacity:0}
+.ai-icon:hover .sparkle-1{animation:sparklePop 0.6s var(--spring) 0.1s forwards}
+.ai-icon:hover .sparkle-2{animation:sparklePop 0.6s var(--spring) 0.25s forwards}
+@keyframes sparklePop{0%{opacity:0;transform:scale(0) translate(0,0)}50%{opacity:1;transform:scale(1.2) translate(4px,-4px)}100%{opacity:0;transform:scale(0.5) translate(8px,-8px)}}
 
 /* ============================================
    LAYOUT
@@ -167,9 +202,7 @@ a{color:var(--accent-primary);text-decoration:none;transition:opacity var(--dura
   border-bottom:1px solid var(--border-glass);
 }
 .navbar-wordmark{font-family:var(--font-display);font-size:22px;color:var(--accent-primary);letter-spacing:-0.02em;cursor:pointer;position:relative;overflow:hidden}
-.navbar-wordmark::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(200,169,126,0.15),transparent);animation:shimmerOnce 1.2s ease-in-out 0.5s 1;pointer-events:none}
-@keyframes shimmerOnce{0%{left:-100%}100%{left:200%}}
-.navbar-wordmark:hover::after{animation:shimmerOnce 0.8s ease-in-out 0s 1}
+.navbar-wordmark:hover{opacity:0.8}
 .nav-tabs{display:flex;gap:4px;background:rgba(255,255,255,0.04);padding:3px;border-radius:var(--radius-lg);position:relative}
 .nav-tab{padding:8px 20px;border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:500;color:var(--text-secondary);cursor:pointer;transition:color var(--duration-fast) var(--ease-out);position:relative;z-index:2;min-height:36px;display:flex;align-items:center}
 .nav-tab.active{color:var(--text-primary)}
@@ -188,9 +221,7 @@ a{color:var(--accent-primary);text-decoration:none;transition:opacity var(--dura
   -webkit-backdrop-filter:blur(32px) saturate(200%);
   border-top:1px solid var(--border-glass);padding:0 var(--space-8)}
 .bottom-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;cursor:pointer;position:relative;color:var(--text-tertiary);transition:color var(--duration-fast)}
-.bottom-tab svg{width:24px;height:24px;transition:color var(--duration-fast)}
-.bottom-tab.active{color:var(--accent-primary)}
-.bottom-tab.active svg{color:var(--accent-primary)}
+.bottom-tab svg[data-lucide]{width:24px;height:24px;transition:color var(--duration-fast)}.bottom-tab.active{color:var(--accent-primary)}
 .bottom-tab.active::before{content:'';position:absolute;top:0;width:24px;height:2px;background:var(--accent-primary);border-radius:0 0 2px 2px;transition:left var(--duration-normal) var(--spring-subtle)}
 .bottom-tab-label{font-size:var(--text-xs);line-height:1;margin-top:1px}
 .bottom-tab:not(.active) .bottom-tab-label{display:none}
@@ -419,8 +450,9 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .resume-a4 .r-name{font-family:var(--font-display);font-size:var(--text-2xl);margin-bottom:4px}
 .resume-a4 .r-section-title{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6B7280;border-bottom:1px solid #E5E7EB;padding-bottom:6px;margin:16px 0 8px}
 
-/* Resume preview paper texture */
-.resume-preview-bg{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");background-repeat:repeat}
+/* Paper texture */
+.paper-bg{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");background-repeat:repeat}
+.card.paper,.glass.paper{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E");background-repeat:repeat;background-blend-mode:overlay}
 
 /* ============================================
    AI RESULT ANIMATION
@@ -438,9 +470,23 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* ============================================
    LANDING
    ============================================ */
-.landing{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:var(--space-48) var(--space-24)}
-.landing .trust-row{font-size:var(--text-sm);color:var(--text-tertiary);display:flex;gap:var(--space-16);flex-wrap:wrap;justify-content:center}
+.landing{min-height:90vh;display:flex;position:relative;padding:var(--space-64) var(--space-24) var(--space-48)}
+.landing-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-64);align-items:center;max-width:1120px;margin:0 auto;width:100%}
+.landing-left{display:flex;flex-direction:column;gap:var(--space-32)}
+.landing-right{position:relative;display:flex;align-items:center;justify-content:center}
+.landing-right .resume-teaser{width:100%;max-width:420px;background:#FAFAF8;color:#1A1C20;padding:32px 28px;border-radius:var(--radius-xl);box-shadow:0 24px 64px rgba(0,0,0,0.3),0 2px 0 rgba(255,255,255,0.06) inset;position:relative;transform:rotate(-1deg);transition:transform var(--duration-slow) var(--spring-subtle)}
+.landing-right .resume-teaser:hover{transform:rotate(0deg) translateY(-4px)}
+.landing-right .resume-teaser .rt-name{font-family:var(--font-display);font-size:var(--text-xl);margin-bottom:4px;color:#1A1C20}
+.landing-right .resume-teaser .rt-title{font-size:var(--text-sm);color:#6B7280;margin-bottom:16px}
+.landing-right .resume-teaser .rt-section-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#9CA3AF;border-bottom:1px solid #E5E7EB;padding-bottom:4px;margin:12px 0 6px}
+.landing-right .resume-teaser .rt-text{font-size:11px;color:#4B5563;line-height:1.5}
+.landing-right .resume-teaser .rt-badge{position:absolute;top:-8px;right:-8px;background:var(--accent-primary);color:#0D1117;font-size:9px;font-weight:700;padding:3px 8px;border-radius:var(--radius-sm);letter-spacing:0.03em}
+.landing .trust-row{font-size:var(--text-sm);color:var(--text-tertiary);display:flex;gap:var(--space-16);flex-wrap:wrap}
 .landing .trust-row span::after{content:'·';margin-left:var(--space-16);color:var(--border-glass)}.landing .trust-row span:last-child::after{content:''}
+.landing-benefits{display:flex;flex-direction:column;gap:var(--space-12)}
+.landing-benefit{display:flex;align-items:center;gap:var(--space-12);font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-snug)}
+.landing-benefit .benefit-icon{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent-primary)}
+@media(max-width:768px){.landing{min-height:auto;padding:var(--space-32) var(--space-16) var(--space-48)}.landing-grid{grid-template-columns:1fr;gap:var(--space-32)}.landing-right{display:none}}
 
 /* ============================================
    ACTION SHEET
@@ -456,6 +502,19 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .coach{position:fixed;z-index:9000;background:var(--bg-overlay);border:1px solid var(--border-glass);border-radius:var(--radius-xl);padding:var(--space-24);max-width:320px;box-shadow:0 24px 48px rgba(0,0,0,0.4);animation:fadeIn var(--duration-normal) var(--spring-subtle)}
 
 /* ============================================
+   SIGNATURE — Stamp Reveal
+   ============================================ */
+.stamp-overlay{position:fixed;inset:0;z-index:9000;display:none;align-items:center;justify-content:center;pointer-events:none}
+.stamp-overlay.active{display:flex;animation:stampAppear 0.4s var(--spring) forwards}
+.stamp-overlay.fade-out{animation:stampFade 0.4s var(--ease-out) forwards}
+.stamp{width:160px;height:160px;border-radius:50%;border:3px solid var(--accent-primary);display:flex;flex-direction:column;align-items:center;justify-content:center;transform:scale(0) rotate(-15deg);opacity:0;animation:stampHit 0.5s var(--spring) 0.1s forwards;background:rgba(200,169,126,0.08);backdrop-filter:blur(8px)}
+.stamp-check{width:48px;height:48px;border-radius:50%;background:var(--accent-primary);display:flex;align-items:center;justify-content:center;margin-bottom:4px;color:#0D1117}
+.stamp-text{font-family:var(--font-display);font-size:var(--text-base);color:var(--accent-primary);letter-spacing:0.04em}
+@keyframes stampAppear{0%{opacity:0}100%{opacity:1}}
+@keyframes stampFade{0%{opacity:1}100%{opacity:0;transform:scale(0.8)}}
+@keyframes stampHit{0%{transform:scale(0) rotate(-15deg);opacity:0}60%{transform:scale(1.2) rotate(-3deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media(max-width:768px){.main-content{padding-left:var(--space-16);padding-right:var(--space-16)}.card{padding:var(--space-16)}}
@@ -463,19 +522,22 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* ============================================
    PREFERENCES
    ============================================ */
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}@keyframes none{}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}.stamp-overlay{display:none!important}@keyframes none{}}
 </style>
 </head>
 <body>
-<!-- Backdrop Orbs -->
-<div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div><div class="orb orb-4"></div>
+<!-- Editorial Grid Background -->
+<div class="grid-bg"></div>
 
 <div id="app">
   <div class="toast" id="toast"></div>
 
   <!-- Navbar -->
   <nav class="navbar" id="navbar">
-    <div class="navbar-wordmark" onclick="showPage('home')">ResumeAI</div>
+    <div class="navbar-wordmark" onclick="showPage('home')">
+      <svg viewBox="0 0 24 24" width="22" height="22" style="vertical-align:-3px;margin-right:6px;fill:none;stroke:var(--accent-primary);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
+      ResumeAI
+    </div>
     <div class="nav-tabs" id="navTabs" role="tablist">
       <div class="nav-tab-indicator" id="navIndicator"></div>
       <div class="nav-tab active" data-page="home" onclick="showPage('home')" tabindex="0" role="tab" aria-selected="true" onkeydown="if(event.key==='Enter')showPage('home')">Home</div>
@@ -485,7 +547,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
     </div>
     <div class="navbar-right">
       <button class="btn btn-icon btn-ghost" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">
-        <span data-lucide="moon" style="width:20px;height:20px"></span>
+        <span data-lucide="moon"></span>
       </button>
       <div id="authArea">
         <button class="btn btn-primary btn-sm" onclick="signIn()" id="signInBtn">Continue with Google</button>
@@ -507,20 +569,41 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
     <!-- Landing Page -->
     <div class="page active" id="page-home">
       <div class="landing">
-        <div class="badge badge-premium" style="margin-bottom:var(--space-24);padding:6px 16px;height:auto;text-wrap:balance">AI-Powered Resume Builder</div>
-        <h1 class="text-display text-balance" style="margin-bottom:var(--space-16)">Resume intelligence<br>for serious candidates</h1>
-        <p class="text-lg text-secondary text-balance" style="max-width:480px;margin-bottom:var(--space-40);line-height:var(--leading-snug)">ATS-optimized resumes crafted with AI. Beautiful by design.</p>
-        <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px;width:100%">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          Continue with Google
-        </button>
-        <div class="flex" style="gap:var(--space-24);margin-top:var(--space-24);flex-wrap:wrap;justify-content:center">
-          <div class="flex" style="align-items:center;gap:var(--space-8);font-size:var(--text-sm);color:var(--text-secondary)"><span data-lucide="sparkles" style="width:16px;height:16px;color:var(--accent-primary)"></span> AI summary &amp; bullet enhancement</div>
-          <div class="flex" style="align-items:center;gap:var(--space-8);font-size:var(--text-sm);color:var(--text-secondary)"><span data-lucide="target" style="width:16px;height:16px;color:var(--accent-primary)"></span> ATS scoring &amp; keyword analysis</div>
-          <div class="flex" style="align-items:center;gap:var(--space-8);font-size:var(--text-sm);color:var(--text-secondary)"><span data-lucide="file-down" style="width:16px;height:16px;color:var(--accent-primary)"></span> Premium PDF export templates</div>
-        </div>
-        <div class="trust-row" style="margin-top:var(--space-32)">
-          <span>Free to start</span><span>₹10 to download</span><span>ATS-optimized</span>
+        <div class="landing-grid">
+          <div class="landing-left">
+            <div>
+              <p class="text-eyebrow" style="margin-bottom:var(--space-16)">Resume Studio</p>
+              <h1 class="text-display-lg" style="margin-bottom:var(--space-16);max-width:580px">Your next role starts with <em>one page</em></h1>
+              <p class="text-lg text-secondary measure-sm" style="line-height:var(--leading-relaxed)">Build an ATS-optimized resume in minutes, not hours. AI writes the first draft — you take the credit.</p>
+            </div>
+            <div style="width:40px;height:1px;background:linear-gradient(90deg,var(--border-accent),transparent)"></div>
+            <div class="landing-benefits">
+              <div class="landing-benefit"><span class="icon-circle icon-circle-xs"><span data-lucide="sparkles"></span></span> AI generates your summary and enhances every bullet point</div>
+              <div class="landing-benefit"><span class="icon-circle icon-circle-xs"><span data-lucide="target"></span></span> ATS score analysis with keyword gap detection against job descriptions</div>
+              <div class="landing-benefit"><span class="icon-circle icon-circle-xs"><span data-lucide="file-down"></span></span> Export polished PDFs with premium templates — 3 downloads for ₹10</div>
+            </div>
+            <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+              Start building — free
+            </button>
+            <div class="trust-row">
+              <span>No credit card</span><span>₹10 to download</span><span>ATS-optimized</span>
+            </div>
+          </div>
+          <div class="landing-right">
+            <div class="resume-teaser">
+              <div class="rt-badge">ATS Score: 92</div>
+              <div class="rt-name">Sarah Chen</div>
+              <div class="rt-title">Senior Product Manager</div>
+              <div class="rt-section-title">Summary</div>
+              <div class="rt-text" style="margin-bottom:8px">Product leader with 8+ years driving B2B SaaS growth. Increased revenue 40% YoY through data-informed roadmap prioritization and cross-functional team alignment.</div>
+              <div class="rt-section-title">Experience</div>
+              <div class="rt-text" style="margin-bottom:4px"><strong>Director of Product</strong> · ScaleUp Inc. · 2021–Present</div>
+              <div class="rt-text" style="margin-bottom:4px"><strong>Senior PM</strong> · TechCorp · 2018–2021</div>
+              <div class="rt-section-title">Skills</div>
+              <div class="rt-text" style="color:#6B7280">Product Strategy · A/B Testing · Team Leadership · Data Analysis</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -535,14 +618,14 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
               <span class="ai-learned" id="aiLearnedBadge" style="display:none;font-size:var(--text-xs);color:var(--accent-secondary);padding:4px 12px;border-radius:var(--radius-sm);background:var(--accent-dim);gap:6px">
                 <span class="ai-star">✦</span> AI learned your style
               </span>
-              <button class="btn btn-ghost btn-sm" onclick="togglePreviewMobile()" id="previewToggleBtn">
+              <button class="btn btn-ghost btn-sm" onclick="togglePreviewMobile()" id="previewToggleBtn" aria-label="Toggle preview">
                 <span data-lucide="eye" style="width:16px;height:16px"></span>
               </button>
             </div>
           </div>
-          <div class="card" style="padding:var(--space-16);margin-bottom:var(--space-24);text-align:center;background:var(--accent-dim);border:1px dashed var(--accent-primary)">
-            <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-8)">Already have a resume? Import and auto-fill everything.</p>
-            <button class="btn btn-secondary btn-sm" onclick="importResume()"><span data-lucide="upload" style="width:16px;height:16px"></span> Import existing resume</button>
+          <div class="card card-subtle" style="padding:var(--space-16);margin-bottom:var(--space-24);text-align:center;border:1px dashed var(--border-accent)">
+            <p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-8)">Already have a resume? We'll import and fill everything in.</p>
+            <button class="btn btn-secondary btn-sm" onclick="importResume()"><span data-lucide="upload" style="width:16px;height:16px"></span> Upload PDF or DOCX</button>
             <input type="file" id="importFileInput" accept=".pdf,.docx" style="display:none" onchange="importFromFile(this.files[0])">
           </div>
 
@@ -552,8 +635,8 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <!-- Step 1 -->
           <div class="step-card active" data-step="1">
             <div class="text-eyebrow">Step 1 of 6</div>
-            <h3 class="step-title">Personal info</h3>
-            <p class="step-subtitle">The essentials — name, contact, links</p>
+            <h3 class="step-title">About you</h3>
+            <p class="step-subtitle">The essentials recruiters look for first</p>
             <div class="input-group"><input type="text" id="fName" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Full name</label><span class="input-error"></span></div>
             <div class="input-group"><input type="text" id="fTitle" placeholder=" " oninput="clearValidation(this);autoSave();updatePreview()"><label>Job title</label><span class="input-error"></span></div>
             <div class="entry-card-grid">
@@ -572,7 +655,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <div class="step-card" data-step="2">
             <div class="text-eyebrow">Step 2 of 6</div>
             <h3 class="step-title">Professional summary</h3>
-            <p class="step-subtitle">A compelling overview of your career</p>
+            <p class="step-subtitle">A concise overview that makes hiring managers want more</p>
             <div class="input-group"><textarea id="fSummary" rows="4" placeholder=" " oninput="autoSave();updatePreview()"></textarea><label>Summary</label></div>
             <button class="btn btn-ai btn-full" onclick="generateSummary()"><span class="ai-star">✦</span> Generate with AI</button>
             <div id="summaryResult" class="mt-16"></div>
@@ -586,7 +669,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <div class="step-card" data-step="3">
             <div class="text-eyebrow">Step 3 of 6</div>
             <h3 class="step-title">Experience</h3>
-            <p class="step-subtitle">Where you've worked and what you've done</p>
+            <p class="step-subtitle">Your roles, results, and impact — quantified where possible</p>
             <div id="experienceEntries"></div>
             <button class="btn btn-secondary btn-full" onclick="addExperience()"><span data-lucide="plus" style="width:16px;height:16px"></span> Add experience</button>
             <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
@@ -599,7 +682,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <div class="step-card" data-step="4">
             <div class="text-eyebrow">Step 4 of 6</div>
             <h3 class="step-title">Education</h3>
-            <p class="step-subtitle">Your academic background</p>
+            <p class="step-subtitle">Degrees, institutions, and graduation years</p>
             <div id="educationEntries"></div>
             <button class="btn btn-secondary btn-full" onclick="addEducation()"><span data-lucide="plus" style="width:16px;height:16px"></span> Add education</button>
             <div class="flex" style="justify-content:space-between;margin-top:var(--space-24)">
@@ -612,7 +695,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <div class="step-card" data-step="5">
             <div class="text-eyebrow">Step 5 of 6</div>
             <h3 class="step-title">Skills</h3>
-            <p class="step-subtitle">What you're good at</p>
+            <p class="step-subtitle">Technical and professional expertise — let AI suggest missing ones</p>
             <div class="input-group">
               <input type="text" id="fSkillInput" placeholder=" " onkeydown="if(event.key==='Enter'){event.preventDefault();addSkill()}">
               <label>Add a skill</label>
@@ -630,7 +713,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           <div class="step-card" data-step="6">
             <div class="text-eyebrow">Step 6 of 6</div>
             <h3 class="step-title">Extras</h3>
-            <p class="step-subtitle">Certifications, projects, languages</p>
+            <p class="step-subtitle">Certifications, projects, and languages that set you apart</p>
             <details class="card" style="margin-bottom:var(--space-16);padding:var(--space-16);cursor:pointer">
               <summary style="font-weight:500;display:flex;align-items:center;gap:8px;color:var(--text-secondary)"><span data-lucide="certificate" style="width:16px;height:16px"></span> Certifications</summary>
               <div class="mt-16" id="certEntries"></div>
@@ -684,8 +767,8 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 
     <!-- Score -->
     <div class="page" id="page-score">
-      <h2 style="margin-bottom:var(--space-8)">Score my resume</h2>
-      <p class="text-secondary" style="margin-bottom:var(--space-32)">Upload your resume for AI-powered ATS analysis</p>
+      <h2 style="margin-bottom:var(--space-8)">ATS Resume Analysis</h2>
+      <p class="text-secondary" style="margin-bottom:var(--space-32);max-width:520px">Upload your resume and get a detailed breakdown of how it scores against ATS systems, with actionable fixes.</p>
       <div class="upload-zone glass" id="scoreZone">
         <div style="margin-bottom:var(--space-16)"><span data-lucide="cloud-upload" style="width:32px;height:32px;color:var(--accent-primary)"></span></div>
         <p style="font-weight:500;margin-bottom:4px">Drop your resume here</p>
@@ -732,11 +815,11 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
         <div style="margin:0 auto var(--space-24);width:64px;height:64px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center">
           <span data-lucide="download" style="width:28px;height:28px;color:var(--accent-primary)"></span>
         </div>
-        <h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">Download any premium template</h3>
-        <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-bottom:var(--space-24)">3 downloads. No time limit. No restrictions.</p>
+        <h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">Unlock premium exports</h3>
+        <p style="color:var(--text-secondary);font-size:var(--text-sm);margin-bottom:var(--space-24);max-width:320px;margin-left:auto;margin-right:auto">One payment. 3 downloads. No subscription, no time limit.</p>
         <div style="font-size:var(--text-3xl);font-family:var(--font-display);color:var(--accent-primary);margin-bottom:var(--space-8)">₹10</div>
-        <p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-bottom:var(--space-24)">One-time payment · 3 downloads</p>
-        <button class="btn btn-primary btn-full" onclick="startPayment()" style="height:52px;font-size:16px"><span data-lucide="lock" style="width:18px;height:18px"></span> Pay ₹10 — Get 3 downloads</button>
+        <p style="font-size:var(--text-xs);color:var(--text-tertiary);margin-bottom:var(--space-24)">One-time · 3 premium template exports</p>
+        <button class="btn btn-primary btn-full" onclick="startPayment()" style="height:52px;font-size:var(--text-base)"><span data-lucide="lock" style="width:18px;height:18px"></span> Pay ₹10 — Get 3 downloads</button>
         <div style="margin-top:var(--space-16);border-top:1px solid var(--border-subtle);padding-top:var(--space-16)">
           <button class="btn btn-ghost btn-sm" onclick="toggleRedeem()"><span data-lucide="key" style="width:14px;height:14px"></span> Have a redeem code?</button>
           <div id="redeemSection" style="display:none;margin-top:var(--space-12)">
@@ -745,6 +828,14 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Signature: Stamp -->
+  <div class="stamp-overlay" id="stampOverlay">
+    <div class="stamp">
+      <div class="stamp-check"><span data-lucide="check" style="width:28px;height:28px"></span></div>
+      <span class="stamp-text">Saved</span>
     </div>
   </div>
 
@@ -1235,21 +1326,26 @@ function renderScore(r){
 async function downloadScoreReport(){showToast('Generating report...','file-down','info');try{await html2pdf().set({margin:10,filename:'ResumeAI_Score_Report.pdf',html2canvas:{scale:2},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}}).from(document.getElementById('scoreResults')).save()}catch(e){showToast('Report failed','alert-circle','error')}}
 
 // ===== FINISH & DASHBOARD =====
+function showStamp(cb){
+  const ov=document.getElementById('stampOverlay');
+  ov.classList.remove('fade-out');ov.classList.add('active');
+  setTimeout(()=>{lucide.createIcons()},50);
+  setTimeout(()=>{ov.classList.remove('active');ov.classList.add('fade-out');setTimeout(()=>ov.classList.remove('fade-out'),500);if(cb)cb()},1200);
+}
 function finishBuild(){
   const d=getResumeData();if(!d.name){showToast('Enter your name','alert-circle','error');return}
   if(!user){showToast('Sign in to save','log-in','info');return}
   const resumes=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]');
   resumes.unshift({...d,id:Date.now(),createdAt:new Date().toISOString()});
   localStorage.setItem('resumeai_resumes_'+user.uid,JSON.stringify(resumes));
-  showToast('Resume saved!','check','success');
-  renderDashboard();
+  showStamp(()=>{showToast('Resume saved','check','success');renderDashboard()});
 }
 
 function renderDashboard(){
   const c=document.getElementById('dashboardContent');
-  if(!user){c.innerHTML='<div class="glass" style="text-align:center;padding:64px 32px;max-width:400px;margin:var(--space-48) auto"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><span data-lucide="log-in" style="width:32px;height:32px;color:var(--accent-primary)"></span></div><h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">Sign in to continue</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-24)">Sign in with Google to save your resumes, access AI features, and download premium templates.</p><button class="btn btn-primary" onclick="signIn()" style="width:200px"><span data-lucide="google" style="width:16px;height:16px"></span> Continue with Google</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
+  if(!user){c.innerHTML='<div class="glass" style="text-align:center;padding:64px 32px;max-width:400px;margin:var(--space-48) auto"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><span data-lucide="log-in" style="width:32px;height:32px;color:var(--accent-primary)"></span></div><h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">Sign in to save your work</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-24);line-height:1.6">Your resumes are stored in your account. Sign in with Google to pick up where you left off.</p><button class="btn btn-primary" onclick="signIn()" style="width:200px">Continue with Google</button></div>';setTimeout(()=>lucide.createIcons(),50);return}
   const resumes=JSON.parse(localStorage.getItem('resumeai_resumes_'+user.uid)||'[]');
-  if(!resumes.length){c.innerHTML='<div class="glass" style="text-align:center;padding:64px 32px;max-width:400px;margin:var(--space-48) auto"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><span data-lucide="file-plus" style="width:32px;height:32px;color:var(--accent-primary)"></span></div><h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">No resumes yet</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-24);line-height:1.6">Create your first AI-powered resume. Get AI-generated summaries, ATS-optimized bullet points, and professional templates.</p><div class="flex" style="flex-direction:column;gap:var(--space-8);align-items:center"><button class="btn btn-primary" onclick="showPage(\'builder\')" style="width:200px"><span data-lucide="plus" style="width:16px;height:16px"></span> Create resume</button><button class="btn btn-ghost btn-sm" onclick="showPage(\'score\')" style="width:200px"><span data-lucide="target" style="width:14px;height:14px"></span> Score existing resume</button></div></div>';setTimeout(()=>lucide.createIcons(),50);return}
+  if(!resumes.length){c.innerHTML='<div class="glass" style="text-align:center;padding:64px 32px;max-width:400px;margin:var(--space-48) auto"><div style="width:72px;height:72px;border-radius:50%;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;margin:0 auto 20px"><span data-lucide="file-plus" style="width:32px;height:32px;color:var(--accent-primary)"></span></div><h3 style="font-size:var(--text-lg);margin-bottom:var(--space-8)">No resumes yet</h3><p style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-24);line-height:1.6">Build your first resume with AI-generated summaries, ATS-optimized bullet points, and professional templates.</p><div class="flex" style="flex-direction:column;gap:var(--space-8);align-items:center"><button class="btn btn-primary" onclick="showPage(\'builder\')" style="width:200px"><span data-lucide="plus" style="width:16px;height:16px"></span> Create resume</button><button class="btn btn-ghost btn-sm" onclick="showPage(\'score\')" style="width:200px">Score existing resume</button></div></div>';setTimeout(()=>lucide.createIcons(),50);return}
   c.innerHTML='<div style="display:grid;gap:12px">'+resumes.map((r,i)=>{const t=r.name||'Untitled';return'<div class="card card-hover" style="display:flex;align-items:center;gap:16px;padding:16px 20px"><div style="width:40px;height:40px;border-radius:10px;background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0"><span data-lucide="file-text" style="width:20px;height:20px;color:var(--accent-primary)"></span></div><div style="flex:1;min-width:0"><div style="font-weight:500;font-size:var(--text-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+t+'</div><div style="font-size:var(--text-xs);color:var(--text-secondary)">'+getTimeAgo(r.createdAt)+'</div></div><div class="flex" style="gap:8px"><button class="btn btn-ghost btn-sm" onclick="restoreData(resumes['+i+']);showPage(\'builder\')" data-lucide="edit" style="width:36px;height:36px"></button><button class="btn btn-ghost btn-sm" onclick="downloadResumeData('+i+')" data-lucide="download" style="width:36px;height:36px"></button></div></div>'}).join('')+'</div>';
   setTimeout(()=>lucide.createIcons(),50);
 }
