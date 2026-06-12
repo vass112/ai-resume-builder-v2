@@ -513,7 +513,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* Smooth preview transition on template switch */
 #resumePreview{transition:opacity 0.3s ease}
 
-.resume-a4{background:#FAFAF8;padding:40px 36px;max-width:595px;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,0.06);position:relative;font-family:var(--font-body);transition:background 0.3s,color 0.3s}
+.resume-a4{box-sizing:border-box;background:#FAFAF8;padding:40px 36px;max-width:595px;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,0.06);position:relative;font-family:var(--font-body);transition:background 0.3s,color 0.3s}
 /* === CLASSIC (standard baseline) === */
 .resume-template-classic{color:#1A1C20}
 .resume-template-classic .r-name{font-family:var(--font-display);font-size:var(--text-2xl);margin-bottom:4px;font-weight:600}
@@ -1651,8 +1651,12 @@ async function downloadResume(){
   showToast('Generating PDF...','file-down','info');
   try{
     await document.fonts.ready;
-    const el=document.getElementById('resumePreview');
-    const canvas=await html2canvas(el,{scale:3,useCORS:true,logging:false});
+    const src=document.getElementById('resumePreview');
+    const cl=src.cloneNode(true);
+    cl.style.position='fixed';cl.style.left='-9999px';cl.style.top='0';cl.style.width='595px';cl.style.maxWidth='595px';cl.style.boxShadow='none';cl.style.margin='0';cl.style.zIndex='-1';
+    document.body.appendChild(cl);
+    const canvas=await html2canvas(cl,{scale:3,useCORS:true,logging:false});
+    document.body.removeChild(cl);
     const p=new jspdf.jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
     const pw=210,ph=297,cw=canvas.width,ch=canvas.height,pgH=cw*ph/pw,pg=Math.ceil(ch/pgH);
     for(let i=0;i<pg;i++){
