@@ -857,7 +857,6 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 // ===== CONFIG =====
 const GEMINI_API_KEY = window._env?.GEMINI_API_KEY || "";
 const RAZORPAY_KEY = window._env?.RAZORPAY_KEY || "";
-const OCR_SPACE_KEY = window._env?.OCR_SPACE_KEY || "";
 const FIREBASE_CONFIG = window._env?.FIREBASE_CONFIG || { apiKey:"", authDomain:"", projectId:"" };
 const VALID_REDEEM_CODES = ['TEST10','FREE3','DEV2024','PREMIUM','BETA'];
 
@@ -1046,27 +1045,14 @@ function restoreData(d){
   autoSave();
 }
 function importResume(){document.getElementById('importFileInput').click()}
-async function ocrSpaceExtract(file){
-  if(!OCR_SPACE_KEY)throw new Error('OCR API key not configured');
-  const fd=new FormData();fd.append('apikey',OCR_SPACE_KEY);fd.append('file',file);
-  fd.append('language','eng');fd.append('isOverlayRequired','false');fd.append('OCREngine','2');
-  const r=await fetch('https://api.ocr.space/parse/image',{method:'POST',body:fd});
-  const j=await r.json();
-  if(j.IsErroredOnProcessing)throw new Error(j.ErrorMessage[0]||'OCR failed');
-  return (j.ParsedResults||[]).map(p=>p.ParsedText).join('\n').trim();
-}
 async function importFromFile(file){
   if(!file)return;
   const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only','file','error');return}
   showToast('Extracting text...','file-text','info');
   try{
     let text='';
-    try{text=await ocrSpaceExtract(file)}catch(ocrErr){
-      console.warn('OCR.space failed, falling back to local:',ocrErr);
-      if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}
-      else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
-    }
-    if(!text){showToast('Could not extract text from this file','alert-circle','error');return}
+    if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}
+    else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
     showToast('Parsing with AI...','sparkles','info');
     const json=await callGemini('Extract structured resume data from the text below. Return ONLY valid JSON with these fields: name, title, email, phone, location, linkedin, portfolio, summary, experiences (array of {company,position,startDate,endDate,description}), educations (array of {school,degree,field,gradYear}), skills (array of strings). Use empty strings for missing fields. RESUME:\n'+text);
     const d=JSON.parse(json.replace(/```json|```/g,'').trim());
@@ -1298,15 +1284,8 @@ function handleResumeUpload(e){const f=e.target.files[0];if(f)handleFile(f)}
 async function handleFile(file){
   const ext=file.name.split('.').pop().toLowerCase();if(!['pdf','docx'].includes(ext)){showToast('PDF or DOCX only','file','error');return}
   showToast('Extracting...','file-text','info');
-  try{
-    let text='';
-    try{text=await ocrSpaceExtract(file)}catch(ocrErr){
-      console.warn('OCR.space failed, falling back to local:',ocrErr);
-      if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}
-      else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
-    }
-    uploadedResumeText=text;document.getElementById('extractedTextPreview').textContent=text.substring(0,1500)+(text.length>1500?'...':'');showToast('Text extracted','check','success')
-  }catch(e){showToast('Error extracting text','alert-circle','error')}
+  try{let text='';if(ext==='pdf'){const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;for(let i=1;i<=pdf.numPages;i++){const p=await pdf.getPage(i),c=await p.getTextContent();text+=c.items.map(x=>x.str).join(' ')+'\n'}}else{text=(await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()})).value}
+  uploadedResumeText=text;document.getElementById('extractedTextPreview').textContent=text.substring(0,1500)+(text.length>1500?'...':'');showToast('Text extracted','check','success')}catch(e){showToast('Error extracting text','alert-circle','error')}
 }
 
 async function analyzeResume(){

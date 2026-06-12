@@ -2,7 +2,6 @@ const fs = require('fs');
 const env = {
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || "",
   RAZORPAY_KEY: process.env.RAZORPAY_KEY || "",
-  OCR_SPACE_KEY: process.env.OCR_SPACE_KEY || "",
   FIREBASE_CONFIG: {
     apiKey: process.env.FIREBASE_API_KEY || "",
     authDomain: process.env.FIREBASE_AUTH_DOMAIN || "",
