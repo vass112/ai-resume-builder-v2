@@ -508,22 +508,38 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* Smooth preview transition on template switch */
 #resumePreview{transition:opacity 0.3s ease}
 
-.resume-a4{background:#FAFAF8;color:#1A1C20;padding:40px 36px;max-width:595px;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,0.06);position:relative;font-family:var(--font-body)}
-.resume-a4 *{color:#1A1C20}
-.resume-a4 .r-name{font-family:var(--font-display);font-size:var(--text-2xl);margin-bottom:4px}
-.resume-a4 .r-section-title{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6B7280;border-bottom:1px solid #E5E7EB;padding-bottom:6px;margin:16px 0 8px}
-/* Template variations */
-.resume-template-modern{font-family:Inter,sans-serif}
-.resume-template-modern .r-name{color:#C8A97E;font-size:26px;letter-spacing:-0.3px}
-.resume-template-modern .r-section-title{color:#C8A97E;border-bottom-color:rgba(200,169,126,0.3)}
-.resume-template-executive .r-name{font-family:'Instrument Serif',Georgia,serif;font-size:30px}
-.resume-template-executive .r-section-title{font-family:'Instrument Serif',Georgia,serif;text-transform:none;letter-spacing:normal;font-size:14px;border-bottom-width:2px}
-.resume-template-minimal{letter-spacing:0.3px}
-.resume-template-minimal .r-name{font-weight:300;font-size:28px;letter-spacing:1px;text-transform:uppercase}
-.resume-template-minimal .r-section-title{text-transform:uppercase;letter-spacing:0.15em;font-weight:400;border:none;font-size:9px;margin:12px 0 4px}
-.resume-template-tech{font-family:Inter,sans-serif}
-.resume-template-tech .r-name{font-family:'JetBrains Mono',monospace;font-weight:500}
-.resume-template-tech .r-section-title{font-family:'JetBrains Mono',monospace;border-bottom-color:#333}
+.resume-a4{background:#FAFAF8;padding:40px 36px;max-width:595px;margin:0 auto;box-shadow:0 2px 16px rgba(0,0,0,0.06);position:relative;font-family:var(--font-body);transition:background 0.3s,color 0.3s}
+/* === CLASSIC (standard baseline) === */
+.resume-template-classic{color:#1A1C20}
+.resume-template-classic .r-name{font-family:var(--font-display);font-size:var(--text-2xl);margin-bottom:4px;font-weight:600}
+.resume-template-classic .r-section-title{font-family:var(--font-body);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#6B7280;border-bottom:1px solid #E5E7EB;padding-bottom:6px;margin:16px 0 8px}
+/* === MODERN (gold accent + left bar) === */
+.resume-template-modern{color:#1A1C20;padding-left:50px;position:relative}
+.resume-template-modern::before{content:'';position:absolute;left:15px;top:40px;bottom:40px;width:3px;background:linear-gradient(180deg,#C8A97E,rgba(200,169,126,0.15));border-radius:2px}
+.resume-template-modern .r-name{color:#C8A97E;font-size:28px;letter-spacing:-0.5px;font-weight:600}
+.resume-template-modern .r-section-title{color:#C8A97E;border-bottom:none;padding-left:10px;border-left:2px solid rgba(200,169,126,0.3);margin-left:2px}
+/* === EXECUTIVE (dark header block, serif formal) === */
+.resume-template-executive{color:#1A1C20;padding-top:0}
+.resume-template-executive .r-exec-header{background:#1a1a1a;margin:-40px -36px 24px;padding:40px 36px 20px}
+.resume-template-executive .r-exec-header .r-name{color:#fff;font-family:'Instrument Serif',Georgia,serif;font-size:30px}
+.resume-template-executive .r-exec-header .r-meta{color:rgba(255,255,255,0.7)!important}
+.resume-template-executive .r-section-title{font-family:'Instrument Serif',Georgia,serif;text-transform:none;letter-spacing:normal;font-size:14px;border-bottom:2px solid #1a1a1a;padding-bottom:4px;color:#1a1a1a}
+/* === MINIMAL (centered, airy, no borders) === */
+.resume-template-minimal{color:#2C2C2C;background:#F5F4F1;text-align:center}
+.resume-template-minimal .r-name{font-weight:300;font-size:22px;letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
+.resume-template-minimal .r-section-title{text-transform:uppercase;letter-spacing:0.2em;font-weight:400;border:none;font-size:9px;margin:20px 0 6px;color:#9CA3AF;text-align:center;position:relative;padding-bottom:0}
+.resume-template-minimal .r-section-title::after{content:'';display:block;width:20px;height:1px;background:#D1D5DB;margin:6px auto 0}
+.resume-template-minimal .r-section-title:first-child{margin-top:0}
+.resume-template-minimal span[style*="background:#E5E7EB"]{background:transparent!important;padding:2px 4px!important;color:#6B7280!important}
+.resume-template-minimal div[style*="margin-bottom:12px"][style*="font-size:var(--text-xs)"]{text-align:center}
+/* === TECH (dark terminal, monospace) === */
+.resume-template-tech{background:#1a1c23;color:#D0D0D0}
+.resume-template-tech .r-name{font-family:'JetBrains Mono',monospace;color:#C8A97E;font-weight:500;letter-spacing:-0.3px;font-size:23px}
+.resume-template-tech .r-name::before{content:'> \00a0';color:#C8A97E;opacity:0.5}
+.resume-template-tech .r-section-title{font-family:'JetBrains Mono',monospace;color:#C8A97E;border-bottom:1px solid #2a2d35;font-size:10px;letter-spacing:0;margin:18px 0 8px;padding-bottom:4px}
+.resume-template-tech .r-section-title::before{content:'// \00a0';color:#C8A97E;opacity:0.4}
+.resume-template-tech span[style*="background:#E5E7EB"]{background:#2a2d35!important;color:#C8A97E!important}
+.resume-template-tech div[style*="color:#6B7280"]{color:#9CA3AF!important}
 
 /* Resume font-family overrides (user selectable) */
 .resume-a4.resume-font-inter{font-family:'Inter',system-ui,sans-serif}
@@ -1546,9 +1562,12 @@ function renderResume(d){
     if(data&&data.trim())sections[s.id]='<div class="r-section-title">'+esc(s.label)+'</div><div style="font-size:var(--text-xs);color:#4B5563;line-height:1.5;margin-bottom:12px">'+esc(data)+'</div>';
   });
   // Build in order
-  const r=['<div class="r-name">'+esc(d.name)+'</div>'];
-  if(d.title)r.push('<div style="color:#6B7280;margin-bottom:12px;font-size:var(--text-sm)">'+esc(d.title)+'</div>');
-  if(d.email||d.phone||d.location)r.push('<div style="color:#6B7280;margin-bottom:16px;font-size:var(--text-xs)">'+(d.email?esc(d.email):'')+(d.phone?' · '+esc(d.phone):'')+(d.location?' · '+esc(d.location):'')+'</div>');
+  const t=d.template||selectedTemplate;
+  const meta=d.title?'<div class="r-meta" style="color:#6B7280;margin-bottom:12px;font-size:var(--text-sm)">'+esc(d.title)+'</div>':'';
+  const ctcs=d.email||d.phone||d.location?'<div class="r-meta" style="color:#6B7280;margin-bottom:16px;font-size:var(--text-xs)">'+(d.email?esc(d.email):'')+(d.phone?' · '+esc(d.phone):'')+(d.location?' · '+esc(d.location):'')+'</div>':'';
+  let hdr='<div class="r-name">'+esc(d.name)+'</div>'+meta+ctcs;
+  if(t==='executive')hdr='<div class="r-exec-header"><div class="r-name">'+esc(d.name)+'</div>'+meta+ctcs+'</div>';
+  const r=[hdr];
   order.forEach(id=>{if(sections[id])r.push(sections[id])});
   return r.join('');
 }
