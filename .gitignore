@@ -19,3 +19,15 @@ auth_handler.html
 
 vercel_*.json
 new_*.json
+
+# Leaked credential files (purged from history)
+gemini_key.txt
+gemini_test.json
+create_sa.json
+f1.json
+f2.json
+f3.json
+f4.json
+f5.json
+f6.json
+firebase.json
