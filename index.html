@@ -523,6 +523,61 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
    PREFERENCES
    ============================================ */
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}.stamp-overlay{display:none!important}@keyframes none{}}
+
+/* ============================================
+   HOW IT WORKS
+   ============================================ */
+.how-section{padding:var(--space-80) 0 var(--space-48)}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-32);margin-top:var(--space-48)}
+.how-step{text-align:center;padding:var(--space-32)}
+.how-step .step-num{width:48px;height:48px;border-radius:50%;background:var(--accent-dim);color:var(--accent-primary);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-16);font-family:var(--font-mono);font-size:var(--text-lg);font-weight:500}
+.how-step h4{font-size:var(--text-lg);margin-bottom:var(--space-8)}
+.how-step p{font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-relaxed);max-width:280px;margin:0 auto}
+@media(max-width:768px){.how-grid{grid-template-columns:1fr;gap:var(--space-16)}}
+
+/* ============================================
+   STATS BAR
+   ============================================ */
+.stats-bar{display:flex;justify-content:center;gap:var(--space-48);padding:var(--space-32) 0;border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle);margin-top:var(--space-48)}
+.stat-item{text-align:center}
+.stat-num{font-family:var(--font-display);font-size:var(--text-2xl);color:var(--accent-primary);line-height:1}
+.stat-label{font-size:var(--text-xs);color:var(--text-tertiary);margin-top:var(--space-4);text-transform:uppercase;letter-spacing:0.06em}
+@media(max-width:768px){.stats-bar{gap:var(--space-24);flex-wrap:wrap}}
+
+/* ============================================
+   IMPROVED SKELETON
+   ============================================ */
+.skeleton-pulse{background:linear-gradient(90deg,var(--bg-elevated) 25%,rgba(255,255,255,0.05) 50%,var(--bg-elevated) 75%);background-size:300px 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-md)}
+.skeleton-card{background:var(--bg-elevated);border-radius:var(--radius-xl);overflow:hidden;border:1px solid var(--border-subtle)}
+.skeleton-card .s-h{height:16px;background:var(--bg-glass-light);border-radius:var(--radius-sm);margin-bottom:var(--space-12)}
+.skeleton-card .s-b{height:12px;background:var(--bg-glass-light);border-radius:var(--radius-sm);margin-bottom:var(--space-8)}
+.skeleton-card .s-b:last-child{width:60%}
+.skeleton-card .s-body{padding:var(--space-24)}
+.skeleton-card .s-head{height:40px;background:var(--accent-dim);border-radius:0}
+.skeleton-card .s-line{display:flex;gap:var(--space-8);padding:var(--space-12) var(--space-24);align-items:center}
+.skeleton-card .s-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg-glass-light);flex-shrink:0}
+.skeleton-card .s-text{flex:1;height:12px;background:var(--bg-glass-light);border-radius:var(--radius-sm)}
+
+/* ============================================
+   DIFF VIEW
+   ============================================ */
+.diff-view{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-16)}
+.diff-pane{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-subtle)}
+.diff-pane .diff-label{padding:var(--space-8) var(--space-16);font-size:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.04em;background:var(--bg-glass-light);color:var(--text-tertiary)}
+.diff-pane .diff-content{padding:var(--space-16);font-size:var(--text-sm);line-height:var(--leading-relaxed);white-space:pre-wrap;color:var(--text-secondary)}
+.diff-pane.old .diff-content{color:var(--text-tertiary)}
+.diff-pane.new .diff-content{color:var(--text-primary)}
+.diff-pane.new{border-color:rgba(78,205,196,0.2)}
+.diff-pane.new .diff-label{color:var(--jade);background:rgba(78,205,196,0.08)}
+@media(max-width:640px){.diff-view{grid-template-columns:1fr}}
+
+/* ============================================
+   INLINE GHOST TEXT
+   ============================================ */
+.ghost-wrap{position:relative}
+.ghost-hint{position:absolute;top:24px;left:16px;right:16px;font-size:var(--text-base);color:var(--text-tertiary);pointer-events:none;opacity:0;transition:opacity var(--duration-normal);white-space:pre-wrap;line-height:var(--leading-relaxed);font-family:var(--font-body);z-index:1}
+.ghost-wrap textarea{position:relative;z-index:2;background:transparent}
+.ghost-wrap .ghost-hint.show{opacity:0.4}
 </style>
 </head>
 <body>
@@ -582,7 +637,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
               <div class="landing-benefit"><span class="icon-circle icon-circle-xs"><span data-lucide="target"></span></span> ATS score analysis with keyword gap detection against job descriptions</div>
               <div class="landing-benefit"><span class="icon-circle icon-circle-xs"><span data-lucide="file-down"></span></span> Export polished PDFs with premium templates — 3 downloads for ₹10</div>
             </div>
-            <button class="btn btn-primary btn-lg" onclick="signIn()" id="landingCta" style="max-width:320px">
+            <button class="btn btn-primary btn-lg" onclick="handleCta()" id="landingCta" style="max-width:320px">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
               Start building — free
             </button>
@@ -604,6 +659,52 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
               <div class="rt-text" style="color:#6B7280">Product Strategy · A/B Testing · Team Leadership · Data Analysis</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div class="how-section">
+        <div class="text-center">
+          <p class="text-eyebrow">How it works</p>
+          <h2 style="font-size:var(--text-2xl)">Three steps to your next resume</h2>
+          <p class="text-secondary measure" style="margin:var(--space-8) auto 0">No account setup. No templates to choose. Just your experience and AI.</p>
+        </div>
+        <div class="how-grid">
+          <div class="how-step">
+            <div class="step-num">1</div>
+            <h4>Fill in your details</h4>
+            <p>Your name, experience, education, and skills — or upload an existing resume and let AI parse it automatically.</p>
+          </div>
+          <div class="how-step">
+            <div class="step-num">2</div>
+            <h4>Polish with AI</h4>
+            <p>Generate a professional summary, enhance bullet points with quantified results, and discover missing skills — all in one click.</p>
+          </div>
+          <div class="how-step">
+            <div class="step-num">3</div>
+            <h4>Export as PDF</h4>
+            <p>Preview live changes across multiple templates. Download a polished, ATS-friendly PDF ready to submit — 3 exports for ₹10.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-num">95+</div>
+          <div class="stat-label">ATS Score Average</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">10k+</div>
+          <div class="stat-label">Resumes Built</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Minutes Average Build Time</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">₹10</div>
+          <div class="stat-label">Cost Per 3 Downloads</div>
         </div>
       </div>
     </div>
@@ -904,6 +1005,10 @@ async function initFirebase(){
   }catch(e){showToast('Firebase init failed: '+(e.message||e),'alert-circle','error');console.error('Firebase:',e)}
 }
 function setUser(u){user={uid:u.uid,name:u.displayName||'User',email:u.email,photo:u.photoURL};updateAuthUI();loadUserResumes()}
+function handleCta(){
+  if(user){showPage('builder')}
+  else{signIn()}
+}
 function signIn(){
   if(!window._auth||!window._signInWithPopup){showToast('Firebase not configured','alert-circle','error');return}
   window._signInWithPopup(window._auth,new window._GoogleAuthProvider()).catch(e=>{
@@ -1136,7 +1241,6 @@ function updateAuthUI(){
     area.innerHTML=`<button class="btn btn-primary btn-sm" onclick="signIn()">Continue with Google</button>`;
   }
   document.getElementById('signInBtn')&&(document.getElementById('signInBtn').style.display='none');
-  const cta=document.getElementById('landingCta');if(cta){cta.textContent=user?'Start building →':'Continue with Google';cta.onclick=user?()=>showPage('builder'):signIn}
   setTimeout(()=>lucide.createIcons(),50);
 }
 
@@ -1170,7 +1274,8 @@ function recordReject(t){sessionContext.rejected.push(t)}
 // ===== AI FEATURES =====
 async function generateSummary(){
   const n=document.getElementById('fName').value||'the candidate',t=document.getElementById('fTitle').value||'professional';
-  const s=document.getElementById('summaryResult');s.innerHTML='<div class="skeleton" style="height:80px"></div>';
+  const s=document.getElementById('summaryResult');
+  s.innerHTML='<div class="skeleton-card"><div class="s-head"></div><div class="s-body"><div class="s-h" style="width:40%"></div><div class="s-b"></div><div class="s-b"></div><div class="s-b" style="width:70%"></div><div class="s-b"></div><div class="s-b" style="width:50%"></div></div></div>';
   try{
     const text=await callGemini('Write 3-4 line ATS-optimized summary for '+n+', a '+t+'. Skills: '+(skills.join(', ')||'various')+'. Return ONLY summary text.');
     _lastSummary=text;const enc=encodeURIComponent(text);
@@ -1182,14 +1287,37 @@ function acceptSummary(t){document.getElementById('fSummary').value=t;recordAcce
 
 async function enhanceBullets(id,btn){
   const exp=experiences.find(e=>e.id===id);if(!exp||!exp.description){showToast('Write a description first','edit','info');return}
+  const container=btn.closest('.entry-card')||btn.parentElement;
   setLoading(btn,true);
-  try{const text=await callGemini('Rewrite these bullet points into quantified, action-verb-led lines: '+exp.description+'\nReturn ONLY the rewritten text.');exp.description=text;renderExp();recordAccept('bullets');showToast('Bullets enhanced','check','success');updatePreview()}catch(e){showToast('Error: '+e.message,'alert-circle','error')}
+  try{
+    const text=await callGemini('Rewrite these bullet points into quantified, action-verb-led lines: '+exp.description+'\nReturn ONLY the rewritten text.');
+    const encOld=encodeURIComponent(exp.description),encNew=encodeURIComponent(text);
+    const diffHtml='<div class="diff-view" style="margin-top:var(--space-12)">'
+      +'<div class="diff-pane old"><div class="diff-label">Original</div><div class="diff-content">'+esc(exp.description)+'</div></div>'
+      +'<div class="diff-pane new"><div class="diff-label">Enhanced</div><div class="diff-content">'+esc(text)+'</div></div>'
+      +'</div><div class="flex" style="gap:8px;justify-content:flex-end;margin-top:var(--space-8)">'
+      +'<button class="btn btn-sm" style="background:rgba(78,205,196,0.15);color:var(--jade);border:none" onclick="applyEnhancement(\''+id+'\',decodeURIComponent(\''+encNew+'\'),this)"><span data-lucide="check" style="width:14px;height:14px"></span> Apply</button>'
+      +'<button class="btn btn-ghost btn-sm" onclick="this.closest(\'.diff-view\')&&this.closest(\'.diff-view\').remove()">Dismiss</button></div>';
+    const existing=container.querySelector('.diff-view');if(existing)existing.remove();
+    container.insertAdjacentHTML('beforeend',diffHtml);
+    setTimeout(()=>lucide.createIcons(),50);
+    recordAccept('bullets');
+  }catch(e){showToast('Error: '+e.message,'alert-circle','error')}
   setLoading(btn,false);
+}
+function applyEnhancement(id,text,btn){
+  const exp=experiences.find(e=>e.id==id);if(!exp)return;
+  exp.description=text;renderExp();
+  showToast('Bullets enhanced','check','success');
+  updatePreview();
 }
 
 async function suggestSkills(){
   const t=document.getElementById('fTitle').value;if(!t){showToast('Enter a job title first','edit','info');return}
-  const c=document.getElementById('suggestedSkillsResult');c.innerHTML='<div class="skeleton" style="height:40px"></div>';
+  const c=document.getElementById('suggestedSkillsResult');
+  c.innerHTML='<div class="skeleton-card"><div class="s-body" style="padding:var(--space-16)"><div class="flex" style="gap:8px;flex-wrap:wrap">'+
+    Array(8).fill('<div class="skeleton-pulse" style="width:'+(40+Math.random()*60)+'px;height:28px;border-radius:14px;display:inline-block"></div>').join('')+
+    '</div></div></div>';
   try{
     const text=await callGemini('Suggest 10-15 skills for a '+t+'. Return comma-separated list only.');
     const suggested=text.split(',').map(s=>s.trim()).filter(Boolean);
@@ -1301,7 +1429,8 @@ async function analyzeResume(){
   if(!uploadedResumeText){showToast('Upload a resume first','cloud-upload','info');return}
   if(analyzing)return;analyzing=true;
   const btn=document.querySelector('#page-score .btn-ai');const orig=btn.innerHTML;btn.innerHTML='<span class="spinner" style="display:inline-block;width:16px;height:16px;border:2px solid rgba(200,169,126,0.3);border-top-color:var(--accent-primary);border-radius:50%;animation:spin 0.6s linear infinite"></span> Analyzing...';btn.disabled=true;
-  const rd=document.getElementById('scoreResults');rd.style.display='block';rd.innerHTML='<div class="skeleton" style="height:200px"></div>';
+  const rd=document.getElementById('scoreResults');rd.style.display='block';
+  rd.innerHTML='<div class="skeleton-card"><div class="s-head"></div><div class="s-body"><div class="flex" style="gap:var(--space-24);align-items:center;margin-bottom:var(--space-16)"><div class="skeleton-pulse" style="width:120px;height:120px;border-radius:50%;flex-shrink:0"></div><div style="flex:1"><div class="s-h" style="width:30%"></div><div class="s-b" style="width:60%"></div><div class="s-b" style="width:45%"></div></div></div><div class="s-h" style="width:20%;margin-top:var(--space-16)"></div><div class="s-b"></div><div class="s-b"></div><div class="s-b" style="width:55%"></div></div></div>';
   try{
     const jd=document.getElementById('scoreJd').value;
     const text=await callGemini('You are an expert ATS resume analyzer. Analyze the resume and return ONLY valid JSON: {"ats_score":0-100,"section_scores":{"summary":0,"experience":0,"education":0,"skills":0,"formatting":0},"strengths":[],"critical_issues":[],"quick_wins":[],"keywords_present":[],"keywords_missing":[],"overall_verdict":"","improvement_priority":[]} RESUME: '+uploadedResumeText+(jd?'\nJD: '+jd:''));
