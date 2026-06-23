@@ -389,7 +389,7 @@ svg[data-lucide]{display:inline-block;width:1em;height:1em;stroke-width:1.5;vert
 .builder-layout{display:flex;gap:var(--space-40);align-items:flex-start}
 .builder-form{flex:1;max-width:600px}
 .builder-preview{flex:1;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto;scrollbar-gutter:stable}
-@media(max-width:1024px){.builder-preview{display:none}.builder-form{max-width:100%}}
+@media(max-width:768px){.builder-preview{display:none;position:static;max-height:none;overflow:visible;width:100%}.builder-form{max-width:100%}.builder-layout{flex-direction:column}}
 
 /* ============================================
    SCORE RING
@@ -625,9 +625,9 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .landing .trust-row span::after{content:'·';margin-left:var(--space-16);color:var(--border-glass)}.landing .trust-row span:last-child::after{content:''}
 .landing-benefits{display:flex;flex-direction:column;gap:var(--space-12)}
 .landing-benefit{display:flex;align-items:center;gap:var(--space-10);font-size:var(--text-sm);color:var(--text-secondary);white-space:nowrap}
-.landing-benefit .icon-circle{flex-shrink:0;margin-top:2px}
+.landing-benefit .icon-circle{flex-shrink:0}
 .landing-benefit .benefit-icon{width:28px;height:28px;border-radius:var(--radius-sm);background:var(--accent-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent-primary)}
-@media(max-width:768px){.landing{min-height:auto;padding:var(--space-32) var(--space-16) var(--space-48)}.landing-grid{grid-template-columns:1fr;gap:var(--space-32)}.landing-right{display:none}}
+@media(max-width:768px){.landing{min-height:auto;padding:var(--space-32) var(--space-16) var(--space-48)}.landing-grid{grid-template-columns:1fr;gap:var(--space-32)}.landing-right{display:none}.text-display-lg{font-size:var(--text-2xl)}.landing-actions{flex-direction:column}.landing-actions .btn{max-width:100%!important;flex:1 1 100%}.landing-benefit{white-space:normal;font-size:var(--text-xs)}.landing .trust-row{font-size:var(--text-xs)}.landing-benefits{gap:var(--space-8)}h1{font-size:var(--text-2xl)}.text-display{font-size:var(--text-2xl)}}
 
 /* ============================================
    ACTION SHEET
@@ -658,7 +658,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media(max-width:768px){.main-content{padding-left:var(--space-16);padding-right:var(--space-16)}.card{padding:var(--space-16)}}
+@media(max-width:768px){.main-content{padding-left:var(--space-16);padding-right:var(--space-16)}.card{padding:var(--space-16)}.entry-card-grid{grid-template-columns:1fr}.steps{overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0}.step-connector{min-width:12px}.score-ring{width:100px;height:100px}.score-ring svg{width:100px;height:100px}.score-ring-num{font-size:var(--text-xl)}.section-bar-label{width:72px;font-size:var(--text-xs)}.tg-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}.upload-zone{padding:var(--space-32) var(--space-16)}.preview-header{padding:var(--space-10) var(--space-16)}.preview-body{padding:var(--space-12)}.modal-header{padding:var(--space-16) var(--space-20) 0}.modal-body{padding:var(--space-16) var(--space-20) var(--space-24)}.template-chip{width:36px}.section-row{padding:6px 8px}.input-group{margin-bottom:var(--space-16)}.step-subtitle{margin-bottom:var(--space-24)}.navbar{padding:0 var(--space-16)}.builder-form .card.card-subtle{padding:var(--space-12)}}
 
 /* ============================================
    SKELETON CARDS
@@ -684,6 +684,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 .diff-pane.new{border-color:rgba(78,205,196,0.2)}
 .diff-pane.new .diff-label{color:var(--jade);background:rgba(78,205,196,0.08)}
 @media(max-width:640px){.diff-view{grid-template-columns:1fr}}
+@media(max-width:480px){.bottom-tab-label{display:none}.tag{padding:3px 8px;font-size:var(--text-xs)}.btn{padding:0 16px;font-size:var(--text-xs)}.btn-lg{height:44px;padding:0 20px;font-size:var(--text-sm)}.text-display-lg{font-size:var(--text-xl)}.landing .trust-row{font-size:10px;gap:var(--space-8)}.landing-benefit{gap:var(--space-6)}.action-sheet{max-width:100%;border-radius:var(--radius-2xl) var(--radius-2xl) 0 0}}
 
 /* ============================================
    PREFERENCES
