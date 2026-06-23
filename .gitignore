@@ -10,14 +10,13 @@ profile-readme/
 
 .vercel
 node_modules/
-package.json
-package-lock.json
 idp*.json
 vercel_env*.json
 update_domains.json
 auth_handler.html
 
 vercel_*.json
+new_*.json
 new_*.json
 
 # Leaked credential files (purged from history)
