@@ -1,7 +1,32 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": ["firebase.json", "**/.*"],
-    "rewrites": []
-  }
+    "hosting":  {
+                    "ignore":  [
+                                   "firebase.json",
+                                   "**/.*"
+                               ],
+                    "redirects":  [
+                                      {
+                                          "destination":  "/",
+                                          "source":  "/privacy.html",
+                                          "type":  301
+                                      },
+                                      {
+                                          "destination":  "/",
+                                          "source":  "/Gemini*",
+                                          "type":  301
+                                      }
+                                  ],
+                    "public":  ".",
+                    "headers":  [
+                                    {
+                                        "headers":  [
+                                                        {
+                                                            "key":  "Link",
+                                                            "value":  "\u003chttps://resumeai-pro-2025.web.app/\u003e; rel=\"canonical\""
+                                                        }
+                                                    ],
+                                        "source":  "**/*.html"
+                                    }
+                                ]
+                }
 }
