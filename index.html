@@ -244,7 +244,7 @@ svg[data-lucide]{display:inline-block;width:1em;height:1em;stroke-width:1.5;vert
 .bottom-tab.active::before{content:'';position:absolute;top:0;width:24px;height:2px;background:var(--accent-primary);border-radius:0 0 2px 2px;transition:left var(--duration-normal) var(--spring-subtle)}
 .bottom-tab-label{font-size:var(--text-xs);line-height:1;margin-top:1px}
 .bottom-tab:not(.active) .bottom-tab-label{display:none}
-@media(max-width:768px){.bottom-tabs{display:flex}.nav-tabs,.user-name{display:none}.navbar{padding:0 var(--space-16)}.main-content{padding-bottom:64px}}
+@media(max-width:768px){.bottom-tabs{display:flex}.nav-tabs,.user-name{display:none}.navbar{padding:0 var(--space-16)}.main-content{padding-bottom:80px;width:100%;overflow-x:hidden}}
 
 /* ============================================
    MAIN CONTENT
@@ -260,8 +260,8 @@ svg[data-lucide]{display:inline-block;width:1em;height:1em;stroke-width:1.5;vert
   height:44px;padding:0 24px;border-radius:var(--radius-lg);font-family:var(--font-body);
   font-size:var(--text-sm);font-weight:600;letter-spacing:-0.01em;line-height:1;
   cursor:pointer;transition:all var(--duration-fast) var(--ease-out);border:none;position:relative;
-  -webkit-tap-highlight-color:transparent;white-space:nowrap;text-decoration:none}
-.btn:active{transform:scale(0.96)}
+  -webkit-tap-highlight-color:transparent;white-space:normal; max-width:100%; box-sizing:border-box; word-wrap:break-word;text-decoration:none}
+.btn:active{transform:scale(0.96)}\n.btn:hover{transform:translateY(-1px) scale(1.02)}
 .btn:focus-visible{outline:2px solid var(--accent-primary);outline-offset:2px;border-radius:var(--radius-lg)}
 .btn.loading{pointer-events:none;opacity:0.7}
 .btn.loading .btn-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:currentColor;border-radius:50%;animation:spin 0.6s linear infinite}
@@ -386,8 +386,8 @@ svg[data-lucide]{display:inline-block;width:1em;height:1em;stroke-width:1.5;vert
 /* ============================================
    BUILDER LAYOUT
    ============================================ */
-.builder-layout{display:flex;gap:var(--space-40);align-items:flex-start}
-.builder-form{flex:1;max-width:600px}
+.builder-layout{display:flex;gap:var(--space-40);align-items:flex-start;max-width:100%;overflow-x:hidden}
+.builder-form{flex:1;max-width:600px;min-width:0}
 .builder-preview{flex:1;position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto;scrollbar-gutter:stable}
 @media(max-width:768px){.builder-preview{display:none;position:static;max-height:none;overflow:visible;width:100%}.builder-form{max-width:100%}.builder-layout{flex-direction:column}}
 
@@ -423,7 +423,7 @@ svg[data-lucide]{display:inline-block;width:1em;height:1em;stroke-width:1.5;vert
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);z-index:5000;display:none;align-items:flex-end;justify-content:center;animation:fadeIn var(--duration-normal) var(--ease-out)}
 .modal-overlay.open{display:flex}
 @media(min-width:768px){.modal-overlay{align-items:center}}
-.modal-sheet{width:100%;max-width:520px;max-height:85vh;overflow-y:auto;scrollbar-gutter:stable;animation:sheetUp var(--duration-slow) var(--spring);position:relative}
+.modal-sheet{width:100%;max-width:520px;max-height:85vh;overflow-y:auto;overflow-x:hidden;scrollbar-gutter:stable;animation:sheetUp var(--duration-slow) var(--spring);position:relative;margin:0 16px}
 .modal-sheet .grabber{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,0.20);margin:12px auto 8px;flex-shrink:0}
 @media(min-width:768px){.modal-sheet{border-radius:var(--radius-2xl);max-height:80vh}.modal-sheet .grabber{display:none}}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -658,7 +658,7 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media(max-width:768px){.main-content{padding-left:var(--space-16);padding-right:var(--space-16)}.card{padding:var(--space-16)}.entry-card-grid{grid-template-columns:1fr}.steps{overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0}.step-connector{min-width:12px}.score-ring{width:100px;height:100px}.score-ring svg{width:100px;height:100px}.score-ring-num{font-size:var(--text-xl)}.section-bar-label{width:72px;font-size:var(--text-xs)}.tg-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}.upload-zone{padding:var(--space-32) var(--space-16)}.preview-header{padding:var(--space-10) var(--space-16)}.preview-body{padding:var(--space-12)}.modal-header{padding:var(--space-16) var(--space-20) 0}.modal-body{padding:var(--space-16) var(--space-20) var(--space-24)}.template-chip{width:36px}.section-row{padding:6px 8px}.input-group{margin-bottom:var(--space-16)}.step-subtitle{margin-bottom:var(--space-24)}.navbar{padding:0 var(--space-16)}.builder-form .card.card-subtle{padding:var(--space-12)}}
+@media(max-width:768px){.main-content{padding-left:var(--space-16);padding-right:var(--space-16)}.card{padding:var(--space-16)}.entry-card-grid{grid-template-columns:1fr}.steps{overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0;width:100%;max-width:100%}.step-connector{min-width:12px}.score-ring{width:100px;height:100px}.score-ring svg{width:100px;height:100px}.score-ring-num{font-size:var(--text-xl)}.section-bar-label{width:72px;font-size:var(--text-xs)}.tg-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}.upload-zone{padding:var(--space-32) var(--space-16)}.preview-header{padding:var(--space-10) var(--space-16)}.preview-body{padding:var(--space-12)}.modal-header{padding:var(--space-16) var(--space-20) 0}.modal-body{padding:var(--space-16) var(--space-20) var(--space-24)}.template-chip{width:36px}.section-row{padding:6px 8px}.input-group{margin-bottom:var(--space-16)}.step-subtitle{margin-bottom:var(--space-24)}.navbar{padding:0 var(--space-16)}.builder-form .card.card-subtle{padding:var(--space-12)}}
 
 /* ============================================
    SKELETON CARDS
@@ -690,6 +690,10 @@ a:focus-visible,.nav-tab:focus-visible,.step-dot:focus-visible,.bottom-tab:focus
    PREFERENCES
    ============================================ */
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}.stamp-overlay{display:none!important}@keyframes none{}}
+
+.flex{display:flex;flex-wrap:wrap;}
+
+.glass-prominent.glow { box-shadow: 0 0 0 0.5px rgba(255,255,255,0.05) inset, 0 1px 0 rgba(255,255,255,0.08) inset, 0 0 24px var(--accent-glow), var(--shadow-xl); }
 </style>
 </head>
 <body>
